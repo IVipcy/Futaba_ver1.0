@@ -29,10 +29,10 @@ httpx==0.27.0
 openai==1.54.5
 tiktoken==0.5.2
 
-# データ処理（Python 3.11互換）
-pandas==2.1.4
-numpy==1.26.4
-scipy==1.11.4
+# データ処理（Python 3.13互換 - プリビルドホイール使用）
+pandas>=2.2.0
+numpy>=1.26.0
+scipy>=1.12.0
 
 # 音声処理
 azure-cognitiveservices-speech==1.36.0
