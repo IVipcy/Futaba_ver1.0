@@ -490,6 +490,13 @@
         quizDeclined: false  // 🎯 新規追加: クイズを断ったフラグ
     };
     
+    // アンケート状態管理
+    let surveyState = {
+        isOpen: false,
+        questions: [],
+        quizScore: 0
+    };
+    
     let audioState = {
         recorder: null,
         chunks: [],
@@ -510,8 +517,15 @@
         lastResponseTime: 0,
         connectionStatus: 'disconnected',
         conversationCount: 0,
-        interactionCount: 0
+        interactionCount: 0,
+        userTypeSelectionTimer: null  // 🔧 追加: 属性選択UIタイマー
     };
+    
+    // 🆕 京セラCERA用: ユーザー属性管理
+    let userTypeSelected = false;
+    
+    // 言語切り替え時の挨拶処理フラグ
+    let expectingLanguageChangeGreeting = false;
     
     // システム音声の管理
     const systemSounds = {
@@ -862,9 +876,10 @@
             socket.on('response', handleResponseMessage);
             socket.on('transcription', handleTranscription);
             socket.on('error', handleErrorMessage);
-            socket.on('context_aware_response', handleContextAwareResponse);
             socket.on('conversation_start', handleConversationStart);
             socket.on('unity_conversation_end', handleConversationEnd);
+            // 🆕 京セラCERA用: ユーザー属性選択イベント
+            socket.on('user_type_selected', handleUserTypeSelected);
             // 🎯 新規追加: クイズ用Socket.IOイベントリスナー
             socket.on('quiz_proposal', handleQuizProposal);
             socket.on('quiz_question', handleQuizQuestion);
@@ -877,6 +892,53 @@
                 console.log('📋 stage3サジェスチョンを受信:', data.suggestions);
                 if (data.suggestions && data.suggestions.length > 0) {
                     showSuggestions(data.suggestions);
+                }
+            });
+            
+            // アンケート質問を受信
+            socket.on('survey_questions', function(data) {
+                console.log('📋 アンケート質問受信:', data.questions.length, '問');
+                displaySurveyModal(data.questions);
+            });
+            
+            // アンケート送信完了を受信（v3.0: 常に報酬表示＋Masterレベル昇格）
+            socket.on('survey_submitted', function(data) {
+                console.log('✅ アンケート送信完了:', data);
+                
+                closeSurvey();
+                
+                // お礼メッセージを表示
+                addMessage(data.message, false, { skipSound: true });
+                
+                // 感情を送信（音声があればtalking状態）
+                const isTalking = !!data.audio;
+                sendEmotionToAvatar('happy', isTalking, 'survey_thanks');
+                
+                // 音声再生
+                if (data.audio) {
+                    startConversation('happy', data.audio);
+                }
+                
+                // 🔧 v3.0: Masterレベルに昇格（アンケート回答完了時）
+                domElements.relationshipLevel.innerHTML = `
+                    <div class="level-badge master-badge">Master</div>
+                `;
+                visitorManager.visitData.relationshipLevel = 5;
+                visitorManager.visitData.quizCompleted = true;
+                visitorManager.saveVisitData();
+                
+                if (domElements.relationshipProgress) {
+                    domElements.relationshipProgress.style.width = '100%';
+                }
+                if (domElements.relationshipExp) {
+                    domElements.relationshipExp.textContent = 'Master';
+                }
+                
+                // 🎁 報酬をチャットに表示（v3.0: 常に表示）
+                if (data.show_reward && data.reward_image_url) {
+                    setTimeout(() => {
+                        showRewardInChat(data.reward_image_url);
+                    }, 3000);  // 3秒後に表示
                 }
             });
             
@@ -1103,6 +1165,12 @@
             return;
         }
         
+        // Unity iframeを一時的に非表示にする（モーダルのクリックを可能にするため）
+        if (domElements.unityFrame) {
+            domElements.unityFrame.style.display = 'none';
+            console.log('🎮 Unity iframeを一時的に非表示にしました');
+        }
+        
         domElements.languageModal.style.display = 'flex';
         console.log('✅ 言語選択モーダル表示完了');
     }
@@ -1123,6 +1191,12 @@
         
         if (domElements.languageModal) {
             domElements.languageModal.style.display = 'none';
+        }
+        
+        // Unity iframeを再表示する
+        if (domElements.unityFrame) {
+            domElements.unityFrame.style.display = 'block';
+            console.log('🎮 Unity iframeを再表示しました');
         }
         
         initializeAudioContextAfterUserGesture();
@@ -1312,12 +1386,71 @@
      * @returns {HTMLElement|null} メディアコンテナ要素
      */
     function createMediaContainer(media) {
-        if (!media || (!media.images?.length && !media.videos?.length)) {
+        // 🔧 v3.3: reward, link, images, videosに対応
+        if (!media || (!media.images?.length && !media.videos?.length && !media.link && media.type !== 'reward')) {
             return null;
         }
         
         const container = document.createElement('div');
         container.classList.add('media-container');
+        
+        // 🆕 報酬タイプの特別処理
+        if (media.type === 'reward') {
+            container.classList.add('reward-media-container');
+            
+            // 🔧 v3.4: コンテナスタイルも確実に適用
+            container.style.marginTop = '15px';
+            container.style.padding = '20px';
+            container.style.background = 'linear-gradient(135deg, #fff5f7 0%, #ffe5ec 100%)';
+            container.style.border = '2px solid #ff69b4';
+            container.style.borderRadius = '15px';
+            container.style.textAlign = 'center';
+            
+            // 報酬画像
+            const rewardImage = document.createElement('img');
+            rewardImage.src = media.imageUrl;
+            rewardImage.alt = '報酬画像';
+            rewardImage.classList.add('reward-media-image');
+            rewardImage.loading = 'lazy';
+            
+            // 🔧 v3.4: インラインスタイルで確実にサイズ制限
+            rewardImage.style.width = '100%';
+            rewardImage.style.maxWidth = '280px';
+            rewardImage.style.height = 'auto';
+            rewardImage.style.display = 'block';
+            rewardImage.style.margin = '0 auto 15px';
+            
+            // エラーハンドリング
+            rewardImage.onerror = function() {
+                console.error('報酬画像読み込みエラー:', media.imageUrl);
+                this.style.display = 'none';
+            };
+            
+            container.appendChild(rewardImage);
+            
+            // ダウンロードボタン
+            const downloadButton = document.createElement('a');
+            downloadButton.href = media.downloadUrl;
+            downloadButton.download = 'cera_reward.png';
+            downloadButton.className = 'reward-media-download';
+            downloadButton.textContent = media.downloadText;
+            downloadButton.target = '_blank';
+            downloadButton.rel = 'noopener noreferrer';
+            
+            // 🔧 v3.4: ボタンスタイルも確実に適用
+            downloadButton.style.display = 'inline-block';
+            downloadButton.style.padding = '12px 28px';
+            downloadButton.style.background = 'linear-gradient(135deg, #ff69b4 0%, #ff1493 100%)';
+            downloadButton.style.color = 'white';
+            downloadButton.style.textDecoration = 'none';
+            downloadButton.style.borderRadius = '25px';
+            downloadButton.style.fontSize = '15px';
+            downloadButton.style.fontWeight = '600';
+            
+            container.appendChild(downloadButton);
+            
+            return container;
+        }
         
         // 画像表示
         if (media.images && media.images.length > 0) {
@@ -1410,6 +1543,32 @@
             });
             
             container.appendChild(videosContainer);
+        }
+        
+        // 🆕 外部リンク表示
+        if (media.link) {
+            const linkContainer = document.createElement('div');
+            linkContainer.classList.add('media-link-container');
+            
+            const linkButton = document.createElement('a');
+            linkButton.href = media.link.url;
+            linkButton.target = '_blank';
+            linkButton.rel = 'noopener noreferrer';
+            linkButton.classList.add('media-external-link');
+            
+            // テキスト部分
+            const textSpan = document.createElement('span');
+            textSpan.textContent = media.link.text.replace(' →', '');
+            linkButton.appendChild(textSpan);
+            
+            // アイコン
+            const icon = document.createElement('span');
+            icon.classList.add('link-icon');
+            icon.textContent = '→';
+            linkButton.appendChild(icon);
+            
+            linkContainer.appendChild(linkButton);
+            container.appendChild(linkContainer);
         }
         
         return container;
@@ -1722,20 +1881,8 @@
             suggestionsContainer.classList.add('fade-in');
         }, 100);
         
-        // 30秒後に自動的に非表示
-        const hideTimer = setTimeout(() => {
-            suggestionsContainer.classList.add('fade-out');
-            setTimeout(() => {
-                if (suggestionsContainer.parentNode) {
-                    suggestionsContainer.parentNode.removeChild(suggestionsContainer);
-                }
-            }, 500);
-        }, 30000);
-        
-        // タイマーを管理(クリーンアップ用)
-        if (conversationState.audioTimers) {
-            conversationState.audioTimers.add(hideTimer);
-        }
+        // 🔧 修正: 30秒自動削除を廃止（京セラではサジェスチョンを永続的に表示）
+        // ユーザーがクリックするか、新しいサジェスチョンが表示されるまで残り続ける
     }
     
     // ====== サジェスチョンクリック処理(修正版) ======
@@ -2125,7 +2272,14 @@
         unityState.activeAudioElement = audio;
         conversationState.audioElement = audio;
         
-        const maxPlayTime = 30000;
+        // 🔧 修正: 音声長を動的に推定して最大再生時間を設定
+        const estimatedDuration = estimateAudioDuration(audioData);
+        const maxPlayTime = Math.max(
+            estimatedDuration * 1000 + 5000,  // 推定時間 + 5秒バッファ
+            60000  // 最低60秒を保証
+        );
+        console.log(`🎵 最大再生時間: ${maxPlayTime / 1000}秒 (推定: ${estimatedDuration.toFixed(1)}秒)`);
+        
         let playbackTimer = null;
         let hasEnded = false;
         
@@ -2134,13 +2288,16 @@
             hasEnded = true;
             
             console.log('🎵 音声終了処理開始');
-            if (playbackTimer) {
-                clearTimeout(playbackTimer);
-                playbackTimer = null;
-            }
             
-            if (conversationState.audioTimers) {
-                conversationState.audioTimers.delete(playbackTimer);
+            // 🔧 修正: audioTimersから削除してからnullにする（順序重要）
+            if (playbackTimer) {
+                if (conversationState.audioTimers) {
+                    conversationState.audioTimers.delete(playbackTimer);
+                    console.log('⏹️ playbackTimerをaudioTimersから削除しました');
+                }
+                clearTimeout(playbackTimer);
+                console.log('⏹️ playbackTimerをキャンセルしました');
+                playbackTimer = null;
             }
             
             if (socket && socket.connected) {
@@ -2185,29 +2342,18 @@
             }
         };
         
-        // ユーザーインタラクション後のみ音声再生
-        if (unityState.hasUserInteracted) {
-            audio.play().catch(error => {
-                console.error('音声再生開始エラー:', error);
-                
-                const fallbackTimer = setTimeout(() => {
-                    handleAudioEnd();
-                }, 2000);
-                
-                if (conversationState.audioTimers) {
-                    conversationState.audioTimers.add(fallbackTimer);
-                }
-            });
-        } else {
-            console.log('⏸️ ユーザーインタラクション待機中 - 音声再生を延期');
-            const delayTimer = setTimeout(() => {
+        // 🔧 v3.5: 常に音声を自動再生（言語選択時にAudioContextは初期化済み）
+        audio.play().catch(error => {
+            console.error('🔊 音声再生開始エラー:', error);
+            
+            const fallbackTimer = setTimeout(() => {
                 handleAudioEnd();
             }, 2000);
             
             if (conversationState.audioTimers) {
-                conversationState.audioTimers.add(delayTimer);
+                conversationState.audioTimers.add(fallbackTimer);
             }
-        }
+        });
     }
     
     function endConversation() {
@@ -2236,7 +2382,7 @@
         
         resetConversationState();
         
-        // 🎯 新規追加: 会話終了後にクイズ提案が必要な場合は送信
+        // 🎯 クイズ提案が必要な場合は送信
         if (quizState.shouldProposeQuizAfterConversation && !quizState.hasCompletedQuiz && !quizState.isActive) {
             console.log('🎯 音声終了：クイズ提案を送信します');
             quizState.shouldProposeQuizAfterConversation = false;  // フラグをリセット
@@ -2332,6 +2478,96 @@
         }
     }
     
+    // 🆕 京セラCERA用: 属性選択UI表示関数（🔧 修正版）
+    function showUserTypeSelection() {
+        console.log('🎭🎭🎭 属性選択UIを表示 - 開始 🎭🎭🎭');
+        console.log(`📊 現在の状態: userTypeSelected=${userTypeSelected}, language=${appState.currentLanguage}`);
+        
+        const isJapanese = appState.currentLanguage === 'ja';
+        
+        // 🔧 修正: addMessage()を使用して既存のCSSを適用
+        const messageText = isJapanese 
+            ? 'あなたについて教えてください。'
+            : 'Tell me about yourself.';
+        console.log(`📝 メッセージテキスト: ${messageText}`);
+        const messageWrapper = addMessage(messageText, false);
+        
+        if (!messageWrapper) {
+            console.error('❌ メッセージ表示に失敗しました');
+            return;
+        }
+        console.log('✅ メッセージ表示成功');
+        
+        // ボタンコンテナを作成
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'message-suggestions';  // 既存のサジェスチョンコンテナと同じクラス
+        buttonContainer.style.marginTop = '10px';
+        
+        // 🔧 修正: ビジネスボタン（通常のサジェスチョンと同じスタイル）
+        const businessButton = document.createElement('button');
+        businessButton.className = 'suggestion-button';
+        businessButton.textContent = isJapanese 
+            ? 'ビジネス・協業に興味がある'
+            : 'Business / Collaboration';
+        businessButton.addEventListener('click', () => handleUserTypeSelection('business', buttonContainer));
+        
+        // 🔧 修正: 学生ボタン（通常のサジェスチョンと同じスタイル）
+        const studentButton = document.createElement('button');
+        studentButton.className = 'suggestion-button';
+        studentButton.textContent = isJapanese 
+            ? '学生・キャリアに興味がある'
+            : 'Student / Career';
+        studentButton.addEventListener('click', () => handleUserTypeSelection('student', buttonContainer));
+        
+        buttonContainer.appendChild(businessButton);
+        buttonContainer.appendChild(studentButton);
+        messageWrapper.appendChild(buttonContainer);
+        
+        console.log('✅ ボタンコンテナをDOMに追加しました');
+        console.log(`📋 ボタン数: ${buttonContainer.children.length}`);
+        
+        // スクロール調整
+        setTimeout(() => {
+            if (domElements.chatMessages) {
+                domElements.chatMessages.scrollTop = domElements.chatMessages.scrollHeight;
+            }
+        }, 100);
+        
+        console.log('🎭🎭🎭 属性選択UIを表示 - 完了 🎭🎭🎭');
+    }
+    
+    // 🆕 京セラCERA用: 属性選択ハンドラー（🔧 修正版）
+    function handleUserTypeSelection(type, buttonContainer) {
+        console.log(`📋 ユーザー属性選択: ${type}`);
+        
+        // 🔧 追加: 属性選択タイマーをクリア（二重表示防止）
+        if (appState.userTypeSelectionTimer) {
+            clearTimeout(appState.userTypeSelectionTimer);
+            appState.userTypeSelectionTimer = null;
+            console.log('⏹️ 属性選択タイマーをクリアしました');
+        }
+        
+        // ボタンを無効化
+        if (buttonContainer) {
+            buttonContainer.remove();
+        }
+        
+        // フラグ設定
+        userTypeSelected = true;
+        
+        // 🔧 修正: Socket.IOではsocket.connectedを使用
+        if (socket && socket.connected) {
+            socket.emit('select_user_type', {
+                type: type,
+                language: appState.currentLanguage
+            });
+            
+            console.log(`✅ 属性選択を送信: ${type}`);
+        } else {
+            console.error('❌ Socket未接続 - 属性選択を送信できません');
+        }
+    }
+    
     function executeGreetingWithIntroduction(data, emotion) {
         console.log('🎭 音声付き自己紹介を実行開始');
         
@@ -2355,6 +2591,22 @@
         }
         
         startConversation(emotion, data.audio);
+        
+        // 🆕 京セラCERA用: 自己紹介後に属性選択UIを表示
+        console.log(`🔍 属性選択チェック: userTypeSelected=${userTypeSelected}, isGreeting=${data.isGreeting}`);
+        
+        if (!userTypeSelected && data.isGreeting) {
+            console.log('✅ 3秒後に属性選択UIを表示します');
+            const delayTimer = setTimeout(() => {
+                console.log('⏰ 3秒経過 - 属性選択UI表示を実行');
+                showUserTypeSelection();
+            }, 3000);  // 自己紹介の3秒後
+            
+            // 🔧 重要: このタイマーはaudioTimersに追加しない（会話終了時にクリアされないように）
+            appState.userTypeSelectionTimer = delayTimer;
+        } else {
+            console.log(`❌ 属性選択UI非表示: userTypeSelected=${userTypeSelected}, isGreeting=${data.isGreeting}`);
+        }
     }
     
     // ====== イベントハンドラー(続き) ======
@@ -2384,14 +2636,25 @@
         console.log('言語が設定/変更されました:', data.language);
         appState.currentLanguage = data.language;
         updateUILanguage(data.language);
+        
+        // 言語切り替えによる挨拶が来ることを通知
+        expectingLanguageChangeGreeting = true;
+        console.log('🚩 言語切り替えフラグをON - 次の挨拶で履歴をクリアしません');
     }
     
     function handleGreetingMessage(data) {
         console.log('🎵 挨拶メッセージを受信:', data);
         
-        if (domElements.chatMessages) {
+        // 言語切り替え中でなければ履歴をクリア
+        if (!expectingLanguageChangeGreeting && domElements.chatMessages) {
             domElements.chatMessages.innerHTML = '';
+            console.log('🗑️ チャット履歴をクリアしました');
+        } else if (expectingLanguageChangeGreeting) {
+            console.log('✅ 言語切り替え中のため履歴を保持します');
         }
+        
+        // フラグをリセット
+        expectingLanguageChangeGreeting = false;
         
         const emotion = data.emotion || 'start';
         
@@ -2435,6 +2698,54 @@
         
         appState.isWaitingResponse = false;
         updateConnectionStatus('connected');
+    }
+    
+    // 🆕 京セラCERA用: ユーザー属性選択完了ハンドラー
+    function handleUserTypeSelected(data) {
+        console.log('📋 属性選択完了受信', data);
+        
+        // メッセージ表示
+        const messageWrapper = addMessage(data.message, false);
+        
+        // 会話メモリに追加
+        conversationMemory.addMessage('assistant', data.message, data.emotion);
+        appState.conversationCount++;
+        
+        // 🔧 修正: 通常の応答と同じ音声再生ロジックを使用
+        let emotion = data.emotion || 'neutral';
+        
+        if (data.audio) {
+            // 音声再生とリップシンク（感情同期も含む）
+            startConversation(emotion, data.audio);
+        } else {
+            console.log('🔇 音声データなし - テキストのみ応答');
+            
+            // 音声なしの場合は感情のみ送信
+            if (isUnityFullyReady()) {
+                sendEmotionToAvatar(emotion, true, 'text_response_start');
+                
+                const textLength = data.message ? data.message.length : 20;
+                const duration = Math.min(Math.max(textLength * 100, 2000), 8000);
+                
+                const endTimer = setTimeout(() => {
+                    sendEmotionToAvatar('neutral', false, 'text_response_end');
+                    console.log(`✅ ${duration}ms後にNeutralに復帰`);
+                }, duration);
+                
+                if (conversationState.audioTimers) {
+                    conversationState.audioTimers.add(endTimer);
+                }
+            }
+        }
+        
+        // サジェスチョン表示
+        if (data.suggestions && data.suggestions.length > 0) {
+            setTimeout(() => {
+                showSuggestions(data.suggestions, messageWrapper);
+            }, 500);
+        }
+        
+        console.log(`✅ 属性: ${data.userType}, サジェスチョン: ${data.suggestions?.length || 0}個`);
     }
     
     function handleResponseMessage(data) {
@@ -2493,10 +2804,13 @@
                 }
             }
             
+            // 🔧 修正: 音声再生の有無に関わらず、テキスト表示後すぐにサジェスチョンを表示
             if (data.suggestions && data.suggestions.length > 0) {
+                // 常に800ms後にサジェスチョンを表示（ユーザーがテキストを読む時間を確保）
                 const suggestionTimer = setTimeout(() => {
                     showSuggestions(data.suggestions, messageWrapper);
-                }, conversationState.isActive ? 3000 : 500);
+                    console.log('📋 サジェスチョン表示完了');
+                }, 800);
                 
                 if (conversationState.audioTimers) {
                     conversationState.audioTimers.add(suggestionTimer);
@@ -2507,11 +2821,6 @@
             console.error('レスポンス処理エラー:', error);
             sendEmotionToAvatar('neutral', false, 'error_recovery');
         }
-    }
-    
-    function handleContextAwareResponse(data) {
-        console.log('🧠 文脈認識応答を受信:', data);
-        handleResponseMessage(data);
     }
     
     function handleTranscription(data) {
@@ -2930,57 +3239,30 @@
     function handleQuizFinalResult(data) {
         quizState.isActive = false;
         
-        if (data.allCorrect) {
-            // 全問正解
-            addMessage(data.message, false, { skipSound: true });
-            
-            sendEmotionToAvatar('happy', true, 'quiz_perfect');
-            
-            if (data.audio) {
-                startConversation('happy', data.audio);
-            }
-            
-            // 報酬を表示
+        // 🔧 修正v3.0: 正解数に関わらず同じ処理
+        // メッセージを表示
+        addMessage(data.message, false, { skipSound: true });
+        
+        // 感情をアバターに送信（常にhappy、音声があればtalking状態）
+        const isTalking = !!data.audio;
+        sendEmotionToAvatar('happy', isTalking, data.allCorrect ? 'quiz_perfect' : 'quiz_finished');
+        
+        // 音声再生
+        if (data.audio) {
+            startConversation('happy', data.audio);
+        }
+        
+        // クイズ完了フラグをlocalStorageに永続化
+        quizState.hasCompletedQuiz = true;
+        localStorage.setItem('quiz_completed', 'true');
+        
+        // 🔧 注意: Masterレベル昇格はアンケート回答後に行う（ここでは行わない）
+        
+        // 常にアンケートを表示（5秒後）
+        if (data.showSurvey) {
             setTimeout(() => {
-                showQuizReward();
-            }, 2000);
-            
-            // 🎯 修正: クイズ完了フラグをlocalStorageに永続化
-            quizState.hasCompletedQuiz = true;
-            localStorage.setItem('quiz_completed', 'true');
-            
-            // Masterレベルに更新
-            domElements.relationshipLevel.innerHTML = `
-                <div class="level-badge master-badge">Master</div>
-            `;
-            
-            // 訪問者データを更新
-            visitorManager.visitData.relationshipLevel = 5; // Masterレベル
-            visitorManager.visitData.quizCompleted = true;
-            visitorManager.saveVisitData();
-            
-            // 🎯 追加: 理解度メーターも更新
-            if (domElements.relationshipProgress) {
-                domElements.relationshipProgress.style.width = '100%';
-            }
-            if (domElements.relationshipExp) {
-                domElements.relationshipExp.textContent = 'Master';
-            }
-            
-        } else {
-            // 不正解あり
-            const messageWrapper = addMessage(data.message, false, {});
-            
-            sendEmotionToAvatar('neutral', false, 'quiz_retry_prompt');
-            
-            if (data.audio) {
-                startConversation('neutral', data.audio);
-            }
-            
-            // 再挑戦ボタンを表示
-            setTimeout(() => {
-                showQuizRetryButtons(messageWrapper);
-            }, 1000);
+                showSurveyAfterQuiz(data.score);
+            }, 5000);
         }
     }
 
@@ -3267,6 +3549,323 @@
             }
         }
     };
+    
+    // ====== アンケートシステム関数 ======
+    
+    /**
+     * アンケート質問をサーバーから取得
+     */
+    function fetchSurveyQuestions() {
+        if (socket && socket.connected) {
+            socket.emit('get_survey_questions');
+        }
+    }
+    
+    /**
+     * クイズ完了後にアンケートを表示
+     * @param {number} quizScore - クイズのスコア (0-3)
+     */
+    function showSurveyAfterQuiz(quizScore) {
+        console.log('🎯 アンケート表示: Score =', quizScore);
+        
+        surveyState.quizScore = quizScore;
+        
+        // アンケート質問を取得
+        fetchSurveyQuestions();
+    }
+    
+    /**
+     * アンケートモーダルを表示
+     * @param {Array} questions - アンケート質問配列
+     */
+    function displaySurveyModal(questions) {
+        console.log('🎯 displaySurveyModal 開始:', questions);
+        
+        try {
+            surveyState.questions = questions;
+            surveyState.isOpen = true;
+            
+            const isJapanese = appState.currentLanguage === 'ja';
+            console.log('🌐 言語:', isJapanese ? '日本語' : '英語');
+            
+            // 質問HTMLを個別に生成してログ出力
+            const questionHTMLs = [];
+            for (let i = 0; i < questions.length; i++) {
+                console.log(`📝 質問${i + 1}を生成中:`, questions[i]);
+                try {
+                    const html = generateQuestionHTML(questions[i], i);
+                    questionHTMLs.push(html);
+                    console.log(`✅ 質問${i + 1}のHTML生成成功`);
+                } catch (e) {
+                    console.error(`❌ 質問${i + 1}のHTML生成エラー:`, e);
+                    throw e;
+                }
+            }
+            
+            // モーダルHTML生成（v3.2: インラインスタイル強化版＋スマホ最適化）
+            const modalHTML = `
+                <style>
+                    @media (max-width: 768px) {
+                        #survey-form { padding: 30px !important; }
+                        .survey-question { padding: 25px !important; margin-bottom: 45px !important; }
+                        .survey-radio-group, .survey-checkbox-group { gap: 16px !important; }
+                        .survey-radio-label, .survey-checkbox-label { padding: 16px 18px !important; }
+                        .survey-btn { width: 100% !important; }
+                    }
+                </style>
+                <div id="survey-modal" class="survey-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 10000; opacity: 0; transition: opacity 0.3s ease;">
+                    <div class="survey-content" style="background: white; border-radius: 20px; width: 90%; max-width: 700px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);">
+                        <div class="survey-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px 30px; border-radius: 20px 20px 0 0;">
+                            <h2 style="margin: 0 0 8px 0; font-size: 26px; font-weight: 700;">${isJapanese ? 'アンケートにご協力ください' : 'Please take our survey'}</h2>
+                            <p class="survey-subtitle" style="margin: 0; font-size: 15px; opacity: 0.9;">
+                                ${isJapanese ? 'あなたのフィードバックは私たちの改善に役立ちます' : 'Your feedback helps us improve'}
+                            </p>
+                        </div>
+                        
+                        <form id="survey-form" style="padding: 50px; counter-reset: question-counter;">
+                            ${questionHTMLs.join('')}
+                            
+                            <div class="survey-actions" style="display: flex; justify-content: center; gap: 15px; margin-top: 40px; padding-top: 30px; border-top: 1px solid #e0e0e0;">
+                                <button type="submit" class="survey-btn survey-btn-submit" style="width: 60%; padding: 18px 32px; font-size: 18px; font-weight: 600; border: none; border-radius: 12px; cursor: pointer; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; transition: all 0.3s ease;">
+                                    ${isJapanese ? '送信' : 'Submit'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            console.log('📄 モーダルHTMLを生成しました');
+            
+            // モーダルを挿入
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            console.log('✅ モーダルをDOMに挿入しました');
+            
+            // フォーム送信イベント
+            const form = document.getElementById('survey-form');
+            if (form) {
+                form.addEventListener('submit', handleSurveySubmit);
+                console.log('✅ フォーム送信イベントを登録しました');
+            } else {
+                console.error('❌ survey-formが見つかりません');
+            }
+            
+            // モーダル表示アニメーション
+            setTimeout(() => {
+                const modal = document.getElementById('survey-modal');
+                if (modal) {
+                    modal.classList.add('show');
+                    modal.style.opacity = '1'; // 強制的に表示
+                    console.log('✅ モーダルを表示しました');
+                } else {
+                    console.error('❌ survey-modalが見つかりません');
+                }
+            }, 100);
+            
+        } catch (error) {
+            console.error('❌ displaySurveyModal エラー:', error);
+            console.error('スタックトレース:', error.stack);
+        }
+    }
+    
+    /**
+     * アンケート質問のHTMLを生成
+     * @param {Object} question - 質問オブジェクト
+     * @param {number} index - インデックス
+     * @returns {string} HTML文字列
+     */
+    function generateQuestionHTML(question, index) {
+        const required = question.id === 'q1' || question.id === 'q2' ? 'required' : '';
+        
+        if (question.type === 'radio') {
+            // ラジオボタン式の質問（単一選択）v3.2: インラインスタイル追加
+            return `
+                <div class="survey-question" style="margin-bottom: 60px; padding: 35px; background: #f8f9fa; border-radius: 15px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); position: relative; counter-increment: question-counter;">
+                    <div style="display: block; font-size: 16px; font-weight: 700; color: #5566cc; margin-bottom: 15px; letter-spacing: 0.5px;">Q${index + 1}.</div>
+                    <label class="survey-question-label" style="display: block; font-size: 18px; font-weight: 700; color: #4169e1; margin-bottom: 20px; line-height: 1.6;">
+                        ${question.question}
+                        ${required ? '<span class="required-mark" style="color: #e74c3c; margin-left: 4px; font-size: 20px;">*</span>' : ''}
+                    </label>
+                    <div class="survey-radio-group" style="display: flex; flex-direction: column; gap: 22px;">
+                        ${question.options.map((opt, i) => `
+                            <label class="survey-radio-label" style="display: flex; align-items: center; padding: 20px 22px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background: white; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);">
+                                <input 
+                                    type="radio" 
+                                    name="${question.id}" 
+                                    value="${opt.value}"
+                                    class="survey-radio"
+                                    style="width: 22px; height: 22px; margin-right: 14px; cursor: pointer; accent-color: #667eea;"
+                                    ${required}
+                                >
+                                <span style="font-size: 16px; color: #333; line-height: 1.5;">${opt.label}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        } else if (question.type === 'rating') {
+            // 評価式の質問 (1-5) v3.2: インラインスタイル追加
+            return `
+                <div class="survey-question" style="margin-bottom: 60px; padding: 35px; background: #f8f9fa; border-radius: 15px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); position: relative; counter-increment: question-counter;">
+                    <div style="display: block; font-size: 16px; font-weight: 700; color: #5566cc; margin-bottom: 15px; letter-spacing: 0.5px;">Q${index + 1}.</div>
+                    <label class="survey-question-label" style="display: block; font-size: 18px; font-weight: 700; color: #4169e1; margin-bottom: 20px; line-height: 1.6;">
+                        ${question.question}
+                        ${required ? '<span class="required-mark" style="color: #e74c3c; margin-left: 4px; font-size: 20px;">*</span>' : ''}
+                    </label>
+                    <select name="${question.id}" class="survey-select" style="width: 100%; padding: 14px 16px; font-size: 16px; border: 2px solid #e0e0e0; border-radius: 12px; background: white; cursor: pointer; transition: border-color 0.2s ease;" ${required}>
+                        <option value="">選択してください / Please select</option>
+                        ${question.options.map(opt => 
+                            `<option value="${opt.value}">${opt.label}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+            `;
+        } else if (question.type === 'checkbox') {
+            // チェックボックス式の質問（複数選択）v3.2: インラインスタイル追加
+            return `
+                <div class="survey-question" style="margin-bottom: 60px; padding: 35px; background: #f8f9fa; border-radius: 15px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); position: relative; counter-increment: question-counter;">
+                    <div style="display: block; font-size: 16px; font-weight: 700; color: #5566cc; margin-bottom: 15px; letter-spacing: 0.5px;">Q${index + 1}.</div>
+                    <label class="survey-question-label" style="display: block; font-size: 18px; font-weight: 700; color: #4169e1; margin-bottom: 20px; line-height: 1.6;">
+                        ${question.question}
+                        ${required ? '<span class="required-mark" style="color: #e74c3c; margin-left: 4px; font-size: 20px;">*</span>' : ''}
+                    </label>
+                    <div class="survey-checkbox-group" style="display: flex; flex-direction: column; gap: 22px;">
+                        ${question.options.map((opt, i) => `
+                            <label class="survey-checkbox-label" style="display: flex; align-items: center; padding: 20px 22px; border: 2px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background: white; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);">
+                                <input 
+                                    type="checkbox" 
+                                    name="${question.id}" 
+                                    value="${opt.value}"
+                                    class="survey-checkbox"
+                                    style="width: 22px; height: 22px; margin-right: 14px; cursor: pointer; accent-color: #667eea;"
+                                >
+                                <span style="font-size: 16px; color: #333; line-height: 1.5;">${opt.label}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        
+        return '';
+    }
+    
+    /**
+     * アンケート送信処理
+     * @param {Event} event - フォーム送信イベント
+     */
+    function handleSurveySubmit(event) {
+        console.log('🚀 handleSurveySubmit が呼ばれました');
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+        
+        console.log('📝 FormData エントリー数:', Array.from(formData.entries()).length);
+        
+        // 回答データを整理（チェックボックス対応）
+        const answers = {};
+        
+        // チェックボックスの値を配列として収集
+        const checkboxValues = {};
+        for (let [key, value] of formData.entries()) {
+            console.log(`  - ${key}: ${value}`);
+            if (form.querySelector(`input[name="${key}"][type="checkbox"]`)) {
+                if (!checkboxValues[key]) {
+                    checkboxValues[key] = [];
+                }
+                checkboxValues[key].push(value);
+            } else {
+                answers[key] = value;
+            }
+        }
+        
+        // チェックボックスの値をカンマ区切りの文字列に変換
+        for (let key in checkboxValues) {
+            answers[key] = checkboxValues[key].join(',');
+        }
+        
+        console.log('📤 アンケート送信データ:', answers);
+        console.log('🎯 クイズスコア:', surveyState.quizScore);
+        
+        // サーバーに送信
+        if (socket && socket.connected) {
+            console.log('✅ Socket接続OK - データ送信中...');
+            socket.emit('submit_survey', {
+                ...answers,
+                quiz_score: surveyState.quizScore
+            });
+            
+            // 送信中表示
+            const submitBtn = form.querySelector('.survey-btn-submit');
+            if (submitBtn) {
+                submitBtn.textContent = appState.currentLanguage === 'ja' ? '送信中...' : 'Submitting...';
+                submitBtn.disabled = true;
+            }
+        } else {
+            console.error('❌ Socket接続なし:', {
+                socket: !!socket,
+                connected: socket ? socket.connected : false
+            });
+        }
+    }
+    
+    /**
+     * アンケートモーダルを閉じる
+     */
+    function closeSurvey() {
+        const modal = document.getElementById('survey-modal');
+        if (modal) {
+            modal.classList.remove('show');
+            modal.style.opacity = '0'; // フェードアウト
+            setTimeout(() => {
+                if (modal.parentNode) {
+                    modal.parentNode.removeChild(modal);
+                }
+            }, 300);
+        }
+        
+        surveyState.isOpen = false;
+    }
+    
+    /**
+     * 報酬画像をチャット内にメッセージとして表示（v3.3: メッセージバブル内に統合）
+     * @param {string} imageUrl - 画像URL
+     */
+    function showRewardInChat(imageUrl) {
+        const isJapanese = appState.currentLanguage === 'ja';
+        
+        console.log('🎁 報酬画像をメッセージとして表示:', imageUrl);
+        
+        // 報酬メッセージのテキスト
+        const rewardMessage = isJapanese ? '🎁 特別なプレゼントです！' : '🎁 Here\'s your special reward!';
+        
+        // 報酬用のメディアオブジェクトを作成
+        const rewardMedia = {
+            type: 'reward',
+            imageUrl: imageUrl,
+            downloadUrl: imageUrl,
+            downloadText: isJapanese ? '📥 ダウンロード' : '📥 Download'
+        };
+        
+        // 通常のメッセージとして表示（メディア付き）
+        const messageWrapper = addMessage(rewardMessage, false, {
+            media: rewardMedia,
+            skipSound: true
+        });
+        
+        // スクロール
+        setTimeout(() => {
+            if (domElements.chatMessages) {
+                domElements.chatMessages.scrollTop = domElements.chatMessages.scrollHeight;
+            }
+        }, 100);
+        
+        console.log('✅ 報酬をメッセージとして追加しました');
+    }
+    
+    // closeSurvey をグローバルに公開
+    window.closeSurvey = closeSurvey;
     
     // ====== 初期化実行 ======
     document.addEventListener('DOMContentLoaded', initialize);

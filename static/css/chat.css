@@ -38,15 +38,16 @@
     padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
-    color: white;
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+    color: #d4af37;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.3s;
+    transition: all 0.3s;
 }
 
 .language-button:hover {
-    background-color: #0056b3;
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    color: #1a1a1a;
 }
 
 /* モバイル対応 */
@@ -59,5 +60,593 @@
     .language-button {
         padding: 0.7rem 1.2rem;
         font-size: 0.9rem;
+    }
+}
+
+/* ============================================
+   外部リンク表示スタイル
+   ============================================ */
+
+/* リンクコンテナ */
+.media-link-container {
+    margin-top: 15px;
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* 外部リンクボタン */
+.media-external-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* ホバー効果 */
+.media-external-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.media-external-link:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* リップル効果 */
+.media-external-link::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.media-external-link:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* アイコン */
+.link-icon {
+    font-size: 18px;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.media-external-link:hover .link-icon {
+    transform: translateX(5px);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .media-external-link {
+        padding: 12px 24px;
+        font-size: 14px;
+        gap: 8px;
+    }
+    
+    .link-icon {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .media-external-link {
+        padding: 10px 20px;
+        font-size: 13px;
+    }
+}
+
+/* ============================================
+   アンケートシステム用CSS
+   ============================================ */
+
+/* ===== アンケートモーダル（v3.0: デザイン改善版） ===== */
+.survey-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8); /* 🔧 0.75 → 0.8 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.survey-modal.show {
+    opacity: 1;
+}
+
+.survey-content {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 700px; /* 🔧 600px → 700px */
+    max-height: 90vh; /* 🔧 85vh → 90vh */
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: survey-slide-in 0.4s ease-out;
+}
+
+@keyframes survey-slide-in {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.survey-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px 30px;
+    border-radius: 20px 20px 0 0;
+}
+
+.survey-header h2 {
+    margin: 0 0 8px 0;
+    font-size: 26px; /* 🔧 24px → 26px */
+    font-weight: 700;
+}
+
+.survey-subtitle {
+    margin: 0;
+    font-size: 15px; /* 🔧 14px → 15px */
+    opacity: 0.9;
+}
+
+/* カウンターの初期化（フォーム全体で） */
+#survey-form {
+    padding: 50px; /* 🔧 v3.2: 35px → 50px */
+    counter-reset: question-counter; /* 🔧 追加: カウンターリセット */
+}
+
+/* ===== 質問スタイル（v3.2: カード形式＋質問番号＋余白大幅増） ===== */
+.survey-question {
+    margin-bottom: 60px; /* 🔧 v3.2: 45px → 60px */
+    padding: 35px; /* 🔧 v3.2: 25px → 35px */
+    background: #f8f9fa; /* 🔧 追加: 薄いグレー背景 */
+    border-radius: 15px; /* 🔧 追加: 角丸 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 🔧 追加: 軽い影 */
+    position: relative; /* 🔧 追加: 質問番号用 */
+    counter-increment: question-counter; /* 🔧 追加: カウンター */
+}
+
+/* 🆕 質問番号を自動追加（v3.2: サイズと色を改善） */
+.survey-question::before {
+    content: 'Q' counter(question-counter) '.';
+    display: block;
+    font-size: 16px; /* 🔧 v3.2: 14px → 16px */
+    font-weight: 700;
+    color: #5566cc; /* 🔧 v3.2: #667eea → 濃い青 */
+    margin-bottom: 15px; /* 🔧 v3.2: 12px → 15px */
+    letter-spacing: 0.5px;
+}
+
+.survey-question-label {
+    display: block;
+    font-size: 18px; /* 🔧 16px → 18px */
+    font-weight: 700; /* 🔧 600 → 700 */
+    color: #4169e1; /* 🔧 v3.2: #222 → ロイヤルブルー */
+    margin-bottom: 20px; /* 🔧 v3.2: 18px → 20px */
+    line-height: 1.6; /* 🔧 v3.2: 1.5 → 1.6 */
+}
+
+.required-mark {
+    color: #e74c3c;
+    margin-left: 4px;
+    font-size: 20px; /* 🔧 追加 */
+}
+
+/* ===== ラジオボタン（v3.2: 間隔と余白を大幅に増加） ===== */
+.survey-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 22px; /* 🔧 v3.2: 18px → 22px */
+}
+
+.survey-radio-label {
+    display: flex;
+    align-items: center;
+    padding: 20px 22px; /* 🔧 v3.2: 16px 18px → 20px 22px */
+    border: 2px solid #e0e0e0;
+    border-radius: 12px; /* 🔧 10px → 12px */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white; /* 🔧 v3.2: #fafafa → white */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* 🔧 v3.2: 追加 */
+}
+
+.survey-radio-label:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+    transform: translateX(4px); /* 🔧 追加: ホバー時にスライド */
+}
+
+.survey-radio {
+    width: 22px; /* 🔧 20px → 22px */
+    height: 22px; /* 🔧 20px → 22px */
+    margin-right: 14px; /* 🔧 12px → 14px */
+    cursor: pointer;
+    accent-color: #667eea;
+}
+
+.survey-radio-label span {
+    font-size: 16px; /* 🔧 15px → 16px */
+    color: #333; /* 🔧 #444 → #333 */
+    line-height: 1.5; /* 🔧 追加 */
+}
+
+/* ===== セレクトボックス ===== */
+.survey-select {
+    width: 100%;
+    padding: 14px 16px; /* 🔧 12px 15px → 14px 16px */
+    font-size: 16px; /* 🔧 15px → 16px */
+    border: 2px solid #e0e0e0;
+    border-radius: 12px; /* 🔧 10px → 12px */
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.survey-select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); /* 🔧 追加: フォーカス時の影 */
+}
+
+/* ===== チェックボックス（v3.2: 間隔と余白を大幅に増加） ===== */
+.survey-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 22px; /* 🔧 v3.2: 18px → 22px */
+}
+
+.survey-checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 20px 22px; /* 🔧 v3.2: 16px 18px → 20px 22px */
+    border: 2px solid #e0e0e0;
+    border-radius: 12px; /* 🔧 10px → 12px */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white; /* 🔧 v3.2: #fafafa → white */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); /* 🔧 v3.2: 追加 */
+}
+
+.survey-checkbox-label:hover {
+    border-color: #667eea;
+    background: #f0f4ff;
+    transform: translateX(4px); /* 🔧 追加: ホバー時にスライド */
+}
+
+.survey-checkbox {
+    width: 22px; /* 🔧 20px → 22px */
+    height: 22px; /* 🔧 20px → 22px */
+    margin-right: 14px; /* 🔧 12px → 14px */
+    cursor: pointer;
+    accent-color: #667eea;
+}
+
+.survey-checkbox-label span {
+    font-size: 16px; /* 🔧 15px → 16px */
+    color: #333; /* 🔧 #444 → #333 */
+    line-height: 1.5; /* 🔧 追加 */
+}
+
+/* ===== アクションボタン（v3.2: スキップ削除、送信のみ中央寄せ） ===== */
+.survey-actions {
+    display: flex;
+    justify-content: center; /* 🔧 v3.2: 中央寄せ */
+    gap: 15px;
+    margin-top: 40px; /* 🔧 v3.2: 35px → 40px */
+    padding-top: 30px; /* 🔧 v3.2: 25px → 30px */
+    border-top: 1px solid #e0e0e0;
+}
+
+.survey-btn {
+    width: 60%; /* 🔧 v3.2: flex: 1 → 60%固定幅 */
+    padding: 18px 32px; /* 🔧 v3.2: 16px 24px → 18px 32px */
+    font-size: 18px; /* 🔧 v3.2: 17px → 18px */
+    font-weight: 600;
+    border: none;
+    border-radius: 12px; /* 🔧 10px → 12px */
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* 🔧 v3.2: スキップボタンのスタイルは削除（使用しないため） */
+.survey-btn-skip {
+    display: none; /* 完全に非表示 */
+}
+
+.survey-btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.survey-btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5); /* 🔧 v3.2: 影を強化 */
+}
+
+.survey-btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ===== 報酬モーダル ===== */
+.reward-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001; /* アンケートモーダルより上 */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.reward-modal.show {
+    opacity: 1;
+}
+
+.reward-content {
+    background: linear-gradient(135deg, #FFE5F0 0%, #FFF0F5 100%);
+    border: 3px solid #FF69B4;
+    border-radius: 25px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 15px 50px rgba(255, 105, 180, 0.4);
+    animation: reward-popup 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes reward-popup {
+    0% {
+        transform: scale(0.5) rotate(-10deg);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.reward-header {
+    background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 22px 22px 0 0;
+    text-align: center;
+}
+
+.reward-header h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.reward-body {
+    padding: 30px;
+    text-align: center;
+}
+
+.reward-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    animation: reward-sparkle 2s ease-in-out infinite;
+}
+
+@keyframes reward-sparkle {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.02);
+        filter: brightness(1.1);
+    }
+}
+
+.reward-download-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 14px 30px;
+    background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+}
+
+.reward-download-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.5);
+}
+
+.reward-close-btn {
+    width: calc(100% - 60px);
+    margin: 0 30px 30px 30px;
+    padding: 12px;
+    background: white;
+    color: #FF69B4;
+    border: 2px solid #FF69B4;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.reward-close-btn:hover {
+    background: #FF69B4;
+    color: white;
+}
+
+/* ===== レスポンシブ対応 ===== */
+@media (max-width: 768px) {
+    .survey-content,
+    .reward-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    #survey-form {
+        padding: 30px; /* 🔧 v3.2: 20px → 30px */
+    }
+    
+    .survey-header {
+        padding: 20px;
+    }
+    
+    .survey-header h2 {
+        font-size: 20px;
+    }
+    
+    /* 🔧 v3.2: 質問カードのスマホ調整 */
+    .survey-question {
+        padding: 25px; /* 🔧 v3.2: 20px → 25px */
+        margin-bottom: 45px; /* 🔧 v3.2: 35px → 45px */
+    }
+    
+    .survey-question::before {
+        font-size: 15px; /* 🔧 v3.2: 13px → 15px */
+        margin-bottom: 12px; /* 🔧 v3.2: 10px → 12px */
+    }
+    
+    .survey-question-label {
+        font-size: 17px; /* 🔧 v3.2: 16px → 17px */
+        margin-bottom: 18px; /* 🔧 v3.2: 15px → 18px */
+    }
+    
+    .survey-radio-label span,
+    .survey-checkbox-label span {
+        font-size: 15px; /* 🔧 v3.2: 14px → 15px */
+    }
+    
+    /* 選択肢の間隔をスマホで少し詰める */
+    .survey-radio-group,
+    .survey-checkbox-group {
+        gap: 16px; /* 🔧 v3.2: 14px → 16px */
+    }
+    
+    /* 選択肢のpaddingを調整 */
+    .survey-radio-label,
+    .survey-checkbox-label {
+        padding: 16px 18px; /* 🔧 v3.2: 14px 16px → 16px 18px */
+    }
+    
+    .survey-actions {
+        flex-direction: column;
+        padding-top: 25px; /* 🔧 v3.2: 追加 */
+        margin-top: 35px; /* 🔧 v3.2: 追加 */
+    }
+    
+    .survey-btn {
+        width: 100%; /* スマホでは横幅いっぱい */
+    }
+}
+
+/* ============================================
+   報酬画像メッセージ内表示用CSS（v3.3: メッセージバブル内統合）
+   ============================================ */
+
+.reward-media-container {
+    margin-top: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #fff5f7 0%, #ffe5ec 100%);
+    border: 2px solid #ff69b4;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.15);
+}
+
+.reward-media-image {
+    width: 100%;
+    max-width: 280px; /* 🔧 v3.4: 400px → 280px */
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin: 0 auto 15px;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.reward-media-image:hover {
+    transform: scale(1.02);
+}
+
+.reward-media-download {
+    display: inline-block;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #ff69b4 0%, #ff1493 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 12px rgba(255, 105, 180, 0.3);
+}
+
+.reward-media-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 18px rgba(255, 105, 180, 0.5);
+}
+
+/* レスポンシブ対応（スマホ最適化） */
+@media (max-width: 768px) {
+    .reward-media-container {
+        padding: 15px;
+        margin-top: 12px;
+    }
+    
+    .reward-media-image {
+        max-width: 240px; /* 🔧 v3.4: 100% → 240px */
+        border-radius: 10px;
+    }
+    
+    .reward-media-download {
+        padding: 10px 24px;
+        font-size: 14px;
     }
 } 

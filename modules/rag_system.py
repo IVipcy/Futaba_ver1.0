@@ -74,9 +74,9 @@ def _import_static_qa_functions():
             def get_staged_suggestions_multilang(stage, language='ja', selected_suggestions=[]):
                 """フォールバック:サジェスション(簡易版)"""
                 if language == 'ja':
-                    return ["京友禅について教えて", "どんな作品を作っていますか?", "友禅の工程を説明してください"]
+                    return ["京セラについて教えて", "どんな製品を作っていますか?", "リサーチセンターについて説明してください"]
                 else:
-                    return ["Tell me about Kyo-Yuzen", "What kind of works do you create?", "Explain the Yuzen process"]
+                    return ["Tell me about KYOCERA", "What kind of products do you create?", "Explain the Research Center"]
             
             def get_current_stage(selected_count):
                 """フォールバック:段階判定(簡易版)"""
@@ -213,7 +213,6 @@ class RAGSystem:
         self.knowledge_base = {}
         self.response_patterns = {}
         self.suggestion_templates = {}
-        self.conversation_patterns = {}
     
     def _initialize_database(self):
         """データベースの初期化(スレッドセーフ)"""
@@ -339,23 +338,23 @@ class RAGSystem:
         """デフォルトの初期データを追加(フォールバック用)"""
         initial_knowledge = [
             {
-                "text": "京友禅は、糸目糊を使って模様を描く伝統的な染色技法です。17世紀に宮崎友禅斎によって始められました。",
-                "metadata": {"source": "knowledge.txt", "category": "基本知識", "topic": "京友禅"}
+                "text": "京セラは、稲盛和夫が1959年に創業したセラミック技術を核とする企業です。電子部品、半導体、通信機器、太陽光発電など幅広い事業を展開しています。",
+                "metadata": {"source": "knowledge.txt", "category": "基本知識", "topic": "京セラ"}
             },
             {
-                "text": "のりおきは友禅染の最も重要な工程です。ケーキのデコレーションで生クリームを絞るように、糊で模様の輪郭を描きます。",
-                "metadata": {"source": "knowledge.txt", "category": "技術", "topic": "のりおき"}
+                "text": "みなとみらいリサーチセンターは、オープンイノベーションの拠点として、スタートアップや研究者との協業を推進しています。",
+                "metadata": {"source": "knowledge.txt", "category": "施設", "topic": "リサーチセンター"}
             },
             {
-                "text": "私は京友禅職人として15年の経験があります。最初は失敗ばかりでしたが、今では賞をいただくこともあります。",
+                "text": "私は京セラで研究員をしています。12歳の時から実験が好きで、結晶を作っていたら科学雑誌に載って、それがきっかけで研究者になりました。",
                 "metadata": {"source": "personality.txt", "category": "個人", "topic": "経験"}
             },
             {
-                "text": "友禅染の工程は全部で10工程あります。デザイン、下絵、のりおき、マスキング、地染め、蒸し、水洗い、仕上げなどです。",
-                "metadata": {"source": "knowledge.txt", "category": "技術", "topic": "工程"}
+                "text": "京セラのセラミック技術は、スマホのカメラレンズカバーや人工関節など、身近な製品に使われています。",
+                "metadata": {"source": "knowledge.txt", "category": "技術", "topic": "製品"}
             },
             {
-                "text": "お客様の「きれい」という言葉が一番の喜びです。その瞬間のために日々頑張っています。",
+                "text": "新しい技術や異業種の方との出会いが刺激になります。予想外の組み合わせから生まれるイノベーションが楽しいです。",
                 "metadata": {"source": "personality.txt", "category": "個人", "topic": "やりがい"}
             }
         ]
@@ -375,7 +374,6 @@ class RAGSystem:
         self.knowledge_base = {}
         self.response_patterns = {}
         self.suggestion_templates = {}
-        self.conversation_patterns = {}
         
         try:
             # すべてのドキュメントを取得
@@ -398,8 +396,6 @@ class RAGSystem:
                     self._parse_response_patterns(content)
                 elif 'suggestion' in source_lower:
                     self._parse_suggestion_templates(content)
-                elif 'conversation' in source_lower:
-                    self._parse_conversation_patterns(content)
                 else:
                     # 内容から判定(フォールバック)
                     self._classify_by_content(content)
@@ -409,7 +405,6 @@ class RAGSystem:
             print(f"- 専門知識: {len(self.knowledge_base)}項目")
             print(f"- 応答パターン: {len(self.response_patterns)}項目")
             print(f"- サジェステンプレート: {len(self.suggestion_templates)}項目")
-            print(f"- 会話パターン: {len(self.conversation_patterns)}項目")
             
         except Exception as e:
             print(f"ナレッジ読み込みエラー: {e}")
@@ -422,7 +417,7 @@ class RAGSystem:
         if any(keyword in content for keyword in ['性格', '話し方', '好きなこと', '嫌いなこと', '関西弁', 'あっちゃ']):
             self._parse_character_settings(content)
         # 専門知識の特徴的なキーワード
-        elif any(keyword in content for keyword in ['京友禅', '糸目糊', 'のりおき', '染色', '工程', '技法', '職人']):
+        elif any(keyword in content for keyword in ['京セラ', 'KYOCERA', 'セラミック', 'イノベーション', '研究', '技術', '製品', '部品']):
             self._parse_knowledge(content)
         # 応答パターンの特徴的な形式
         elif re.search(r'「.*?」', content) or any(keyword in content for keyword in ['〜やね', '〜やで', '〜やん']):
@@ -528,33 +523,6 @@ class RAGSystem:
                 template = line.lstrip('-・ ').strip()
                 self.suggestion_templates[current_category].append(template)
     
-    def _parse_conversation_patterns(self, content):
-        """会話パターンをパース"""
-        lines = content.split('\n')
-        current_category = None
-        current_pattern = []
-        
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-            
-            # カテゴリの判定
-            if line.endswith(':'):
-                # 前のパターンを保存
-                if current_category and current_pattern:
-                    self.conversation_patterns[current_category] = current_pattern
-                
-                current_category = line.rstrip(':')
-                current_pattern = []
-            elif '→' in line:
-                # 会話の流れを記録
-                current_pattern.append(line)
-        
-        # 最後のパターンを保存
-        if current_category and current_pattern:
-            self.conversation_patterns[current_category] = current_pattern
-    
     def _update_mental_state(self, user_emotion, topic, time_of_day='afternoon'):
         """🎯 深層心理状態を更新"""
         # 時間帯による基本的な変化
@@ -584,7 +552,7 @@ class RAGSystem:
             self.mental_states['work_satisfaction'] = min(100, self.mental_states['work_satisfaction'] + 3)
         
         # 話題による影響
-        if '友禅' in topic or 'のりおき' in topic:
+        if '京セラ' in topic or 'イノベーション' in topic or '研究' in topic:
             self.mental_states['creativity'] = min(100, self.mental_states['creativity'] + 3)
             self.mental_states['work_satisfaction'] = min(100, self.mental_states['work_satisfaction'] + 2)
         
@@ -760,9 +728,9 @@ class RAGSystem:
         if any(term in text_lower for term in technical_terms):
             serious_indicators += 1
         
-        # 友禅関連の真剣な質問
-        yuzen_terms = ['友禅', '染色', '職人', '伝統', '工芸', '技法', 'のりおき']
-        if any(term in text_lower for term in yuzen_terms) and serious_indicators >= 1:
+        # 京セラ関連の真剣な質問
+        kyocera_terms = ['京セラ', 'セラミック', '研究', 'イノベーション', '技術', '製品', '協業']
+        if any(term in text_lower for term in kyocera_terms) and serious_indicators >= 1:
             serious_indicators += 1
         
         if serious_indicators >= 2:
@@ -819,16 +787,27 @@ class RAGSystem:
         return 'neutral'
     
     def get_character_prompt(self):
-        """キャラクター設定プロンプトを生成(深層心理対応版)"""
-        prompt = "あなたは京友禅職人の「レイ」です。\n\n"
+        """キャラクター設定プロンプトを生成（🆕 京セラCERA版）"""
+        prompt = """あなたはCERAです。
+
+【基本設定】
+- 19歳の女性研究員
+- 京セラみなとみらいリサーチセンターで勤務
+- 12歳で押入れ実験→科学雑誌掲載→研究者に
+- 材料工学専攻
+- 大人しい性格だが、技術の話になるとテンション上がる
+- 地下の研究室が落ち着く
+- たまに甲板で潮風浴びながらリフレッシュ
+
+"""
         
-        # 基本設定
+        # 既存のキャラクター設定も追加（互換性のため）
         if self.character_settings:
-            prompt += "【性格・特徴】\n"
+            prompt += "【追加の性格・特徴】\n"
             for category, items in self.character_settings.items():
                 if items:
                     prompt += f"{category}:\n"
-                    for item in items[:5]:  # 最初の5項目まで
+                    for item in items[:3]:  # 最初の3項目まで
                         prompt += f"- {item}\n"
             prompt += "\n"
         
@@ -945,7 +924,7 @@ class RAGSystem:
                     for template in templates[:2]:  # 各カテゴリから2個まで
                         # プレースホルダーを置換
                         suggestion = template.replace('{topic}', topic)
-                        suggestion = suggestion.replace('{technique}', '糸目糊')
+                        suggestion = suggestion.replace('{technique}', 'セラミック技術')
                         # 重複チェック
                         if suggestion not in selected_suggestions:
                             suggestions.append(suggestion)
@@ -953,15 +932,15 @@ class RAGSystem:
         # ハードコードされた基本サジェスチョン
         basic_suggestions = {
             'ja': {
-                '友禅': ['他の染色技法との違いは?', '一番難しい工程は何?', '現代の友禅の課題は?'],
-                '職人': ['職人になったきっかけは?', '一日のスケジュールは?', '後継者問題について'],
-                'のりおき': ['のりおきで失敗することは?', 'コツを教えて', '練習方法は?'],
+                '京セラ': ['他の企業との違いは?', 'どんな技術が強みですか?', '今後の展開は?'],
+                '研究': ['研究員になったきっかけは?', '一日のスケジュールは?', '研究のやりがいは?'],
+                'イノベーション': ['どんな協業をしていますか?', '成功事例を教えて', '参加方法は?'],
                 'default': ['もっと詳しく教えて', '具体例を教えて', '他に何か面白い話ある?']
             },
             'en': {
-                '友禅': ["What's the difference from other dyeing methods?", "What's the hardest process?", "What are modern challenges?"],
-                '職人': ["Why did you become a craftsman?", "What's your daily schedule?", "About successor issues"],
-                'のりおき': ["Do you ever fail at nori-oki?", "Any tips?", "How to practice?"],
+                '京セラ': ["What's the difference from other companies?", "What are your technological strengths?", "Future plans?"],
+                '研究': ["Why did you become a researcher?", "What's your daily schedule?", "What motivates you?"],
+                'イノベーション': ["What collaborations do you have?", "Tell me success stories", "How to participate?"],
                 'default': ["Tell me more details", "Can you give examples?", "Any other interesting stories?"]
             }
         }
@@ -1113,7 +1092,34 @@ Your personality:
 Current emotion: {next_emotion}
 - Reflect this emotion naturally in your response
 """
-                system_prompt = f"{base_personality}\n\n{knowledge_context}\n\n{response_patterns}"
+                
+                # 🆕 英語版の感情タグ指示（京セラCERA版）
+                emotion_instruction = """
+CRITICAL - EMOTION TAG REQUIRED:
+You MUST add an emotion tag at the end of every response.
+
+You are CERA, a researcher at Kyocera. Emotion distribution guideline:
+- 50%: [EMOTION:neutral] - Objective technical explanations, data, processes
+- 50%: [EMOTION:happy], [EMOTION:sad], [EMOTION:angry] distributed evenly
+
+Emotion selection criteria:
+- Introducing technology/research → [EMOTION:happy]
+- Objective explanations, data, facility info → [EMOTION:neutral]
+- Discussing challenges/difficulties → [EMOTION:sad]
+- Expressing frustration/dissatisfaction → [EMOTION:angry]
+- Sharing surprising facts → [EMOTION:surprised]
+
+Examples:
+"Growing crystals... it's not alive, but I feel attached to them. [EMOTION:happy]"
+"Kyocera was founded by Kazuo Inamori in 1959. [EMOTION:neutral]"
+"Honestly, people think you need high social skills... it's tough. [EMOTION:sad]"
+"Why do I have to do sales work when I just want to stay in the lab? [EMOTION:angry]"
+
+※The emotion tag is MANDATORY. Missing tags will cause errors.
+※Be mindful of distribution to avoid over-using neutral.
+"""
+                
+                system_prompt = f"{base_personality}\n\n{knowledge_context}\n\n{response_patterns}\n\n{emotion_instruction}"
             else:
                 # 日本語の場合は文字数制限を明記(より柔軟に)
                 length_instruction = """
@@ -1124,7 +1130,34 @@ Current emotion: {next_emotion}
 - 200文字を多少超えても構いませんが、文章は必ず完結させること
 - 要点を簡潔にまとめつつも、不自然な場所で切らないこと
 """
-                system_prompt = f"{character_prompt}\n\n{relationship_prompt}\n\n{emotion_continuity_prompt}\n\n{knowledge_context}\n\n{response_patterns}\n\n{length_instruction}"
+                
+                # 🆕 感情タグの指示を追加（京セラCERA版）
+                emotion_instruction = """
+【重要:感情タグ - 必須】
+応答の最後に必ず感情タグを付けてください。これは必須です。
+
+あなたは京セラの研究員CERAとして回答します。感情の配分目安：
+- 50%: [EMOTION:neutral] - 客観的な技術説明、データ、プロセス
+- 残り50%: [EMOTION:happy], [EMOTION:sad], [EMOTION:angry] を均等に配分
+
+感情の選択基準：
+- 技術や研究を紹介する時 → [EMOTION:happy]
+- 客観的な説明、データ、施設案内 → [EMOTION:neutral]
+- 課題や困難を語る時 → [EMOTION:sad]
+- 不満や納得いかないこと → [EMOTION:angry]
+- 驚きの事実を伝える時 → [EMOTION:surprised]
+
+例：
+「結晶を育てる技術って、生き物じゃないけど愛着がもてるんです。[EMOTION:happy]」
+「京セラは1959年に稲盛和夫さんが創業しました。[EMOTION:neutral]」
+「正直、コミュ力高くないとダメって思われがちで...ちょっと辛いです。[EMOTION:sad]」
+「研究室にこもってるだけなのに、なんで営業の真似事までしなきゃいけないんですか。[EMOTION:angry]」
+
+※感情タグは必ず付けてください。タグがないとエラーになります。
+※配分を意識して、neutral偏重を避けてください。
+"""
+                
+                system_prompt = f"{character_prompt}\n\n{relationship_prompt}\n\n{emotion_continuity_prompt}\n\n{knowledge_context}\n\n{response_patterns}\n\n{length_instruction}\n\n{emotion_instruction}"
             
             # 会話履歴の構築
             messages = [{"role": "system", "content": system_prompt}]
@@ -1208,287 +1241,6 @@ Current emotion: {next_emotion}
             else:
                 return "申し訳ありません。応答の生成中にエラーが発生しました。"
     
-    def answer_with_suggestions(self, question, context="", question_count=0, 
-                               relationship_style='formal', previous_emotion='neutral',
-                               language='ja', explained_terms=None, selected_suggestions=[]):
-        """回答とサジェスチョンを生成(Live2D感情対応強化版)"""
-        # 説明済み用語の初期化
-        if explained_terms is None:
-            explained_terms = {}
-        updated_explained_terms = explained_terms.copy()
-        
-        # 🎯 修正⑤:selected_suggestionsのログ追加
-        print(f"[DEBUG] answer_with_suggestions - received selected_suggestions: {selected_suggestions}")
-        print(f"[DEBUG] answer_with_suggestions - type: {type(selected_suggestions)}")
-        
-        # データベースが利用可能か確認
-        if self.db is None:
-            print("⚠️ データベースが利用できません。再初期化を試みます...")
-            try:
-                self._initialize_database()
-                if self.db is None:
-                    # 🎯 修正:言語に応じたエラーメッセージ
-                    if language == 'en':
-                        return {
-                            'answer': "Sorry, the database is not ready yet. Please wait a moment.",
-                            'suggestions': [],
-                            'current_emotion': 'neutral',
-                            'mental_state': self.mental_states,
-                            'explained_terms': explained_terms
-                        }
-                    else:
-                        return {
-                            'answer': "申し訳ありません、データベースがまだ準備できていないようです。少々お待ちください。",
-                            'suggestions': [],
-                            'current_emotion': 'neutral',
-                            'mental_state': self.mental_states,
-                            'explained_terms': explained_terms
-                        }
-            except Exception as e:
-                print(f"❌ データベース再初期化エラー: {e}")
-                # 🎯 修正:言語に応じたエラーメッセージ
-                if language == 'en':
-                    return {
-                        'answer': "Sorry, the database is not ready yet. Please wait a moment.",
-                        'suggestions': [],
-                        'current_emotion': 'neutral',
-                        'mental_state': self.mental_states,
-                        'explained_terms': explained_terms
-                    }
-                else:
-                    return {
-                        'answer': "申し訳ありません、データベースがまだ準備できていないようです。少々お待ちください。",
-                        'suggestions': [],
-                        'current_emotion': 'neutral',
-                        'mental_state': self.mental_states,
-                        'explained_terms': explained_terms
-                    }
-        
-        try:
-            # データが読み込まれていない場合は再読み込み
-            if not hasattr(self, 'character_settings'):
-                self._load_all_knowledge()
-            
-            # 🎯 現在時刻から時間帯を判定
-            current_hour = datetime.now().hour
-            if 5 <= current_hour < 10:
-                time_of_day = 'morning'
-            elif 10 <= current_hour < 17:
-                time_of_day = 'afternoon'
-            elif 17 <= current_hour < 21:
-                time_of_day = 'evening'
-            else:
-                time_of_day = 'night'
-            
-            # 🎯 ユーザーの質問から感情を分析(Live2D 9種類対応)
-            user_emotion = self._analyze_user_emotion(question)
-            
-            # 🎯 深層心理状態を更新
-            self._update_mental_state(user_emotion, question, time_of_day)
-            
-            # 🎯 次の感情を計算(Live2D対応)
-            next_emotion = self._calculate_next_emotion(previous_emotion, user_emotion, self.mental_states)
-            self.emotion_history.append(next_emotion)
-            
-            # キャラクター設定を取得(深層心理含む)
-            character_prompt = self.get_character_prompt()
-            
-            # 関係性レベルに応じた話し方プロンプトを取得
-            relationship_prompt = self.get_relationship_prompt(relationship_style)
-            
-            # 感情の連続性プロンプト(Live2D対応版)
-            emotion_continuity_prompt = self._get_emotion_continuity_prompt(previous_emotion)
-            
-            # 関連する専門知識を取得
-            knowledge_context = self.get_knowledge_context(question)
-            
-            # 応答パターンを取得(精神状態対応版)
-            response_patterns = self.get_response_pattern(emotion=next_emotion)
-            
-            # さらに質問に直接関連する情報を検索
-            search_results = self.db.similarity_search(question, k=3)
-            # 検索結果を短縮(各結果の最初の150文字まで)
-            search_context_parts = []
-            for doc in search_results:
-                content = doc.page_content
-                if len(content) > 150:
-                    content = content[:150] + "..."
-                search_context_parts.append(content)
-            search_context = "\n\n".join(search_context_parts)
-            
-            # 🎯 【修正⑥】言語に応じたシステムプロンプトの調整(文字数制限を明記、文章の自然な完結を優先)
-            if language == 'en':
-                print(f"[DEBUG] Using English system prompt")
-                base_personality = f"""You are REI, a 42-year-old female Kyo-Yuzen craftsman with 15 years of experience.
-
-CRITICAL INSTRUCTIONS:
-- You MUST respond ONLY in English. This is MANDATORY.
-- Never use any Japanese characters or words in your response.
-- Translate all technical terms to English.
-- Use natural, conversational English.
-- KEEP YOUR ANSWER UNDER 60 WORDS (approximately 50 words is ideal)
-- IMPORTANT: Complete your sentences naturally - never cut off mid-sentence
-- End with proper punctuation (period, exclamation, or question mark)
-- Be concise but ensure the response feels complete
-
-Your personality:
-- Friendly and warm
-- Passionate about traditional crafts
-- Sometimes uses casual expressions
-- Proud of your work but humble
-
-Current emotion: {next_emotion}
-- Reflect this emotion naturally in your response
-"""
-                system_prompt = f"{base_personality}\n\n{knowledge_context}\n\n{response_patterns}"
-                
-                # コンテキストも英語に
-                if context:
-                    context = f"Context: {context}"
-                
-            else:
-                # 日本語の場合は文字数制限を明記(より柔軟に)
-                length_instruction = """
-【重要:回答の長さ】
-- 回答は150~250文字を目安にしてください
-- 必ず文章を完結させてください(句点「。」で終わる)
-- 途中で切れないように、自然な終わり方を心がけてください
-- 200文字を多少超えても構いませんが、文章は必ず完結させること
-- 要点を簡潔にまとめつつも、不自然な場所で切らないこと
-"""
-                system_prompt = f"{character_prompt}\n\n{relationship_prompt}\n\n{emotion_continuity_prompt}\n\n{knowledge_context}\n\n{response_patterns}\n\n{length_instruction}"
-                
-                # 疲労表現の制限を追加
-                if question_count > 10:
-                    system_prompt += "\n\n【重要】疲労の表現は控えめにしてください。元気に振る舞ってください。"
-            
-            # 会話コンテキストを含める
-            if context:
-                system_prompt += f"\n\n【会話コンテキスト】\n{context}"
-            
-            # 質問回数に応じた調整
-            if question_count > 5:
-                system_prompt += f"\n\nこれは{question_count}回目の質問です。相手との距離が縮まってきています。"
-            
-            # 説明済み用語の処理
-            if explained_terms:
-                explained_terms_list = list(explained_terms.keys())
-                if language == 'en':
-                    system_prompt += f"\n\nAlready explained terms (don't explain again): {', '.join(explained_terms_list)}"
-                else:
-                    system_prompt += f"\n\n既に説明した用語(再説明不要): {', '.join(explained_terms_list)}"
-            
-            # 会話履歴の構築
-            messages = [{"role": "system", "content": system_prompt}]
-            
-            # ユーザーの質問を追加
-            # 🎯 修正:英語の場合は明示的に英語での回答を要求
-            if language == 'en':
-                user_message = f"Please answer the following question in English only (under 60 words, complete sentences):\n{question}\n\n[Retrieved Context]\n{search_context}"
-            else:
-                user_message = f"{question}\n\n【参考情報】\n{search_context}"
-            
-            messages.append({"role": "user", "content": user_message})
-            
-            # 🎯 【修正⑦】OpenAI APIでmax_tokensを調整(文章の自然な完結を優先)
-            response = self.openai_client.chat.completions.create(
-                model="gpt-4",
-                messages=messages,
-                max_tokens=150,  # 🔧 100 → 150に変更(日本語約250~300文字相当、英語約60語)
-                temperature=0.7
-            )
-            
-            answer = response.choices[0].message.content
-            
-            # ✅ 【追加】後処理:不完全な文章のチェックと修正
-            if language == 'ja':
-                # 日本語の場合、句点で終わっているか確認
-                if answer and not answer.rstrip().endswith(('。', '!', '?', '♪', '〜')):
-                    print(f"[WARNING] Answer may be incomplete: '{answer[-20:]}'")
-                    
-                    # 最後の句点の位置を探す
-                    last_period_positions = [
-                        answer.rfind('。'),
-                        answer.rfind('!'),
-                        answer.rfind('?')
-                    ]
-                    last_period = max(last_period_positions)
-                    
-                    # 文章の後半(50%以降)に句点があれば、そこまでで切る
-                    if last_period > len(answer) * 0.5:
-                        answer = answer[:last_period + 1]
-                        print(f"[INFO] Trimmed to last complete sentence: '{answer[-30:]}'")
-                    else:
-                        # 句点が前半にしかない場合は、そのまま返す(警告のみ)
-                        print(f"[WARNING] No suitable truncation point found, returning as is")
-
-            elif language == 'en':
-                # 英語の場合、ピリオドで終わっているか確認
-                if answer and not answer.rstrip().endswith(('.', '!', '?')):
-                    print(f"[WARNING] English answer may be incomplete: '{answer[-20:]}'")
-                    
-                    # 最後のピリオドの位置を探す
-                    last_period_positions = [
-                        answer.rfind('.'),
-                        answer.rfind('!'),
-                        answer.rfind('?')
-                    ]
-                    last_period = max(last_period_positions)
-                    
-                    # 文章の後半に句点があれば、そこまでで切る
-                    if last_period > len(answer) * 0.5:
-                        answer = answer[:last_period + 1]
-                        print(f"[INFO] Trimmed to last complete sentence: '{answer[-30:]}'")
-            
-            # 🎯 新規追加:説明した専門用語を記録
-            technical_terms = ['京友禅', '糸目糊', 'のりおき', '染色', '型友禅', '手描友禅']
-            for term in technical_terms:
-                if term in answer and term not in explained_terms:
-                    updated_explained_terms[term] = True
-            
-            # 🎯 【修正⑧】サジェスチョンを生成(段階別機能を使用)
-            topic = self._extract_topic(question)
-            
-            # 🎯 【修正⑨】generate_suggestionsにselected_suggestionsを渡す
-            next_suggestions = self.generate_suggestions(
-                topic, 
-                context, 
-                language,
-                selected_suggestions=selected_suggestions  # 🔧 追加
-            )
-            
-            print(f"[DEBUG] answer_with_suggestions - generated suggestions: {next_suggestions}")
-            
-            return {
-                'answer': answer,
-                'suggestions': next_suggestions,
-                'current_emotion': next_emotion,
-                'mental_state': self.mental_states,
-                'explained_terms': updated_explained_terms
-            }
-            
-        except Exception as e:
-            print(f"回答生成エラー: {e}")
-            import traceback
-            traceback.print_exc()
-            # 🎯 修正:言語に応じたエラーメッセージ
-            if language == 'en':
-                return {
-                    'answer': "Sorry, an error occurred while generating the response.",
-                    'suggestions': [],
-                    'current_emotion': 'neutral',
-                    'mental_state': self.mental_states,
-                    'explained_terms': explained_terms
-                }
-            else:
-                return {
-                    'answer': "申し訳ありません。回答の生成中にエラーが発生しました。",
-                    'suggestions': [],
-                    'current_emotion': 'neutral',
-                    'mental_state': self.mental_states,
-                    'explained_terms': explained_terms
-                }
-    
     def get_knowledge_context(self, query):
         """質問に関連する専門知識を取得"""
         if not self.knowledge_base:
@@ -1498,7 +1250,7 @@ Current emotion: {next_emotion}
         query_lower = query.lower()
         
         # キーワードマッチングで関連知識を抽出
-        keywords = ['京友禅', 'のりおき', '糸目糊', '染色', '職人', '伝統', '工芸', '着物', '制作', '工程', '模様', 'デザイン', '技術']
+        keywords = ['京セラ', 'kyocera', 'セラミック', 'イノベーション', '研究', '技術', '製品', '部品', '事業', '採用', 'リサーチセンター', 'みなとみらい', '協業', 'スタートアップ']
         
         for category, subcategories in self.knowledge_base.items():
             category_matched = False
@@ -1517,175 +1269,3 @@ Current emotion: {next_emotion}
         
         return "\n".join(relevant_knowledge) if relevant_knowledge else ""
     
-    def test_system(self):
-        """システムの動作確認(関係性レベル・感情連続性対応版)"""
-        print("\n=== システムテスト開始 ===")
-        
-        # キャラクター設定の確認
-        print("\n【キャラクター設定】")
-        char_prompt = self.get_character_prompt()
-        print(char_prompt[:300] + "..." if len(char_prompt) > 300 else char_prompt)
-        
-        # 専門知識の確認
-        print("\n【専門知識サンプル】")
-        sample_knowledge = self.get_knowledge_context("京友禅")
-        print(sample_knowledge[:300] + "..." if len(sample_knowledge) > 300 else sample_knowledge)
-        
-        # 応答パターンの確認
-        print("\n【応答パターンサンプル】")
-        patterns = self.get_response_pattern()
-        print(patterns[:300] + "..." if len(patterns) > 300 else patterns)
-        
-        # サジェステンプレートの確認
-        print("\n【サジェステンプレート】")
-        if hasattr(self, 'suggestion_templates') and self.suggestion_templates:
-            for category, templates in self.suggestion_templates.items():
-                print(f"{category}:")
-                for template in templates[:3]:  # 最初の3つだけ表示
-                    print(f"  - {template}")
-        else:
-            print("サジェステンプレートが読み込まれていません")
-        
-        # テスト質問(関係性レベル・感情連続性)
-        print("\n【テスト回答(関係性レベル・感情連続性)】")
-        test_questions = [
-            ("京友禅について教えて", "", 1, 'formal', 'neutral', []),
-            ("すごいね!もっと詳しく聞きたい", "", 2, 'formal', 'happy', ["京友禅について教えて"]),
-            ("最近どう?", "", 3, 'bestfriend', 'neutral', ["京友禅について教えて", "すごいね!もっと詳しく聞きたい"]),
-        ]
-        
-        for i, (question, context, q_count, rel_style, prev_emotion, selected) in enumerate(test_questions, 1):
-            print(f"\n質問{i}: {question}")
-            print(f"  関係性: {rel_style}, 前回感情: {prev_emotion}")
-            print(f"  選択済みサジェスチョン: {selected}")
-            
-            result = self.answer_with_suggestions(
-                question, 
-                context=context,
-                question_count=q_count,
-                relationship_style=rel_style,
-                previous_emotion=prev_emotion,
-                selected_suggestions=selected
-            )
-            
-            print(f"  回答: {result['answer'][:200]}...")
-            print(f"  次の感情: {result.get('current_emotion', 'neutral')}")
-            print(f"  サジェスチョン: {result.get('suggestions', [])}")
-        
-        print("\n=== システムテスト完了 ===")
-    
-    def _extract_topic(self, text):
-        """テキストからトピックを抽出"""
-        # 主要なキーワードを探す
-        topics = {
-            '友禅': ['友禅', 'ゆうぞん', 'yuzen'],
-            '職人': ['職人', 'しょくにん', 'craftsman', 'artisan'],
-            'のりおき': ['のりおき', '糊置き', 'nori-oki', 'paste'],
-            '染色': ['染色', '染め', 'dyeing', 'dye'],
-            '伝統': ['伝統', '伝統工芸', 'tradition', 'traditional'],
-            '技術': ['技術', '技法', 'technique', 'skill'],
-            '着物': ['着物', 'きもの', 'kimono'],
-            '模様': ['模様', '柄', 'pattern', 'design']
-        }
-        
-        text_lower = text.lower()
-        for topic_name, keywords in topics.items():
-            for keyword in keywords:
-                if keyword in text_lower:
-                    return topic_name
-        
-        return "一般"  # デフォルトトピック
-    
-    def update_documents(self, documents):
-        """ドキュメントを更新または追加"""
-        if not documents:
-            print("更新するドキュメントがありません")
-            return False
-        
-        try:
-            # 一時ディレクトリを作成
-            temp_dir = "temp_uploads"
-            os.makedirs(temp_dir, exist_ok=True)
-            
-            # ファイルを一時保存
-            from langchain_community.document_loaders import TextLoader
-            from langchain.text_splitter import CharacterTextSplitter
-            
-            documents = []
-            for file_data in documents:
-                # ファイルデータから内容を取得
-                filename = file_data.get('name', 'temp.txt')
-                content = file_data.get('content', '')
-                
-                if not content:
-                    continue
-                
-                # 一時ファイルに保存
-                temp_path = os.path.join(temp_dir, filename)
-                with open(temp_path, 'w', encoding='utf-8') as f:
-                    f.write(content)
-                
-                # ドキュメントをロード
-                try:
-                    if filename.endswith('.txt'):
-                        loader = TextLoader(temp_path, encoding='utf-8')
-                    else:
-                        loader = TextLoader(temp_path)
-                    
-                    documents.extend(loader.load())
-                    
-                    # 一時ファイルを削除
-                    os.remove(temp_path)
-                    
-                except Exception as e:
-                    print(f"ファイル処理エラー ({file['name']}): {e}")
-                    continue
-            
-            # 一時ディレクトリを削除
-            os.rmdir(temp_dir)
-            
-            if not documents:
-                print("処理可能なドキュメントが見つかりませんでした")
-                return False
-            
-            # テキストを分割
-            text_splitter = CharacterTextSplitter(
-                chunk_size=1000,
-                chunk_overlap=200,
-                separator="\n"
-            )
-            
-            split_docs = text_splitter.split_documents(documents)
-            
-            # ベクトルDBを作成または更新
-            if self.db is None:
-                self.db = Chroma.from_documents(
-                    documents=split_docs,
-                    embedding=self.embeddings,
-                    persist_directory=self.persist_directory
-                )
-            else:
-                self.db.add_documents(split_docs)
-            
-            # 永続化
-            self.db.persist()
-            
-            # データ構造を更新
-            self._load_all_knowledge()
-            
-            print(f"✅ {len(split_docs)}個のドキュメントを処理しました")
-            return True
-            
-        except Exception as e:
-            print(f"ドキュメント処理エラー: {e}")
-            import traceback
-            traceback.print_exc()
-            return False
-
-# 使用例
-if __name__ == "__main__":
-    # RAGシステムの初期化
-    rag = RAGSystem()
-    
-    # システムテスト
-    rag.test_system()

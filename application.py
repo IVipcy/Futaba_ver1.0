@@ -20,6 +20,7 @@ import base64
 import requests
 from modules.rag_system import RAGSystem
 from modules.speech_processor import SpeechProcessor
+from survey_integration import SurveyManager, SURVEY_QUESTIONS
 from pathlib import Path
 import azure.cognitiveservices.speech as speechsdk
 from dotenv import load_dotenv
@@ -291,66 +292,66 @@ audio_cache = {}
 QUIZ_DATA = {
     'ja': [
         {
-            'question': '京友禅を確立したとされる人物は誰でしょう?',
+            'question': 'CERAが話していた「スマホのカメラレンズに使われる傷つきにくい素材」は何でしょう？',
             'options': [
-                'A) 宮崎友禅斎',
-                'B) 野々村仁清',
-                'C) 本阿弥光悦'
-            ],
-            'correct': 0,
-            'explanation': '江戸時代の元禄期に、扇絵師だった宮崎友禅斎が確立した染色技法です。彼の名前が「友禅染」の由来となっています!'
-        },
-        {
-            'question': '京友禅の最大の特徴である技法は何でしょう?',
-            'options': [
-                'A) 型紙を使った捺染',
-                'B) 糸目糊による手描き染色',
-                'C) 絞り染め'
+                'A) 強化ガラス',
+                'B) サファイアガラス',
+                'C) ダイヤモンドコーティング'
             ],
             'correct': 1,
-            'explanation': '細い筒から糊を絞り出して輪郭線を描き、色が混ざらないようにする「糸目糊」が京友禅の代表的な技法です。繊細で優美な表現が可能になります✨'
+            'explanation': 'サファイアガラスです！京セラは結晶を「育てる」技術を持っていて、この硬い素材が色んな製品に使われています。CERAは結晶を育てることに愛着を持っているんですよ✨'
         },
         {
-            'question': '京友禅の色彩や図柄の特徴として正しいものはどれ?',
+            'question': '京セラは「セラミックの会社」というイメージが強いですが、実際には様々な事業を展開しています。次のうち京セラが手がけていないものはどれ？',
             'options': [
-                'A) 原色を多用した大胆な柄',
-                'B) 藍色一色のシンプルな柄',
-                'C) 優美で雅な多色使いの柄'
+                'A) 太陽光発電システム',
+                'B) 5G通信の基地局',
+                'C) 自動車の完成車製造'
             ],
             'correct': 2,
-            'explanation': '京友禅は、京都の雅な文化を反映した繊細で優美な色彩と、四季の草花や御所車などの伝統的な図柄が特徴です。多彩な色を使った華やかさが魅力です🌸'
+            'explanation': '正解は「自動車の完成車製造」です！京セラは車のエンジン周りの部品は作っていますが、車そのものは作っていません。太陽光発電、5G基地局、医療機器、半導体など、実は身の回りの色々なところで活躍しているんです🚗'
+        },
+        {
+            'question': '京セラのみなとみらいリサーチセンターの特徴として正しいものはどれ？',
+            'options': [
+                'A) 首都圏の3つの研究所を統合して約700人の研究者が働いている',
+                'B) 京セラ製品の製造工場として稼働している',
+                'C) 一般向けのショールームとして毎日公開されている'
+            ],
+            'correct': 0,
+            'explanation': '正解です！2019年にできた研究開発専門の拠点で、約700人の研究者が一緒に働いています。他の会社や大学と一緒にプロジェクトを進める「共創スペース」もあって、1階の工房ではアイデアソンやハッカソンのイベントもやってるんです🔬'
         }
     ],
     'en': [
         {
-            'question': 'Who is credited with establishing Kyo-Yuzen?',
+            'question': 'What is the scratch-resistant material CERA mentioned that\'s used in smartphone camera lenses?',
             'options': [
-                'A) Miyazaki Yuzensai',
-                'B) Nonomura Ninsei',
-                'C) Hon\'ami Koetsu'
-            ],
-            'correct': 0,
-            'explanation': 'It was established by Miyazaki Yuzensai, a fan painter during the Genroku period of the Edo era. His name became the origin of "Yuzen-zome"!'
-        },
-        {
-            'question': 'What is the main technique characteristic of Kyo-Yuzen?',
-            'options': [
-                'A) Stencil dyeing',
-                'B) Hand-painted dyeing with paste resist',
-                'C) Tie-dyeing'
+                'A) Tempered glass',
+                'B) Sapphire glass',
+                'C) Diamond coating'
             ],
             'correct': 1,
-            'explanation': 'The "itome-nori" (paste resist) technique, where paste is squeezed from a thin tube to draw outlines preventing color mixing, is the representative technique of Kyo-Yuzen. It enables delicate and elegant expressions✨'
+            'explanation': 'It\'s sapphire glass! Kyocera has the technology to "grow" crystals, and this hard material is used in various products. CERA really loves the process of growing crystals✨'
         },
         {
-            'question': 'Which correctly describes the color and pattern characteristics of Kyo-Yuzen?',
+            'question': 'Kyocera is known as a "ceramics company," but actually does business in various fields. Which of these does Kyocera NOT do?',
             'options': [
-                'A) Bold patterns with primary colors',
-                'B) Simple patterns in indigo only',
-                'C) Elegant multi-colored patterns'
+                'A) Solar power generation systems',
+                'B) 5G communication base stations',
+                'C) Complete automobile manufacturing'
             ],
             'correct': 2,
-            'explanation': 'Kyo-Yuzen features delicate and elegant colors reflecting Kyoto\'s refined culture, and traditional patterns like seasonal flowers and imperial carriages. The splendor of diverse colors is its charm🌸'
+            'explanation': 'Correct! Kyocera doesn\'t manufacture complete cars, though they do make parts for car engines. They work in solar power, 5G base stations, medical devices, semiconductors, and many other areas around us🚗'
+        },
+        {
+            'question': 'What is true about Kyocera\'s Minato Mirai Research Center?',
+            'options': [
+                'A) It integrated 3 research labs in the Tokyo area with about 700 researchers',
+                'B) It operates as a manufacturing plant for Kyocera products',
+                'C) It\'s open to the public daily as a showroom'
+            ],
+            'correct': 0,
+            'explanation': 'Correct! It\'s a R&D facility opened in 2019 where about 700 researchers work together. There\'s also a "co-creation space" for joint projects with other companies and universities, and the 1st floor workshop hosts ideathons and hackathons🔬'
         }
     ]
 }
@@ -358,9 +359,12 @@ QUIZ_DATA = {
 # クイズセッション管理
 quiz_sessions = {}
 
-# CoeFontクライアント
-coe_font_client = None
-use_coe_font = False
+# アンケートマネージャー
+survey_manager = None
+
+# ElevenLabsクライアント
+elevenlabs_client = None
+use_elevenlabs = False
 
 # Azure Speech Serviceクライアント
 azure_speech_client = None
@@ -368,75 +372,6 @@ use_azure_speech = False
 
 # SpeechProcessor (音声認識)
 speech_processor = None
-
-# ====== CoeFontの音声合成クラス ======
-class CoeFontClient:
-    """CoeFont音声合成クライアント"""
-    
-    def __init__(self, access_key=None, access_secret=None, coefont_id=None):
-        self.access_key = access_key
-        self.access_secret = access_secret
-        self.coefont_id = coefont_id
-        self.base_url = "https://api.coefont.ai/v2"
-        
-    def test_connection(self):
-        """接続テスト"""
-        if not self.access_key or not self.access_secret:
-            return False
-            
-        headers = {
-            'X-Api-Key': self.access_key,
-            'X-Api-Secret': self.access_secret
-        }
-        
-        try:
-            response = requests.get(f"{self.base_url}/voices", headers=headers)
-            return response.status_code == 200
-        except:
-            return False
-    
-    def generate_voice(self, text, emotion='neutral', speed=1.0):
-        """音声生成"""
-        if not self.access_key or not self.access_secret or not self.coefont_id:
-            raise ValueError("CoeFont APIの認証情報が設定されていません")
-            
-        headers = {
-            'X-Api-Key': self.access_key,
-            'X-Api-Secret': self.access_secret,
-            'Content-Type': 'application/json'
-        }
-        
-        # 感情パラメータの調整
-        emotion_params = self._get_emotion_params(emotion)
-        
-        data = {
-            'text': text,
-            'voice_id': self.coefont_id,
-            'speed': speed,
-            **emotion_params
-        }
-        
-        response = requests.post(
-            f"{self.base_url}/text-to-speech",
-            headers=headers,
-            json=data
-        )
-        
-        if response.status_code == 200:
-            return response.content
-        else:
-            raise Exception(f"CoeFont API Error: {response.status_code} - {response.text}")
-    
-    def _get_emotion_params(self, emotion):
-        """感情に応じたパラメータを設定"""
-        emotion_map = {
-            'happy': {'pitch': 1.1, 'volume': 1.1},
-            'sad': {'pitch': 0.9, 'volume': 0.9},
-            'angry': {'pitch': 1.0, 'volume': 1.2},
-            'surprised': {'pitch': 1.2, 'volume': 1.1},
-            'neutral': {'pitch': 1.0, 'volume': 1.0}
-        }
-        return emotion_map.get(emotion, emotion_map['neutral'])
 
 # ====== Azure Speech Serviceの音声合成クラス ======
 class AzureSpeechClient:
@@ -548,6 +483,201 @@ class AzureSpeechClient:
             traceback.print_exc()
             raise
 
+# ====== ElevenLabs音声合成クラス ======
+class ElevenLabsClient:
+    """ElevenLabs音声合成クライアント"""
+    
+    def __init__(self, api_key=None, voice_id=None):
+        self.api_key = api_key
+        self.voice_id = voice_id or "21m00Tcm4TlvDq8ikWAM"  # デフォルト音声
+        self.base_url = "https://api.elevenlabs.io/v1"
+        
+        # 🆕 京セラ専門用語辞書を外部ファイルから読み込み
+        self.term_dictionary = self._load_term_dictionary()
+    
+    def _load_term_dictionary(self):
+        """専門用語辞書を外部JSONファイルから読み込み
+        
+        Returns:
+            dict: 専門用語辞書（キー: 単語、値: 読み仮名）
+        """
+        import json
+        import os
+        
+        # JSONファイルのパス
+        json_path = os.path.join(os.path.dirname(__file__), 'kyocera_terms.json')
+        
+        try:
+            with open(json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            # カテゴリ別に分かれている辞書を1つにマージ
+            merged_dict = {}
+            for category, terms in data.items():
+                # メタデータ（_で始まるキー）はスキップ
+                if category.startswith('_'):
+                    continue
+                
+                # カテゴリ内の全ての用語を追加
+                if isinstance(terms, dict):
+                    merged_dict.update(terms)
+            
+            print(f"✅ 専門用語辞書を読み込みました: {len(merged_dict)}単語")
+            return merged_dict
+            
+        except FileNotFoundError:
+            print(f"⚠️ 辞書ファイルが見つかりません: {json_path}")
+            print("📝 デフォルト辞書を使用します")
+            return self._get_default_dictionary()
+        
+        except json.JSONDecodeError as e:
+            print(f"❌ 辞書ファイルの読み込みエラー: {e}")
+            print("📝 デフォルト辞書を使用します")
+            return self._get_default_dictionary()
+    
+    def _get_default_dictionary(self):
+        """デフォルトの専門用語辞書（フォールバック用）
+        
+        Returns:
+            dict: 最小限の専門用語辞書
+        """
+        return {
+            '京セラ': 'きょうせら',
+            'KYOCERA': 'きょうせら',
+            'CERA': 'せら',
+            '稲盛和夫': 'いなもりかずお',
+        }
+        
+    def test_connection(self):
+        """接続テスト"""
+        if not self.api_key:
+            return False
+        
+        headers = {'xi-api-key': self.api_key}
+        try:
+            response = requests.get(f"{self.base_url}/voices", headers=headers, timeout=10)
+            return response.status_code == 200
+        except Exception as e:
+            print(f"ElevenLabs接続テストエラー: {e}")
+            return False
+    
+    def preprocess_text(self, text):
+        """専門用語を読みやすく変換（v3.5: テキストクリーニング追加）
+        
+        Args:
+            text: 元のテキスト
+        
+        Returns:
+            str: 変換後のテキスト
+        """
+        import re
+        
+        # 🔧 v3.5: 不自然な区切りを防ぐため、不要な記号を削除
+        processed_text = text
+        
+        # 不要な改行、タブを削除（スペースに変換）
+        processed_text = processed_text.replace('\n', ' ').replace('\t', ' ')
+        
+        # 複数の連続スペースを1つに
+        processed_text = re.sub(r'\s+', ' ', processed_text)
+        
+        # 全角スペースを削除
+        processed_text = processed_text.replace('　', '')
+        
+        # ハイフンやダッシュの前後の不要なスペースを削除
+        processed_text = re.sub(r'\s*[-–—]\s*', '', processed_text)
+        
+        replacements_made = []
+        
+        # 辞書の長い単語から順に置換（部分一致を防ぐため）
+        sorted_terms = sorted(self.term_dictionary.items(), key=lambda x: len(x[0]), reverse=True)
+        
+        for term, reading in sorted_terms:
+            if term in processed_text:
+                processed_text = processed_text.replace(term, reading)
+                replacements_made.append(f"{term}→{reading}")
+        
+        # デバッグ用ログ（置換が行われた場合のみ）
+        if replacements_made:
+            print(f"📝 専門用語変換: {', '.join(replacements_made[:3])}" + 
+                  (f" 他{len(replacements_made)-3}件" if len(replacements_made) > 3 else ""))
+        
+        return processed_text
+    
+    def generate_voice(self, text, emotion='neutral', speed=1.0):
+        """音声生成
+        
+        Args:
+            text: 読み上げテキスト
+            emotion: 感情（'neutral', 'happy', 'sad', 'angry', 'surprised'）
+            speed: 速度（未使用、互換性のため保持）
+        
+        Returns:
+            bytes: MP3音声データ
+        """
+        if not self.api_key:
+            raise ValueError("ElevenLabs APIキーが設定されていません")
+        
+        headers = {
+            'xi-api-key': self.api_key,
+            'Content-Type': 'application/json'
+        }
+        
+        # 🔧 v3.5: 音量・速度を安定化（stability/similarity_boostを統一）
+        # 音量と速度のばらつきを防ぐため、全感情で統一
+        stability = 0.5  # 固定: 音声の安定性（0.5で適度な抑揚と安定性）
+        similarity_boost = 0.75  # 固定: 音量の一貫性（0.75で適度な音量）
+        style = 0.0  # 感情に応じて変化（音量には影響しない）
+        
+        # styleパラメータのみで感情を表現
+        if emotion == 'happy':
+            style = 0.5  # 明るく
+        elif emotion == 'sad':
+            style = 0.3  # 落ち着いて
+        elif emotion == 'angry':
+            style = 0.7  # 強く
+        elif emotion == 'surprised':
+            style = 0.6  # 驚いて
+        elif emotion == 'start':
+            style = 0.5  # 明るく
+        
+        # 🆕 テキストを前処理（専門用語をひらがな化）
+        processed_text = self.preprocess_text(text)
+        
+        data = {
+            'text': processed_text,
+            'model_id': 'eleven_multilingual_v2',  # 日本語対応モデル
+            'voice_settings': {
+                'stability': stability,
+                'similarity_boost': similarity_boost,
+                'style': style,
+                'use_speaker_boost': True
+            }
+        }
+        
+        try:
+            response = requests.post(
+                f"{self.base_url}/text-to-speech/{self.voice_id}",
+                headers=headers,
+                json=data,
+                timeout=60  # タイムアウトを60秒に延長
+            )
+            
+            if response.status_code == 200:
+                print(f"✅ ElevenLabs音声生成成功: {len(response.content)} bytes")
+                return response.content
+            else:
+                error_msg = f"ElevenLabs API Error: {response.status_code} - {response.text}"
+                print(f"❌ {error_msg}")
+                raise Exception(error_msg)
+                
+        except Exception as e:
+            print(f"❌ ElevenLabs音声生成エラー: {e}")
+            print(f"📊 エラータイプ: {type(e).__name__}")
+            import traceback
+            traceback.print_exc()
+            raise
+
 # ====== 【修正箇所】理解度レベル管理システム ======
 def calculate_relationship_level(conversation_count):
     """会話回数から理解度レベルを判定"""
@@ -563,16 +693,16 @@ def calculate_relationship_level(conversation_count):
         return {'level': 4, 'style': 'best_friend', 'name': 'MAX'}
 
 def get_relationship_adjusted_greeting(language, relationship_style):
-    """関係性レベルに応じた挨拶を生成"""
+    """関係性レベルに応じた挨拶を生成（🆕 京セラCERA版）"""
     greetings = {
         'ja': {
-            'formal': "はじめまして！手描き京友禅職人のレイです！私は糸目のりおきという工程を専門にしています。何でも質問してくださいね！",
-            'polite': "こんにちは!また会えて嬉しいです。今日はどんなお話をしましょうか?",
-            'friendly': "やっほー!会いたかったよ〜!今日も楽しくお話しようね!",
-            'casual': "おっす!元気にしてた?なんか面白い話ある?"
+            'formal': "私はCERAといいます。みなさんに京セラの魅力を頑張ってお伝えします。アメリカ育ちで少し漢字が苦手ですが、何でも質問してくださいね！",
+            'polite': "こんにちは！また会えて嬉しいです。今日はどんなお話をしましょうか？",
+            'friendly': "やっほー！会いたかったよ〜！今日も楽しくお話しようね！",
+            'casual': "おっす！元気にしてた？なんか面白い話ある？"
         },
         'en': {
-            'formal': "Hello! I'm Rei. It's a pleasure to meet you.",
+            'formal': "My name is CERA. I'll do my best to share Kyocera's appeal with you! I grew up in America and kanji is a bit challenging for me, but feel free to ask me anything!",
             'polite': "Hello again! It's nice to see you. What would you like to talk about today?",
             'friendly': "Hey there! I missed you! Let's have fun chatting today!",
             'casual': "Yo! How've you been? Got any interesting stories?"
@@ -584,7 +714,7 @@ def get_relationship_adjusted_greeting(language, relationship_style):
 # ====== 初期化処理 ======
 def initialize_system():
     """システムの初期化"""
-    global client, chatbot, coe_font_client, use_coe_font, azure_speech_client, use_azure_speech, speech_processor
+    global client, chatbot, elevenlabs_client, use_elevenlabs, azure_speech_client, use_azure_speech, speech_processor
     
     print("🚀 システム初期化中...")
     
@@ -603,40 +733,45 @@ def initialize_system():
     except Exception as e:
         print(f"⚠️ SpeechProcessor初期化失敗: {e}")
     
-    # 🆕 Azure Speech Service初期化（日本語用 - 最優先）
+    # 🆕 ElevenLabs初期化（日本語用 - 最優先）
+    elevenlabs_key = os.getenv('ELEVENLABS_API_KEY')
+    elevenlabs_voice_id = os.getenv('ELEVENLABS_VOICE_ID', '21m00Tcm4TlvDq8ikWAM')
+    elevenlabs_enabled = os.getenv('ELEVENLABS_ENABLED', 'false').lower() == 'true'
+    
+    if elevenlabs_enabled and elevenlabs_key:
+        try:
+            elevenlabs_client = ElevenLabsClient(elevenlabs_key, elevenlabs_voice_id)
+            if elevenlabs_client.test_connection():
+                use_elevenlabs = True
+                print(f"✅ ElevenLabs初期化完了 (音声ID: {elevenlabs_voice_id})")
+            else:
+                print("⚠️ ElevenLabs接続テスト失敗")
+        except Exception as e:
+            print(f"⚠️ ElevenLabs初期化エラー: {e}")
+            print("ℹ️ ElevenLabsをスキップしてフォールバックを使用します")
+    else:
+        print("ℹ️ ElevenLabsは設定されていません")
+    
+    # Azure Speech Service初期化（フォールバック用 - ElevenLabsが無い場合）
     azure_key = os.getenv('AZURE_SPEECH_KEY')
     azure_region = os.getenv('AZURE_SPEECH_REGION', 'japaneast')
     azure_voice = os.getenv('AZURE_VOICE_NAME', 'ja-JP-NanamiNeural')
     
-    if azure_key and azure_region:
-        azure_speech_client = AzureSpeechClient(azure_key, azure_region, azure_voice)
-        if azure_speech_client.test_connection():
-            use_azure_speech = True
-            print(f"✅ Azure Speech Service初期化完了 (音声: {azure_voice})")
-        else:
-            print("⚠️ Azure Speech Service接続テスト失敗")
+    if not use_elevenlabs and azure_key and azure_region:
+        try:
+            azure_speech_client = AzureSpeechClient(azure_key, azure_region, azure_voice)
+            if azure_speech_client.test_connection():
+                use_azure_speech = True
+                print(f"✅ Azure Speech Service初期化完了 (音声: {azure_voice})")
+            else:
+                print("⚠️ Azure Speech Service接続テスト失敗")
+        except Exception as e:
+            print(f"⚠️ Azure Speech Service初期化エラー: {e}")
+            print("ℹ️ Azure Speech Serviceをスキップしてフォールバックを使用します")
+    elif use_elevenlabs:
+        print("ℹ️ ElevenLabsを使用するため、Azureは無効化されています")
     else:
         print("ℹ️ Azure Speech Serviceは設定されていません")
-    
-    # CoeFont API初期化（フォールバック用 - Azureが無い場合のみ）
-    coefont_enabled = os.getenv('COEFONT_ENABLED', 'false').lower() == 'true'
-    coefont_key = os.getenv('COEFONT_ACCESS_KEY')
-    coefont_secret = os.getenv('COEFONT_ACCESS_SECRET')
-    coefont_id = os.getenv('COEFONT_VOICE_ID')
-    
-    # Azureが使えない場合のみCoeFontを初期化
-    if not use_azure_speech and coefont_enabled and coefont_key and coefont_secret and coefont_id:
-        coe_font_client = CoeFontClient(coefont_key, coefont_secret, coefont_id)
-        if coe_font_client.test_connection():
-            use_coe_font = True
-            print("✅ CoeFont API初期化完了（フォールバック）")
-        else:
-            print("⚠️ CoeFont API接続テスト失敗")
-    else:
-        if use_azure_speech:
-            print("ℹ️ Azure Speech Serviceを使用するため、CoeFontは無効化されています")
-        else:
-            print("ℹ️ CoeFont APIは設定されていません")
     
     # RAGChatbot初期化
     try:
@@ -645,8 +780,20 @@ def initialize_system():
     except Exception as e:
         print(f"❌ RAGChatbot初期化エラー: {e}")
     
+    # アンケートマネージャー初期化
+    global survey_manager
+    survey_manager = SurveyManager(
+        credentials_path='credentials.json',
+        spreadsheet_id=os.getenv('SPREADSHEET_ID')
+    )
+    
+    if survey_manager.enabled:
+        print("✅ アンケートシステム初期化完了")
+    else:
+        print("⚠️ アンケートシステムは無効化されています")
+    
     print("🎉 システム初期化完了")
-    print(f"📊 音声エンジン状況: Azure={use_azure_speech}, CoeFont={use_coe_font}, OpenAI TTS=常に利用可能")
+    print(f"📊 音声エンジン状況: ElevenLabs={use_elevenlabs}, Azure={use_azure_speech}, OpenAI TTS=常に利用可能")
 
 # ====== ユーティリティ関数 ======
 def get_session_data(session_id):
@@ -666,7 +813,10 @@ def get_session_data(session_id):
             },
             'selected_suggestions': [],
             'current_emotion': 'neutral',
-            'relationship_style': 'formal'
+            'relationship_style': 'formal',
+            # 🆕 京セラCERA用: ユーザー属性管理
+            'user_type': None,  # 'business' or 'student'
+            'selected_suggestions_count': 0  # Phase判定用カウント
         }
     return session_data[session_id]
 
@@ -687,16 +837,61 @@ def get_visitor_data(visitor_id):
 
 # ====== 音声生成関数 ======
 def generate_audio_by_language(text, language='ja', emotion_params='neutral'):
-    """言語に応じた音声生成（Azure優先）"""
+    """言語に応じた音声生成（ElevenLabs優先）"""
     # 音声キャッシュのチェック
     cache_key = hashlib.md5(f"{text}_{language}_{emotion_params}".encode()).hexdigest()
     if cache_key in audio_cache:
         print(f"🎵 音声キャッシュヒット: {cache_key[:8]}")
         return audio_cache[cache_key]
     
+    audio_base64 = None
+    engine_used = None
+    
     try:
-        # 🆕 日本語の場合、Azure Speech Serviceを最優先
-        if language == 'ja' and use_azure_speech:
+        # 🆕 日本語の場合、ElevenLabsを最優先
+        if language == 'ja' and use_elevenlabs:
+            try:
+                print(f"🎤 ElevenLabsで音声生成中... (感情: {emotion_params})")
+                audio_content = elevenlabs_client.generate_voice(
+                    text, 
+                    emotion=emotion_params,
+                    speed=1.0
+                )
+                
+                # MP3を直接Base64エンコード
+                audio_base64 = base64.b64encode(audio_content).decode('utf-8')
+                engine_used = 'ElevenLabs'
+                
+                print(f"✅ ElevenLabs音声生成成功: {len(audio_content)} バイト")
+                
+            except Exception as e:
+                print(f"❌ ElevenLabs音声生成エラー: {e}")
+                print("⚠️ Azureにフォールバック")
+                # Azureにフォールバック
+                if use_azure_speech:
+                    audio_content = azure_speech_client.generate_voice(
+                        text, 
+                        emotion=emotion_params,
+                        speed=1.0
+                    )
+                    
+                    # WAVファイルとして一時保存
+                    with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
+                        tmp_file.write(audio_content)
+                        tmp_path = tmp_file.name
+                    
+                    # Base64エンコード
+                    with open(tmp_path, 'rb') as f:
+                        audio_base64 = base64.b64encode(f.read()).decode('utf-8')
+                    
+                    # 一時ファイル削除
+                    os.unlink(tmp_path)
+                    engine_used = 'Azure Speech (フォールバック)'
+                    
+                    print(f"✅ Azure音声生成成功 (フォールバック): {len(audio_content)} バイト")
+            
+        # フォールバック: 日本語 + Azure Speech Service（ElevenLabsが無い場合）
+        elif language == 'ja' and use_azure_speech:
             print(f"🎤 Azure Speech Serviceで音声生成中... (感情: {emotion_params})")
             audio_content = azure_speech_client.generate_voice(
                 text, 
@@ -715,25 +910,9 @@ def generate_audio_by_language(text, language='ja', emotion_params='neutral'):
             
             # 一時ファイル削除
             os.unlink(tmp_path)
+            engine_used = 'Azure Speech'
             
             print(f"✅ Azure音声生成成功: {len(audio_content)} バイト")
-            
-        # フォールバック: 日本語 + CoeFont（Azureが無い場合のみ）
-        elif language == 'ja' and use_coe_font:
-            print(f"🎤 CoeFont APIで音声生成中... (感情: {emotion_params})")
-            audio_content = coe_font_client.generate_voice(text, emotion=emotion_params)
-            
-            # WAVファイルとして保存
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp_file:
-                tmp_file.write(audio_content)
-                tmp_path = tmp_file.name
-            
-            # Base64エンコード
-            with open(tmp_path, 'rb') as f:
-                audio_base64 = base64.b64encode(f.read()).decode('utf-8')
-            
-            os.unlink(tmp_path)
-            print(f"✅ CoeFont音声生成成功")
             
         # その他の言語（英語など） → OpenAI TTS
         else:
@@ -753,21 +932,19 @@ def generate_audio_by_language(text, language='ja', emotion_params='neutral'):
             # MP3をBase64エンコード
             audio_content = speech_response.content
             audio_base64 = base64.b64encode(audio_content).decode('utf-8')
+            engine_used = 'OpenAI TTS'
             print(f"✅ OpenAI TTS音声生成成功")
         
         # キャッシュに保存(最大100件)
-        if len(audio_cache) >= 100:
-            # 古いエントリを削除
-            oldest_key = next(iter(audio_cache))
-            del audio_cache[oldest_key]
-        
-        audio_cache[cache_key] = audio_base64
-        
-        # 使用した音声エンジンをログ出力
-        engine = 'Azure Speech' if (language == 'ja' and use_azure_speech) else \
-                 'CoeFont' if (language == 'ja' and use_coe_font) else \
-                 'OpenAI TTS'
-        print(f"🎵 音声生成完了: {cache_key[:8]} (エンジン: {engine})")
+        if audio_base64:
+            if len(audio_cache) >= 100:
+                # 古いエントリを削除
+                oldest_key = next(iter(audio_cache))
+                del audio_cache[oldest_key]
+            
+            audio_cache[cache_key] = audio_base64
+            
+            print(f"🎵 音声生成完了: {cache_key[:8]} (エンジン: {engine_used})")
         
         return audio_base64
         
@@ -902,6 +1079,43 @@ def analyze_emotion(text):
     # デフォルト
     return 'neutral'
 
+# ====== 【新規追加】感情タグ抽出関数 ======
+def extract_emotion_tag(response_text):
+    """
+    応答テキストから[EMOTION:xxx]タグを抽出して削除
+    
+    Args:
+        response_text (str): 応答テキスト
+        
+    Returns:
+        tuple: (タグを削除した綺麗な応答, 感情)
+        
+    Examples:
+        >>> extract_emotion_tag("こんにちは！[EMOTION:happy]")
+        ("こんにちは！", "happy")
+        
+        >>> extract_emotion_tag("タグなしの応答")
+        ("タグなしの応答", "neutral")
+    """
+    import re
+    
+    # [EMOTION:xxx]パターンを検索
+    match = re.search(r'\[EMOTION:(\w+)\]', response_text)
+    
+    if match:
+        # 感情を取得
+        emotion = match.group(1).lower()
+        
+        # タグを削除した応答を作成
+        clean_response = re.sub(r'\[EMOTION:\w+\]', '', response_text).strip()
+        
+        print(f"✅ 感情タグ検出: {emotion}")
+        return clean_response, emotion
+    
+    # タグが見つからない場合はneutral
+    print(f"⚠️ 感情タグなし → neutral")
+    return response_text, 'neutral'
+
 # ====== 【追加箇所4】感情検証ヘルパー関数 ======
 def validate_emotion(emotion):
     """感情の検証と正規化"""
@@ -930,8 +1144,8 @@ def generate_prioritized_suggestions(session_info, visitor_info, relationship_st
         list: サジェスチョンリスト(最大3個)
     """
     try:
-        # static_qa_data.pyから必要な関数をインポート
-        from modules.static_qa_data import get_staged_suggestions_multilang, get_current_stage
+        # 🔧 修正: 正しい関数名でインポート
+        from modules.static_qa_data import get_suggestions_for_phase, get_current_phase
         
         # 選択済みサジェスチョンを取得(リスト形式に統一)
         selected_suggestions = []
@@ -957,16 +1171,19 @@ def generate_prioritized_suggestions(session_info, visitor_info, relationship_st
         
         # 現在の段階を判定(選択済みサジェスチョン数から自動判定)
         suggestions_count = len(selected_suggestions)
-        current_stage = get_current_stage(suggestions_count)
+        current_phase = get_current_phase(suggestions_count)
         
-        print(f"[DEBUG] Suggestions count: {suggestions_count}, Stage: {current_stage}")
+        print(f"[DEBUG] Suggestions count: {suggestions_count}, Phase: {current_phase}")
         print(f"[DEBUG] Selected suggestions: {selected_suggestions}")
         
+        # 🔧 修正: user_typeを取得（デフォルトは'business'）
+        user_type = session_info.get('user_type', 'business') if session_info else 'business'
+        
         # 段階別サジェスチョンを取得
-        suggestions = get_staged_suggestions_multilang(
-            stage=current_stage,
-            language=language,
-            selected_suggestions=selected_suggestions
+        suggestions = get_suggestions_for_phase(
+            phase=current_phase,
+            selected_suggestions=selected_suggestions,
+            user_type=user_type
         )
         
         print(f"[DEBUG] Generated suggestions: {suggestions}")
@@ -978,11 +1195,8 @@ def generate_prioritized_suggestions(session_info, visitor_info, relationship_st
         import traceback
         traceback.print_exc()
         
-        # エラー時のフォールバック
-        if language == 'en':
-            return ["Tell me about Kyo-Yuzen", "What kind of works do you create?", "Explain the Yuzen process"]
-        else:
-            return ["京友禅について教えて", "どんな作品を作っていますか?", "友禅の工程を説明してください"]
+        # 🔧 修正: エラー時は空配列を返す（属性未選択と同じ扱い）
+        return []
 
 def calculate_mental_state(session_info):
     """精神状態の計算(感情履歴ベース)"""
@@ -1275,6 +1489,71 @@ def handle_visitor_info(data):
         
         print(f'👤 訪問者情報更新: {visitor_id} (訪問回数: {v_data["visit_count"]})')
 
+# ====== 🆕 京セラCERA用: ユーザー属性選択ハンドラー ======
+@socketio.on('select_user_type')
+def handle_user_type_selection(data):
+    """
+    ユーザー属性選択ハンドラー
+    クライアントから 'business' または 'student' を受信
+    """
+    session_id = request.sid
+    user_type = data.get('type', 'business')  # 'business' or 'student'
+    language = data.get('language', 'ja')
+    
+    print(f"📋 ユーザー属性選択: {user_type} (Session: {session_id})")
+    
+    # セッションに保存
+    session_info = get_session_data(session_id)
+    session_info['user_type'] = user_type
+    session_info['language'] = language
+    
+    # 属性に応じたメッセージ
+    if user_type == 'business':
+        response_message = {
+            'ja': 'なるほど。ビジネスでの訪問ですね。京セラのオープンイノベーションや技術について説明します。何から聞きたいですか？',
+            'en': 'I see. You\'re here for business. Let me explain Kyocera\'s open innovation and technologies. What would you like to know?'
+        }
+    else:  # student
+        response_message = {
+            'ja': '学生さんですか。私も19歳なので、先輩っていうほど偉くないですけど...京セラで働く魅力とか、研究者の日常とか、正直に話します。何から聞きたいですか？',
+            'en': 'You\'re a student? I\'m 19 too, so I\'m not much of a senior... But I can honestly talk about working at Kyocera and researcher life. What interests you?'
+        }
+    
+    message = response_message.get(language, response_message['ja'])
+    
+    # Phase1のサジェスチョンを取得
+    from modules.static_qa_data import get_suggestions_for_phase
+    phase1_suggestions = get_suggestions_for_phase('phase1_overview', [], user_type)
+    
+    # 音声生成
+    try:
+        print(f"🎤 音声生成開始: テキスト長={len(message)}, 言語={language}, 感情=neutraltalking")
+        audio_data = generate_audio_by_language(message, language, emotion_params='neutraltalking')
+        
+        if audio_data:
+            audio_size = len(audio_data) if isinstance(audio_data, str) else 0
+            print(f"✅ 音声生成成功: {audio_size} bytes")
+        else:
+            print(f"⚠️ 音声生成失敗: audio_data is None")
+            
+    except Exception as e:
+        print(f"❌ 音声生成エラー: {e}")
+        import traceback
+        traceback.print_exc()
+        audio_data = None
+    
+    # クライアントに送信
+    emit('user_type_selected', {
+        'message': message,
+        'emotion': 'neutraltalking',
+        'audio': audio_data,
+        'suggestions': phase1_suggestions,
+        'userType': user_type,
+        'language': language
+    })
+    
+    print(f"✅ 属性選択完了: {user_type}, Phase1サジェスチョン: {len(phase1_suggestions)}個")
+
 # ====== 【修正箇所3】handle_connect関数の修正(9種類感情対応) ======
 @socketio.on('connect')
 def handle_connect():
@@ -1309,8 +1588,8 @@ def handle_connect():
         # 初回接続の場合
         if session_data[session_id]['first_interaction']:
             try:
-                # 自己紹介メッセージ
-                intro_message = "はじめまして！手描き京友禅職人のレイです！私は糸目のりおきという工程を専門にしています。何でも質問してくださいね！"
+                # 🆕 京セラCERA用: 自己紹介メッセージ（簡潔版）
+                intro_message = "私はCERAといいます。みなさんに京セラの魅力を頑張ってお伝えします。アメリカ育ちで少し漢字が苦手ですが、何でも質問してくださいね！"
                 intro_emotion = 'start'  # Startモーション使用
                 
                 # 感情を検証
@@ -1334,18 +1613,13 @@ def handle_connect():
                     'audio': audio_data,
                     'isGreeting': True,
                     'language': 'ja',
-                    'voice_engine': 'azure_speech' if use_azure_speech else ('coe_font' if use_coe_font else 'openai_tts'),
+                    'voice_engine': 'elevenlabs' if use_elevenlabs else ('azure_speech' if use_azure_speech else 'openai_tts'),
                     'relationshipLevel': 'formal',
                     'mentalState': session_data[session_id]['mental_state']
                 }
                 
-                # サジェスチョン生成
-                greeting_data['suggestions'] = generate_prioritized_suggestions(
-                    session_data[session_id], 
-                    None, 
-                    'formal', 
-                    'ja'
-                )
+                # 🔧 修正: 初回自己紹介時はサジェスチョンなし（属性選択前のため）
+                greeting_data['suggestions'] = []
                 
                 emit('greeting', greeting_data)
                 
@@ -1402,15 +1676,30 @@ def handle_connect():
             'audio': audio_data,
             'isGreeting': True,
             'language': language,
-            'voice_engine': 'azure_speech' if (use_azure_speech and language == 'ja') else ('coe_font' if (use_coe_font and language == 'ja') else 'openai_tts'),
+            'voice_engine': 'elevenlabs' if (use_elevenlabs and language == 'ja') else ('azure_speech' if (use_azure_speech and language == 'ja') else 'openai_tts'),
             'relationshipLevel': relationship_style,
             'mentalState': data['mental_state']
         }
         
-        # 優先順位付きサジェスチョンを生成
-        greeting_data['suggestions'] = generate_prioritized_suggestions(
-            data, visitor_info, relationship_style, language
-        )
+        # 🔧 修正: 再接続時も属性選択前はサジェスチョンなし
+        user_type = data.get('user_type', None)
+        if user_type:
+            # 属性選択済みの場合はサジェスチョン表示
+            try:
+                from modules.static_qa_data import get_suggestions_for_phase, get_current_phase
+                selected_count = data.get('selected_suggestions_count', 0)
+                current_phase = get_current_phase(selected_count)
+                greeting_data['suggestions'] = get_suggestions_for_phase(
+                    current_phase, 
+                    data.get('selected_suggestions', []), 
+                    user_type
+                )
+            except Exception as e:
+                print(f"⚠️ サジェスチョン生成エラー: {e}")
+                greeting_data['suggestions'] = []
+        else:
+            # 属性未選択の場合はサジェスチョンなし
+            greeting_data['suggestions'] = []
         
         emit('greeting', greeting_data)
     
@@ -1441,7 +1730,8 @@ def handle_set_language(data):
     
     # 関係性レベルに応じた挨拶
     greeting_message = get_relationship_adjusted_greeting(language, relationship_style)
-    greeting_emotion = "happy"
+    # 🔧 修正: 言語設定時の挨拶では常に 'start' を使用
+    greeting_emotion = "start"
     
     try:
         audio_data = generate_audio_by_language(
@@ -1459,15 +1749,32 @@ def handle_set_language(data):
         'audio': audio_data,
         'isGreeting': True,
         'language': language,
-        'voice_engine': 'azure_speech' if (use_azure_speech and language == 'ja') else ('coe_font' if (use_coe_font and language == 'ja') else 'openai_tts'),
+        'voice_engine': 'elevenlabs' if (use_elevenlabs and language == 'ja') else ('azure_speech' if (use_azure_speech and language == 'ja') else 'openai_tts'),
         'relationshipLevel': relationship_style,
         'mentalState': session_info['mental_state']
     }
     
-    # 言語に応じたサジェスチョンを生成
-    greeting_data['suggestions'] = generate_prioritized_suggestions(
-        session_info, visitor_info, relationship_style, language
-    )
+    # 🔧 修正: 属性選択状態に応じたサジェスチョン生成
+    user_type = session_info.get('user_type', None)
+    if user_type:
+        # 属性選択済みの場合はPhaseに応じたサジェスチョンを表示
+        try:
+            from modules.static_qa_data import get_suggestions_for_phase, get_current_phase
+            selected_count = session_info.get('selected_suggestions_count', 0)
+            current_phase = get_current_phase(selected_count)
+            greeting_data['suggestions'] = get_suggestions_for_phase(
+                current_phase, 
+                session_info.get('selected_suggestions', []), 
+                user_type
+            )
+            print(f"📋 言語切り替え: Phase={current_phase}, UserType={user_type}, サジェスチョン={len(greeting_data['suggestions'])}個")
+        except Exception as e:
+            print(f"⚠️ サジェスチョン生成エラー: {e}")
+            greeting_data['suggestions'] = []
+    else:
+        # 属性未選択の場合はサジェスチョンなし
+        greeting_data['suggestions'] = []
+        print(f"📋 言語切り替え: 属性未選択のためサジェスチョンなし")
     
     emit('greeting', greeting_data)
 
@@ -1629,20 +1936,37 @@ def handle_message(data):
         else:
             print(f"🤖 新規応答生成: {message[:50]}...")
             
+            # 🆕 京セラCERA用: 静的Q&Aを優先チェック
+            user_type = session_info.get('user_type', 'business')
+            static_response = None
+            
+            try:
+                from modules.static_qa_data import get_response_for_user, get_current_phase
+                
+                # まず静的Q&Aをチェック
+                current_phase = get_current_phase(session_info.get('selected_suggestions_count', 0))
+                static_response = get_response_for_user(message, user_type, current_phase)
+                
+                if static_response:
+                    print(f"✅ 静的Q&Aヒット: {user_type} - {current_phase}")
+            except Exception as e:
+                print(f"⚠️ 静的Q&A検索エラー: {e}")
+            
             # RAG応答生成
             if chatbot:
-                # 感情分析(ユーザーメッセージから)
-                user_emotion = analyze_emotion(message)
+                # 🆕 静的Q&Aがあればそれを使用、なければRAG
+                if static_response:
+                    response = static_response
+                else:
+                    # RAG応答生成
+                    response = chatbot.get_response(
+                        message,
+                        language=language,
+                        conversation_history=conversation_history
+                    )
                 
-                # RAG応答生成
-                response = chatbot.get_response(
-                    message,
-                    language=language,
-                    conversation_history=conversation_history
-                )
-                
-                # 応答の感情分析(改善版を使用)
-                emotion = analyze_emotion(response)
+                # 応答から感情タグを抽出（アバターの回答内容から判定）
+                response, emotion = extract_emotion_tag(response)
                 
                 # 感情を検証
                 emotion = validate_emotion(emotion)
@@ -1667,7 +1991,7 @@ def handle_message(data):
                         language=language,
                         conversation_history=conversation_history
                     )
-                    emotion = analyze_emotion(response)
+                    response, emotion = extract_emotion_tag(response)
                     emotion = validate_emotion(emotion)
                     mental_state = calculate_mental_state(session_info)
                     response = adjust_response_style(response, language, relationship_style)
@@ -1705,10 +2029,40 @@ def handle_message(data):
             print(f"❌ 音声生成エラー: {e}")
             audio_data = None
         
-        # サジェスチョン生成
-        suggestions = generate_prioritized_suggestions(
-            session_info, visitor_info, relationship_style, language
-        )
+        # 🆕 サジェスチョンカウントの更新（選択済みサジェスチョン数から計算）
+        if selected_suggestions_from_client:
+            # 新しく選択されたサジェスチョンの数をカウント
+            previous_count = session_info.get('selected_suggestions_count', 0)
+            current_count = len(selected_suggestions_from_client)
+            if current_count > previous_count:
+                session_info['selected_suggestions_count'] = current_count
+                print(f"📊 Suggestion count updated: {previous_count} → {current_count}")
+        
+        # 🆕 サジェスチョン生成（user_type対応）
+        user_type = session_info.get('user_type', 'business')
+        
+        try:
+            from modules.static_qa_data import get_suggestions_for_phase, get_current_phase
+            
+            # 現在のPhaseを判定
+            selected_count = session_info.get('selected_suggestions_count', 0)
+            current_phase = get_current_phase(selected_count)
+            
+            # Phase別サジェスチョンを取得
+            suggestions = get_suggestions_for_phase(
+                current_phase,
+                session_info.get('selected_suggestions', []),
+                user_type
+            )
+            
+            print(f"📋 サジェスチョン生成: Phase={current_phase}, UserType={user_type}, Count={len(suggestions)}")
+            
+        except Exception as e:
+            print(f"❌ サジェスチョン生成エラー: {e}")
+            # フォールバック: 既存の関数を使用
+            suggestions = generate_prioritized_suggestions(
+                session_info, visitor_info, relationship_style, language
+            )
         
         # 処理時間計測
         processing_time = time.time() - start_time
@@ -1731,7 +2085,7 @@ def handle_message(data):
             'emotion': emotion,
             'audio': audio_data,
             'language': language,
-            'voice_engine': 'azure_speech' if (use_azure_speech and language == 'ja') else ('coe_font' if (use_coe_font and language == 'ja') else 'openai_tts'),
+            'voice_engine': 'elevenlabs' if (use_elevenlabs and language == 'ja') else ('azure_speech' if (use_azure_speech and language == 'ja') else 'openai_tts'),
             'processingTime': round(processing_time, 2),
             'suggestions': suggestions,
             'relationshipLevel': relationship_style,
@@ -1767,14 +2121,14 @@ def handle_message(data):
 
 @socketio.on('request_quiz_proposal')
 def handle_request_quiz_proposal(data):
-    """クイズ提案を生成して送信"""
+    """クイズ提案を生成して送信（修正版：アンケートについても最初から言及）"""
     session_id = request.sid
     language = data.get('language', 'ja')
     
-    # 提案メッセージ
+    # 🔧 修正: クイズとアンケートで特別報酬（正解数不問）
     proposal_text = {
-        'ja': '理解度レベルがMAXになりました！クイズに挑戦して全問正解したら素敵なプレゼントがもらえるよ！クイズに挑戦しますか？',
-        'en': 'Your understanding level is MAX! Challenge the quiz and get a special present if you answer all correctly! Will you try?'
+        'ja': 'クイズとアンケートに回答して特別報酬をゲット！クイズに挑戦しますか？',
+        'en': 'Take the quiz and survey to get a special reward! Will you challenge?'
     }
     
     message = proposal_text.get(language, proposal_text['ja'])
@@ -1793,7 +2147,7 @@ def handle_request_quiz_proposal(data):
         'audio': audio_data
     })
     
-    print(f"🎯 クイズ提案送信: Session={session_id}, Language={language}")
+    print(f"🎯 クイズ提案送信（アンケート言及版）: Session={session_id}, Language={language}")
 
 @socketio.on('quiz_start')
 def handle_quiz_start(data):
@@ -2003,6 +2357,84 @@ def handle_request_stage3_suggestions(data):
             'suggestions': []
         })
 
+# ====== アンケートシステム Socket.IOハンドラ ======
+
+@socketio.on('get_survey_questions')
+def handle_get_survey_questions():
+    """アンケート質問を送信"""
+    session_id = request.sid
+    session_info = get_session_data(session_id)
+    language = session_info.get('language', 'ja')
+    
+    questions = SURVEY_QUESTIONS.get(language, SURVEY_QUESTIONS['ja'])
+    
+    emit('survey_questions', {
+        'questions': questions
+    })
+    
+    print(f"📋 アンケート質問送信: Session={session_id}, Language={language}")
+
+
+@socketio.on('submit_survey')
+def handle_submit_survey(data):
+    """アンケート回答を保存"""
+    session_id = request.sid
+    session_info = get_session_data(session_id)
+    visitor_id = session_info.get('visitor_id', 'unknown')
+    language = session_info.get('language', 'ja')
+    quiz_score = data.get('quiz_score', 0)
+    
+    print(f"📝 アンケート受信: Session={session_id}, Score={quiz_score}")
+    print(f"   Q1={data.get('q1')}, Q2={data.get('q2')}, Q3={data.get('q3')}")
+    
+    # スプレッドシートに保存
+    survey_data = {
+        'visitor_id': visitor_id,
+        'quiz_score': quiz_score,
+        'conversation_count': session_info.get('interaction_count', 0),
+        'q1': data.get('q1', ''),  # 属性
+        'q2': data.get('q2', ''),  # 関心度
+        'q3': data.get('q3', ''),  # 興味項目（カンマ区切り）
+        'language': language
+    }
+    
+    success = survey_manager.save_survey(survey_data)
+    
+    # 🔧 修正v3.0: アンケート回答完了で全員Masterレベルに昇格
+    if visitor_id and visitor_id in visitor_data:
+        visitor_data[visitor_id]['quiz_completed'] = True
+        visitor_data[visitor_id]['quiz_score'] = quiz_score
+        visitor_data[visitor_id]['relationship_level'] = 5  # Masterレベル
+    
+    session_info['quiz_completed'] = True
+    
+    # お礼メッセージ（v3.0: 常に報酬付き）
+    thank_you_text = {
+        'ja': 'アンケートありがとうございました！約束の特別なプレゼントです！',
+        'en': 'Thank you! Here\'s your special reward!'
+    }
+    
+    message = thank_you_text.get(language, thank_you_text['ja'])
+    
+    # 音声生成
+    try:
+        audio_data = generate_audio_by_language(message, language, emotion_params='happy')
+    except Exception as e:
+        print(f"❌ お礼音声生成エラー: {e}")
+        audio_data = None
+    
+    # レスポンス送信（v3.0: 常に報酬表示）
+    emit('survey_submitted', {
+        'success': success,
+        'message': message,
+        'emotion': 'happy',
+        'audio': audio_data,
+        'show_reward': True,  # 🔧 修正: 常にTrue
+        'reward_image_url': '/api/reward-image'  # 🔧 修正: 常に送信
+    })
+    
+    print(f"✅ アンケート処理完了: Success={success}, Masterレベル昇格完了")
+
 # ヘルパー関数
 def send_quiz_question(session_id, language, question_index):
     """指定された問題を送信（🎯 修正: イベント名を動的に変更）"""
@@ -2033,35 +2465,27 @@ def send_quiz_question(session_id, language, question_index):
     })
 
 def send_quiz_final_result(session_id, language, score):
-    """クイズの最終結果を送信"""
+    """クイズの最終結果を送信（v3.0: 正解数に関わらずアンケート表示）"""
     session_info = get_session_data(session_id)
     visitor_id = session_info.get('visitor_id')
     
     all_correct = score == 3
     
+    # 🔧 修正: 正解数に関わらず同じメッセージ（emotionも常にhappy）
     if all_correct:
-        # 全問正解（🎯 修正: メッセージ文言を仕様に合わせる）
         result_text = {
-            'ja': 'コングラチュレーション！おめでとうございます！全問正解したあなたに特別なプレゼントです！',
-            'en': 'Congratulations! Perfect score! Here\'s a special present for you!'
+            'ja': 'コングラチュレーション！おめでとうございます！全問正解です！アンケートに答えると特別なプレゼントがもらえるよ！',
+            'en': 'Congratulations! Perfect score! Answer the survey to get your special reward!'
         }
-        emotion = 'happy'
-        
-        # 訪問者データを更新 - Masterレベルに昇格
-        if visitor_id and visitor_id in visitor_data:
-            visitor_data[visitor_id]['quiz_completed'] = True
-            visitor_data[visitor_id]['quiz_score'] = score
-            visitor_data[visitor_id]['relationship_level'] = 5  # Masterレベル
-        
-        session_info['quiz_completed'] = True
-        
     else:
-        # 不正解あり
         result_text = {
-            'ja': f'{score}/3問正解でした。再度挑戦しますか？',
-            'en': f'You got {score}/3 correct. Try again?'
+            'ja': f'{score}/3問正解でした。アンケートに答えると特別なプレゼントがもらえるよ！',
+            'en': f'You got {score}/3 correct. Answer the survey to get your special reward!'
         }
-        emotion = 'neutral'
+    
+    emotion = 'happy'  # 🔧 修正: 常にhappy
+    
+    # 🔧 注意: Masterレベル昇格はアンケート回答後に行う（ここでは行わない）
     
     message = result_text.get(language, result_text['ja'])
     
@@ -2076,15 +2500,17 @@ def send_quiz_final_result(session_id, language, score):
     if session_id in quiz_sessions:
         del quiz_sessions[session_id]
     
-    # 現在のクライアントに送信
+    # v3.0: 常にアンケートを表示
     emit('quiz_final_result', {
         'message': message,
         'emotion': emotion,
         'audio': audio_data,
-        'allCorrect': all_correct
+        'allCorrect': all_correct,
+        'showSurvey': True,  # 🔧 修正: 常にTrue
+        'score': score
     })
     
-    print(f"🏆 クイズ完了: Session={session_id}, Score={score}/3")
+    print(f"🏆 クイズ完了: Session={session_id}, Score={score}/3, アンケート表示=True")
 
 # ====== システム初期化（モジュールロード時に実行） ======
 # Gunicorn経由でも確実に実行されるように、モジュールレベルで初期化

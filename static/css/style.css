@@ -23,7 +23,7 @@ body {
     overflow-x: hidden;
 }
 
-/* 背景デザイン - 京友禅をイメージした優雅なパターン */
+/* 背景デザイン - カスタム背景画像 */
 body::before {
     content: "";
     position: fixed;
@@ -31,20 +31,15 @@ body::before {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.15) 0%, transparent 25%),
-        radial-gradient(circle at 80% 70%, rgba(255, 192, 203, 0.12) 0%, transparent 30%),
-        linear-gradient(135deg, 
-            #fafbfc 0%, 
-            #f7f9fb 25%, 
-            #f5f7fa 50%, 
-            #f3f6f9 75%, 
-            #f0f4f8 100%);
+    background-image: url('../images/source/BackGround.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     z-index: -1;
-    animation: backgroundShift 30s ease-in-out infinite;
     pointer-events: none;
 }
 
+/* 背景アニメーション（画像使用時は不要のためコメントアウト）
 @keyframes backgroundShift {
     0%, 100% { 
         transform: translateY(0) scale(1);
@@ -55,6 +50,7 @@ body::before {
         filter: hue-rotate(10deg);
     }
 }
+*/
 
 /* ヘッダー */
 .fixed-header {
@@ -64,17 +60,20 @@ body::before {
     right: 0;
     width: 100%;
     height: 80px;
-    background: rgba(255, 255, 255, 0.95);
+    background-image: url('../images/source/Header.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     backdrop-filter: blur(10px);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 20px rgba(212, 175, 55, 0.15);
     z-index: 100;
-    border-bottom: 1px solid rgba(255, 182, 193, 0.2);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .header-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 15px 20px;
+    max-width: 100%;
+    margin: 0;
+    padding: 15px 30px 15px 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -98,18 +97,81 @@ body::before {
 
 .title-kyo {
     font-weight: 700;
-    color: #FF69B4;
+    background: linear-gradient(135deg, 
+        #ffffff 0%, 
+        #e0f7ff 20%,
+        #81d4fa 40%, 
+        #4dd0e1 60%,
+        #00bfff 80%,
+        #00a8cc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 28px;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+    letter-spacing: 4px;
+    filter: drop-shadow(0 0 20px rgba(0, 212, 255, 1))
+            drop-shadow(0 0 10px rgba(0, 255, 255, 0.8))
+            drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.6))
+            drop-shadow(0 0 25px rgba(0, 191, 255, 0.6));
+    position: relative;
+    animation: cyberPulse 3s ease-in-out infinite;
 }
 
 .title-yuzen {
     font-weight: 700;
-    color: #FF1493;
+    background: linear-gradient(135deg, 
+        #00ffff 0%, 
+        #00e5ff 10%,
+        #00d4ff 25%,
+        #00bfff 40%,
+        #00a8cc 55%,
+        #00bfff 70%,
+        #00d4ff 85%,
+        #00ffff 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 28px;
-    letter-spacing: 2px;
-    text-shadow: 2px 2px 4px rgba(255, 20, 147, 0.2);
+    letter-spacing: 4px;
+    filter: drop-shadow(0 0 25px rgba(0, 212, 255, 1))
+            drop-shadow(0 0 15px rgba(0, 255, 255, 1))
+            drop-shadow(2px 3px 8px rgba(0, 0, 0, 0.7))
+            drop-shadow(0 0 35px rgba(0, 191, 255, 0.7));
+    position: relative;
+    animation: neonGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes neonGlow {
+    0%, 100% {
+        background-position: 0% center;
+        filter: drop-shadow(0 0 25px rgba(0, 212, 255, 1))
+                drop-shadow(0 0 15px rgba(0, 255, 255, 1))
+                drop-shadow(2px 3px 8px rgba(0, 0, 0, 0.7))
+                drop-shadow(0 0 35px rgba(0, 191, 255, 0.7));
+    }
+    50% {
+        background-position: 100% center;
+        filter: drop-shadow(0 0 35px rgba(0, 255, 255, 1))
+                drop-shadow(0 0 20px rgba(0, 212, 255, 1))
+                drop-shadow(2px 3px 10px rgba(0, 0, 0, 0.8))
+                drop-shadow(0 0 50px rgba(0, 191, 255, 0.9));
+    }
+}
+
+@keyframes cyberPulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 20px rgba(0, 212, 255, 1))
+                drop-shadow(0 0 10px rgba(0, 255, 255, 0.8))
+                drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.6))
+                drop-shadow(0 0 25px rgba(0, 191, 255, 0.6));
+    }
+    50% {
+        filter: drop-shadow(0 0 30px rgba(0, 212, 255, 1))
+                drop-shadow(0 0 18px rgba(0, 255, 255, 1))
+                drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.7))
+                drop-shadow(0 0 40px rgba(0, 191, 255, 0.8));
+    }
 }
 
 .title-subtitle {
@@ -124,14 +186,17 @@ body::before {
 .title-subtitle::before,
 .title-subtitle::after {
     content: "•";
-    color: #FFB6C1;
+    color: #d4af37;
     margin: 0 5px;
 }
 
 .title-name {
     font-size: 20px;
     font-weight: 500;
-    color: #FF69B4;
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     letter-spacing: 3px;
     position: relative;
 }
@@ -141,10 +206,10 @@ body::before {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 8px 15px;
-    border-radius: 25px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    background: transparent;
+    padding: 8px 0;
+    border-radius: 0;
+    box-shadow: none;
     flex-shrink: 0;
 }
 
@@ -184,8 +249,33 @@ body::before {
 }
 
 .language-button {
-    background: linear-gradient(135deg, #FF69B4 0%, #FF1493 50%, #FFB6C1 100%);
-    color: white;
+    background: linear-gradient(135deg, 
+        rgba(20, 30, 45, 0.95) 0%, 
+        rgba(10, 15, 25, 0.98) 50%, 
+        rgba(20, 30, 45, 0.95) 100%);
+    color: #00d4ff;
+    border: 1.5px solid rgba(0, 212, 255, 0.4);
+    box-shadow: 
+        0 0 12px rgba(0, 212, 255, 0.4),
+        0 2px 8px rgba(0, 191, 255, 0.3),
+        inset 0 1px 0 rgba(0, 255, 255, 0.2);
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+}
+
+.language-button:hover {
+    background: linear-gradient(135deg, 
+        rgba(0, 212, 255, 0.25) 0%, 
+        rgba(0, 191, 255, 0.2) 50%, 
+        rgba(0, 212, 255, 0.25) 100%);
+    color: #00ffff;
+    border-color: rgba(0, 255, 255, 0.7);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 
+        0 0 25px rgba(0, 212, 255, 0.7),
+        0 0 15px rgba(0, 255, 255, 0.5),
+        0 4px 15px rgba(0, 191, 255, 0.4),
+        inset 0 1px 0 rgba(0, 255, 255, 0.4);
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
 }
 
 .language-display {
@@ -211,24 +301,25 @@ body::before {
 .container {
     flex: 1;
     width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     height: 100%;
 }
 
-/* 理解度メーター - コンパクト統合版 */
+/* 理解度メーター - コンパクト統合版（Unity上に重ねる） */
 .relationship-meter-container {
-    flex: 0 0 auto;
-    flex-shrink: 0;
-    margin-bottom: 15px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 50;
     padding: 0;
     background: transparent;
     border-radius: 20px;
-    position: relative;
     overflow: visible;
     animation: fadeIn 0.5s ease-out;
     max-height: 40px;
@@ -239,14 +330,14 @@ body::before {
     width: 100%;
     height: 36px;
     background: 
-        linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 255, 0.9));
+        linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(250, 248, 240, 0.9));
     border-radius: 18px;
     overflow: hidden;
     position: relative;
     box-shadow: 
-        0 4px 20px rgba(255, 182, 193, 0.15),
+        0 4px 20px rgba(212, 175, 55, 0.15),
         inset 0 1px 3px rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 182, 193, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 /* 理解度表示テキスト（メーター内に統合） */
@@ -277,12 +368,20 @@ body::before {
 }
 
 .level-badge {
-    background: linear-gradient(135deg, #FF69B4, #FF1493);
-    color: white;
+    background: linear-gradient(135deg, 
+        rgba(20, 30, 45, 0.9), 
+        rgba(10, 15, 25, 0.95));
+    color: #00d4ff;
     padding: 2px 8px;
     border-radius: 10px;
     font-size: 12px;
     font-weight: bold;
+    border: 1px solid rgba(0, 212, 255, 0.4);
+    box-shadow: 
+        0 0 10px rgba(0, 212, 255, 0.4),
+        0 2px 8px rgba(0, 191, 255, 0.3),
+        inset 0 1px 0 rgba(0, 255, 255, 0.2);
+    text-shadow: 0 0 6px rgba(0, 212, 255, 0.6);
 }
 
 .level-name {
@@ -293,13 +392,29 @@ body::before {
 .relationship-progress {
     height: 100%;
     background: linear-gradient(90deg, 
-        rgba(255, 182, 193, 0.4),
-        rgba(255, 105, 180, 0.6),
-        rgba(255, 20, 147, 0.8));
+        rgba(0, 212, 255, 0.4),
+        rgba(0, 255, 255, 0.5),
+        rgba(77, 208, 225, 0.6),
+        rgba(0, 212, 255, 0.7));
+    background-size: 200% 100%;
+    animation: progressFlow 3s linear infinite;
     border-radius: 18px;
     transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    box-shadow: 
+        0 0 15px rgba(0, 212, 255, 0.5),
+        inset 0 0 10px rgba(0, 255, 255, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+@keyframes progressFlow {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
 }
 
 /* 経験値表示（右側） */
@@ -322,26 +437,48 @@ body::before {
     letter-spacing: 2px;
 }
 
-/* MAX専用スタイル */
+/* MAX専用スタイル - ホログラフィック最高峰 */
 .relationship-level .level-max-badge {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: white;
+    background: linear-gradient(135deg, 
+        rgba(0, 212, 255, 0.4), 
+        rgba(0, 255, 255, 0.5),
+        rgba(77, 208, 225, 0.4));
+    background-size: 200% 100%;
+    animation: maxHologramPulse 2s ease-in-out infinite;
+    color: #00ffff;
     padding: 3px 12px;
     border-radius: 12px;
     font-size: 13px;
     font-weight: bold;
-    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
-    animation: maxPulse 2s ease-in-out infinite;
+    border: 1.5px solid rgba(0, 255, 255, 0.7);
+    box-shadow: 
+        0 0 20px rgba(0, 212, 255, 0.6),
+        0 0 12px rgba(0, 255, 255, 0.5),
+        0 2px 8px rgba(0, 191, 255, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    text-shadow: 
+        0 0 10px rgba(0, 255, 255, 0.9),
+        0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes maxPulse {
+@keyframes maxHologramPulse {
     0%, 100% {
         transform: scale(1);
-        box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        background-position: 0% center;
+        box-shadow: 
+            0 0 20px rgba(0, 212, 255, 0.6),
+            0 0 12px rgba(0, 255, 255, 0.5),
+            0 2px 8px rgba(0, 191, 255, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
     50% {
         transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5);
+        background-position: 100% center;
+        box-shadow: 
+            0 0 30px rgba(0, 212, 255, 0.9),
+            0 0 18px rgba(0, 255, 255, 0.8),
+            0 4px 12px rgba(0, 191, 255, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.5);
     }
 }
 
@@ -372,11 +509,11 @@ body::before {
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 25px rgba(173, 216, 230, 0.15);
+    box-shadow: none;
     overflow: hidden;
     position: relative;
 }
@@ -385,18 +522,18 @@ body::before {
     width: 100%;
     height: 100%;
     border: none;
-    border-radius: 20px;
+    border-radius: 0;
 }
 
 /* チャットセクション：画面右側（PC版） */
 .chat-section {
     position: absolute;
     right: 20px;
-    top: 20px;
+    top: 70px;
     bottom: 20px;
     width: 450px;
     max-width: 35%;
-    height: calc(100% - 40px);
+    height: calc(100% - 90px);
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -435,7 +572,7 @@ body::before {
     max-height: 100%;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin !important;
-    scrollbar-color: rgba(255, 105, 180, 0.4) transparent !important;
+    scrollbar-color: rgba(212, 175, 55, 0.4) transparent !important;
 }
 
 /* スクロールバー強制表示 */
@@ -447,18 +584,18 @@ body::before {
 }
 
 .chat-messages::-webkit-scrollbar-track {
-    background: rgba(255, 182, 193, 0.1) !important;
+    background: rgba(212, 175, 55, 0.1) !important;
     border-radius: 10px !important;
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #FFB6C1, #FF69B4) !important;
+    background: linear-gradient(180deg, #d4af37, #b8860b) !important;
     border-radius: 10px !important;
     min-height: 30px !important;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #FF69B4, #FF1493) !important;
+    background: linear-gradient(180deg, #b8860b, #9a7209) !important;
 }
 
 /* メッセージラッパー */
@@ -488,25 +625,29 @@ body::before {
 /* ユーザーメッセージ：プレミアム透明クリスタル */
 .user-message {
     background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        rgba(255, 255, 255, 0.02) 50%,
-        rgba(255, 255, 255, 0.05) 100%);
-    backdrop-filter: blur(50px) saturate(180%) contrast(105%) brightness(105%);
-    -webkit-backdrop-filter: blur(50px) saturate(180%) contrast(105%) brightness(105%);
-    color: #0f172a;
-    text-shadow: none;
-    padding: 12px 18px;
-    border-radius: 20px 20px 5px 20px;
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.12) 100%);
+    backdrop-filter: blur(50px) saturate(180%) contrast(110%) brightness(108%);
+    -webkit-backdrop-filter: blur(50px) saturate(180%) contrast(110%) brightness(108%);
+    color: #1a1a1a;
+    font-weight: 500;
+    text-shadow: 0 0.5px 1px rgba(255, 255, 255, 0.5);
+    padding: 13px 19px;
+    border-radius: 22px 22px 6px 22px;
     margin-left: auto;
     margin-right: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.04),
-        inset 0 0 20px rgba(255, 255, 255, 0.05),
-        inset 0 1px 1px rgba(255, 255, 255, 0.1),
-        inset 0 -1px 1px rgba(0, 0, 0, 0.02);
+        0 8px 35px rgba(0, 0, 0, 0.08),
+        0 3px 15px rgba(255, 255, 255, 0.1),
+        inset 0 0 25px rgba(255, 255, 255, 0.08),
+        inset 0 1px 2px rgba(255, 255, 255, 0.15),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.03);
     position: relative;
     overflow: hidden;
+    letter-spacing: 0.2px;
+    line-height: 1.65;
 }
 
 /* 虹色のプリズム効果（控えめ） */
@@ -546,20 +687,93 @@ body::before {
     pointer-events: none;
 }
 
-/* アシスタントメッセージ：高級グラスモーフィズム */
+/* アシスタントメッセージ：サイバーネオンパネル */
 .assistant-message {
-    background: linear-gradient(90deg, #14b8a6 0%, #3b82f6 100%);
-    color: white;
-    padding: 12px 18px;
-    border-radius: 20px 20px 20px 5px;
+    background: 
+        linear-gradient(135deg, 
+            rgba(10, 10, 15, 0.95) 0%,
+            rgba(15, 20, 30, 0.92) 25%, 
+            rgba(20, 30, 45, 0.95) 50%,
+            rgba(15, 20, 30, 0.92) 75%,
+            rgba(10, 10, 15, 0.95) 100%);
+    color: #e8f8ff;
+    padding: 14px 20px;
+    border-radius: 16px 16px 16px 4px;
     margin-left: 10px;
     margin-right: auto;
+    border: 2px solid rgba(0, 212, 255, 0.5);
     box-shadow: 
-        0 4px 20px rgba(20, 184, 166, 0.3),
-        0 2px 15px rgba(59, 130, 246, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.2);
+        0 0 25px rgba(0, 212, 255, 0.4),
+        0 0 15px rgba(0, 255, 255, 0.3),
+        0 4px 20px rgba(77, 208, 225, 0.2),
+        inset 0 0 30px rgba(0, 212, 255, 0.08),
+        inset 0 1px 0 rgba(0, 255, 255, 0.3),
+        inset 0 -1px 0 rgba(0, 212, 255, 0.2);
     position: relative;
     overflow: hidden;
+    font-weight: 450;
+    letter-spacing: 0.5px;
+    line-height: 1.7;
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.3),
+                 0 1px 3px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+}
+
+/* ホログラフィックスキャンライン */
+.assistant-message::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(0, 255, 255, 0.1) 25%,
+        rgba(0, 212, 255, 0.2) 50%,
+        rgba(77, 208, 225, 0.15) 75%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: hologramScan 4s linear infinite;
+    border-radius: 16px 16px 16px 4px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* サイバーグロー上部 */
+.assistant-message::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 212, 255, 0.15) 0%,
+        rgba(0, 255, 255, 0.08) 50%,
+        transparent 100%
+    );
+    border-radius: 16px 16px 0 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* テキストを前面に */
+.assistant-message > * {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes hologramScan {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
 }
 
 /* 入力エリア */
@@ -569,31 +783,54 @@ body::before {
     left: 0;
     right: 0;
     padding: 20px;
-    background: linear-gradient(to top, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95));
-    backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(255, 182, 193, 0.2);
-    border-radius: 0 0 20px 20px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    background: transparent;
+    backdrop-filter: none;
+    border-top: none;
+    border-radius: 0;
+    box-shadow: none;
     z-index: 10;
 }
 
 /* 入力トグルボタン */
 .input-toggle-button {
     width: 100%;
-    background: linear-gradient(135deg, #FFB6C1, #FF69B4);
-    color: white;
-    border: none;
+    background: linear-gradient(135deg, 
+        rgba(20, 30, 45, 0.92) 0%, 
+        rgba(10, 15, 25, 0.95) 50%, 
+        rgba(20, 30, 45, 0.92) 100%);
+    color: #00d4ff;
+    border: 1.5px solid rgba(0, 212, 255, 0.5);
     border-radius: 12px;
     padding: 10px 16px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(255, 105, 180, 0.3);
+    box-shadow: 
+        0 0 15px rgba(0, 212, 255, 0.3),
+        0 2px 8px rgba(0, 191, 255, 0.2),
+        inset 0 1px 0 rgba(0, 255, 255, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+}
+
+.input-toggle-button:hover {
+    background: linear-gradient(135deg, 
+        rgba(0, 212, 255, 0.2) 0%, 
+        rgba(0, 191, 255, 0.15) 50%, 
+        rgba(0, 212, 255, 0.2) 100%);
+    color: #00ffff;
+    border-color: rgba(0, 255, 255, 0.8);
+    box-shadow: 
+        0 0 25px rgba(0, 212, 255, 0.6),
+        0 0 15px rgba(0, 255, 255, 0.4),
+        0 4px 15px rgba(0, 191, 255, 0.3),
+        inset 0 1px 0 rgba(0, 255, 255, 0.4);
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+    transform: translateY(-2px);
 }
 
 /* 入力フォームコンテナ */
@@ -613,7 +850,7 @@ body::before {
 #message-input {
     width: 100%;
     padding: 15px 20px;
-    border: 2px solid rgba(255, 182, 193, 0.3);
+    border: 2px solid rgba(0, 212, 255, 0.3);
     border-radius: 15px;
     font-size: 16px;
     background: rgba(255, 255, 255, 0.95);
@@ -625,12 +862,18 @@ body::before {
     resize: vertical;
     font-family: inherit;
     box-sizing: border-box;
+    box-shadow: 
+        0 0 8px rgba(0, 212, 255, 0.1),
+        inset 0 1px 0 rgba(0, 255, 255, 0.05);
 }
 
 #message-input:focus {
-    border-color: rgba(255, 182, 193, 0.8);
-    box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.2);
-    background-color: #fff;
+    border-color: rgba(0, 212, 255, 0.8);
+    box-shadow: 
+        0 0 20px rgba(0, 212, 255, 0.4),
+        0 0 0 3px rgba(0, 212, 255, 0.2),
+        inset 0 1px 0 rgba(0, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.98);
 }
 
 /* ボタンエリア */
@@ -643,21 +886,61 @@ body::before {
 
 button {
     padding: 10px 20px;
-    background: linear-gradient(145deg, #4dbd52, #5acf60);
-    color: white;
-    border: none;
-    border-radius: 15px;
+    background: linear-gradient(135deg, 
+        rgba(20, 30, 45, 0.9), 
+        rgba(10, 15, 25, 0.95));
+    color: #00d4ff;
+    border: 1.5px solid rgba(0, 212, 255, 0.5);
+    border-radius: 12px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
     transition: all 0.3s ease;
-    box-shadow: 0 3px 10px rgba(77, 189, 82, 0.25);
+    box-shadow: 
+        0 0 15px rgba(0, 212, 255, 0.3),
+        0 3px 10px rgba(0, 191, 255, 0.2),
+        inset 0 1px 0 rgba(0, 255, 255, 0.2);
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+}
+
+button:hover {
+    background: linear-gradient(135deg, 
+        rgba(0, 212, 255, 0.2), 
+        rgba(0, 191, 255, 0.15));
+    color: #00ffff;
+    border-color: rgba(0, 255, 255, 0.8);
+    box-shadow: 
+        0 0 25px rgba(0, 212, 255, 0.6),
+        0 0 15px rgba(0, 255, 255, 0.4),
+        0 5px 15px rgba(0, 191, 255, 0.3),
+        inset 0 1px 0 rgba(0, 255, 255, 0.4);
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+    transform: translateY(-2px);
 }
 
 #voice-button {
-    background: linear-gradient(145deg, #2196F3, #1e88e5);
-    box-shadow: 0 3px 10px rgba(33, 150, 243, 0.25);
+    background: linear-gradient(135deg, 
+        rgba(20, 30, 45, 0.9), 
+        rgba(10, 15, 25, 0.95));
+    box-shadow: 
+        0 0 15px rgba(0, 212, 255, 0.3),
+        0 3px 10px rgba(0, 191, 255, 0.2);
+    color: #00d4ff;
+    border: 1.5px solid rgba(0, 212, 255, 0.5);
+}
+
+#voice-button:hover {
+    background: linear-gradient(135deg, 
+        rgba(0, 212, 255, 0.2), 
+        rgba(0, 191, 255, 0.15));
+    color: #00ffff;
+    border-color: rgba(0, 255, 255, 0.8);
+    box-shadow: 
+        0 0 25px rgba(0, 212, 255, 0.6),
+        0 0 15px rgba(0, 255, 255, 0.4),
+        0 5px 15px rgba(0, 191, 255, 0.3);
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
 }
 
 /* サジェスチョンボタン */
@@ -671,30 +954,44 @@ button {
 }
 
 .suggestion-button {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid #e0e0e0;
-    border-radius: 20px;
+    background: linear-gradient(135deg,
+        rgba(20, 40, 60, 0.85),
+        rgba(10, 25, 40, 0.9));
+    border: 2px solid rgba(0, 212, 255, 0.7);
+    border-radius: 18px;
     padding: 8px 16px;
     font-size: 14px;
-    color: #666;
+    color: #00d4ff;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    backdrop-filter: blur(5px);
+    box-shadow: 
+        0 0 15px rgba(0, 212, 255, 0.4),
+        0 2px 8px rgba(0, 191, 255, 0.3),
+        inset 0 1px 0 rgba(0, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
 }
 
 .suggestion-button:hover {
-    background: 
-        radial-gradient(circle at 30% 50%, #10b981 0%, transparent 50%),
-        radial-gradient(circle at 70% 50%, #3b82f6 0%, transparent 50%),
-        linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
-    color: white;
+    background: linear-gradient(135deg, 
+        rgba(0, 212, 255, 0.3) 0%, 
+        rgba(0, 191, 255, 0.25) 100%);
+    color: #00ffff;
+    border-color: rgba(0, 255, 255, 0.9);
     transform: translateY(-2px) scale(1.05);
     box-shadow: 
-        0 5px 20px rgba(16, 185, 129, 0.4),
-        0 2px 10px rgba(59, 130, 246, 0.3);
+        0 0 25px rgba(0, 212, 255, 0.7),
+        0 0 15px rgba(0, 255, 255, 0.5),
+        0 5px 20px rgba(0, 191, 255, 0.4),
+        inset 0 1px 0 rgba(0, 255, 255, 0.4);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.9);
 }
+
+/* 🆕 ユーザー属性選択ボタン（CERA版）（🔧 修正版） */
+/* 通常のサジェスチョンと同じデザインを使用（色のカスタマイズなし） */
+/* .suggestion-buttonクラスで統一スタイルを適用 */
 
 /* モーダル */
 .modal {
@@ -722,7 +1019,10 @@ button {
 }
 
 .modal-content h2 {
-    color: #FF69B4;
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 30px;
     font-size: 24px;
     font-weight: 600;
@@ -752,13 +1052,13 @@ button {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    background: linear-gradient(135deg, #FF69B4, #FF1493);
-    color: white;
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 50%, #2d2d2d 100%);
+    color: #d4af37;
     padding: 20px 30px;
     border-radius: 15px;
     font-size: 18px;
     font-weight: bold;
-    box-shadow: 0 5px 25px rgba(255, 105, 180, 0.5);
+    box-shadow: 0 5px 25px rgba(212, 175, 55, 0.6);
     z-index: 5000;
     transition: transform 0.3s ease-out;
 }
@@ -779,6 +1079,7 @@ button {
         right: 0 !important;
         height: 60px !important;
         z-index: 1000 !important;
+        background-position: right center !important;
     }
     
     /* メインラッパー：全画面 */
@@ -933,7 +1234,7 @@ button {
         min-height: 150px !important;
         -webkit-overflow-scrolling: touch !important;
         scrollbar-width: thin !important;
-        scrollbar-color: rgba(255, 105, 180, 0.5) transparent !important;
+        scrollbar-color: rgba(212, 175, 55, 0.5) transparent !important;
     }
     
     /* モバイル用スクロールバー強制表示 */
@@ -946,18 +1247,18 @@ button {
     }
     
     .chat-messages::-webkit-scrollbar-track {
-        background: rgba(255, 182, 193, 0.2) !important;
+        background: rgba(212, 175, 55, 0.2) !important;
         border-radius: 10px !important;
     }
     
     .chat-messages::-webkit-scrollbar-thumb {
-        background: rgba(255, 105, 180, 0.6) !important;
+        background: rgba(212, 175, 55, 0.6) !important;
         border-radius: 10px !important;
         min-height: 20px !important;
     }
     
     .chat-messages::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 105, 180, 0.8) !important;
+        background: rgba(212, 175, 55, 0.8) !important;
     }
     
     /* メッセージバブル：より透明に */
@@ -983,8 +1284,8 @@ button {
     .input-toggle-button {
         width: 100% !important;
         padding: 10px !important;
-        background: linear-gradient(135deg, #FFB6C1, #FF69B4) !important;
-        color: white !important;
+        background: linear-gradient(135deg, #2d2d2d, #1a1a1a, #2d2d2d) !important;
+        color: #d4af37 !important;
         border: none !important;
         border-radius: 12px !important;
         font-size: 14px !important;
@@ -1000,7 +1301,7 @@ button {
         min-height: 60px !important;
         max-height: 100px !important;
         padding: 10px !important;
-        border: 2px solid rgba(255, 182, 193, 0.3) !important;
+        border: 2px solid rgba(212, 175, 55, 0.3) !important;
         border-radius: 12px !important;
         resize: none !important;
         font-size: 14px !important;
@@ -1083,6 +1384,7 @@ button {
     /* ヘッダーをさらにコンパクトに */
     .fixed-header {
         height: 50px !important;
+        background-position: right center !important;
     }
     
     .main-wrapper {
@@ -1317,31 +1619,42 @@ button {
 /* クイズシステムスタイル */
 /* ============================== */
 
-/* Masterレベルバッジ */
+/* Masterレベルバッジ - サイバーエリート */
 .master-badge {
-    background: linear-gradient(135deg, #FFD700, #FFA500) !important;
-    color: white !important;
+    background: linear-gradient(135deg, 
+        rgba(0, 212, 255, 0.3), 
+        rgba(0, 191, 255, 0.4)) !important;
+    color: #00ffff !important;
     padding: 3px 12px !important;
     border-radius: 12px !important;
     font-size: 13px !important;
     font-weight: bold !important;
+    border: 1.5px solid rgba(0, 255, 255, 0.6) !important;
     box-shadow: 
-        0 4px 15px rgba(255, 215, 0, 0.5),
-        inset 0 1px 3px rgba(255, 255, 255, 0.5) !important;
-    animation: masterGlow 2s ease-in-out infinite;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        0 0 20px rgba(0, 212, 255, 0.6),
+        0 0 12px rgba(0, 255, 255, 0.5),
+        0 4px 15px rgba(0, 191, 255, 0.4),
+        inset 0 1px 3px rgba(0, 255, 255, 0.4) !important;
+    animation: masterCyberGlow 2s ease-in-out infinite;
+    text-shadow: 
+        0 0 10px rgba(0, 255, 255, 0.8),
+        0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes masterGlow {
+@keyframes masterCyberGlow {
     0%, 100% {
         box-shadow: 
-            0 4px 15px rgba(255, 215, 0, 0.5),
-            inset 0 1px 3px rgba(255, 255, 255, 0.5);
+            0 0 20px rgba(0, 212, 255, 0.6),
+            0 0 12px rgba(0, 255, 255, 0.5),
+            0 4px 15px rgba(0, 191, 255, 0.4),
+            inset 0 1px 3px rgba(0, 255, 255, 0.4);
     }
     50% {
         box-shadow: 
-            0 6px 25px rgba(255, 215, 0, 0.8),
-            inset 0 1px 3px rgba(255, 255, 255, 0.7);
+            0 0 30px rgba(0, 212, 255, 0.9),
+            0 0 18px rgba(0, 255, 255, 0.8),
+            0 6px 25px rgba(0, 191, 255, 0.6),
+            inset 0 1px 3px rgba(0, 255, 255, 0.6);
     }
 }
 
@@ -1367,14 +1680,29 @@ button {
 }
 
 .quiz-choice-button.accept {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
+    background: linear-gradient(135deg, 
+        rgba(20, 30, 45, 0.9), 
+        rgba(10, 15, 25, 0.95));
+    color: #00d4ff;
+    border: 1.5px solid rgba(0, 212, 255, 0.5);
+    box-shadow: 
+        0 0 15px rgba(0, 212, 255, 0.3),
+        0 3px 10px rgba(0, 191, 255, 0.2);
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
 }
 
 .quiz-choice-button.accept:hover {
-    background: linear-gradient(135deg, #059669, #047857);
+    background: linear-gradient(135deg, 
+        rgba(0, 212, 255, 0.2), 
+        rgba(0, 191, 255, 0.15));
+    color: #00ffff;
+    border-color: rgba(0, 255, 255, 0.8);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+    box-shadow: 
+        0 0 25px rgba(0, 212, 255, 0.6),
+        0 0 15px rgba(0, 255, 255, 0.4),
+        0 5px 15px rgba(0, 191, 255, 0.3);
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
 }
 
 .quiz-choice-button.decline {
@@ -1401,8 +1729,8 @@ button {
 .quiz-option-button {
     width: 100%;
     padding: 15px 20px;
-    background: linear-gradient(135deg, rgba(255, 182, 193, 0.6), rgba(255, 200, 210, 0.5));
-    border: 2px solid rgba(255, 182, 193, 0.5);
+    background: linear-gradient(135deg, rgba(245, 245, 220, 0.6), rgba(232, 232, 210, 0.5));
+    border: 2px solid rgba(212, 175, 55, 0.5);
     border-radius: 12px;
     font-size: 15px;
     text-align: left;
@@ -1413,11 +1741,11 @@ button {
 }
 
 .quiz-option-button:hover {
-    background: linear-gradient(135deg, #FFB6C1, #FF69B4);
-    color: white;
-    border-color: #FF69B4;
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+    color: #d4af37;
+    border-color: #d4af37;
     transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
 }
 
 /* 報酬コンテナ */
@@ -1426,15 +1754,18 @@ button {
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 250, 0.9));
+    background: linear-gradient(145deg, rgba(250, 248, 240, 0.95), rgba(245, 245, 220, 0.9));
     border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(255, 182, 193, 0.3);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
     margin: 15px 10px;
     animation: fadeIn 0.5s ease-out;
 }
 
 .quiz-reward-container h3 {
-    color: #FF69B4;
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 20px;
     margin-bottom: 15px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -1452,20 +1783,20 @@ button {
 .reward-download-button {
     display: inline-block;
     padding: 12px 30px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
+    background: linear-gradient(135deg, #f59e0b, #d97706);
     color: white;
     text-decoration: none;
     border-radius: 12px;
     font-size: 16px;
     font-weight: bold;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
     transition: all 0.3s ease;
 }
 
 .reward-download-button:hover {
-    background: linear-gradient(135deg, #FFA500, #FF8C00);
+    background: linear-gradient(135deg, #d97706, #b45309);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
 }
 
 /* モバイル対応 */
