@@ -218,6 +218,20 @@ class RAGSystem:
         """データベースの初期化(スレッドセーフ)"""
         with _db_creation_lock:
             try:
+                # 🔧 強制再構築フラグのチェック（本番環境対応）
+                force_rebuild = os.getenv('FORCE_CHROMA_REBUILD', 'false').lower() == 'true'
+                if force_rebuild:
+                    print("🔄 FORCE_CHROMA_REBUILD=trueが検出されました。データベースを強制削除します...")
+                    if os.path.exists(self.persist_directory):
+                        import shutil
+                        try:
+                            shutil.rmtree(self.persist_directory)
+                            print("✅ データベースディレクトリを削除しました")
+                        except Exception as e:
+                            print(f"⚠️ データベース削除エラー: {e}")
+                    os.makedirs(self.persist_directory, exist_ok=True)
+                    print("📁 新しいデータベースディレクトリを作成しました")
+                
                 # 永続化ディレクトリが存在するか確認
                 if os.path.exists(self.persist_directory):
                     print(f"既存のデータベースを読み込み中: {self.persist_directory}")
@@ -318,16 +332,12 @@ class RAGSystem:
                     print(f"{len(documents)}個のドキュメントをデータベースに追加しました")
                 else:
                     print("uploadsディレクトリにファイルが見つかりません")
-                    # 🎯 案1実装: 空のChromaDBを先に初期化してからデフォルトデータを追加
-                    self._initialize_empty_database()
-                    if self.db is not None:
-                        self._add_default_data()
+                    # フォールバック:ハードコードされた初期データ
+                    self._add_default_data()
             else:
                 print(f"uploadsディレクトリが見つかりません: {uploads_dir}")
-                # 🎯 案1実装: 空のChromaDBを先に初期化してからデフォルトデータを追加
-                self._initialize_empty_database()
-                if self.db is not None:
-                    self._add_default_data()
+                # フォールバック:ハードコードされた初期データ
+                self._add_default_data()
             
             # データ構造の初期化
             self._load_all_knowledge()
@@ -336,59 +346,13 @@ class RAGSystem:
             print(f"データベース作成エラー: {e}")
             import traceback
             traceback.print_exc()
-            self.db = None
-    
-    def _initialize_empty_database(self):
-        """空のChromaDBを初期化（案1実装）"""
-        try:
-            print("🔄 空のChromaDBを初期化中...")
-            
-            # Chromaクライアントの初期化
-            client = chromadb.PersistentClient(
-                path=self.persist_directory,
-                settings=Settings(
-                    anonymized_telemetry=False,
-                    allow_reset=True
-                )
-            )
-            
-            # 新しいコレクションを作成
-            collection_name = "kyoyuzen_knowledge"
-            try:
-                collection = client.create_collection(collection_name)
-                print(f"✅ 新しいコレクション '{collection_name}' を作成")
-            except Exception as e:
-                # コレクションが既に存在する場合
-                print(f"⚠️ コレクション作成エラー: {e}")
-                try:
-                    collection = client.get_collection(collection_name)
-                    print(f"✅ 既存のコレクション '{collection_name}' を使用")
-                except Exception as e2:
-                    print(f"❌ コレクション取得エラー: {e2}")
-                    raise
-            
-            # LangChain用のChromaインスタンスを作成
-            self.db = Chroma(
-                client=client,
-                collection_name=collection_name,
-                embedding_function=self.embeddings,
-                persist_directory=self.persist_directory
-            )
-            
-            print("✅ 空のChromaDB初期化完了")
-            
-        except Exception as e:
-            print(f"❌ 空のChromaDB初期化エラー: {e}")
-            import traceback
-            traceback.print_exc()
-            self.db = None
+            # 🔧 修正: _initialize_database()で既にself.dbが作成されている場合があるため、
+            # エラーが出ても既存のself.dbを保持する（Noneで上書きしない）
+            if self.db is None:
+                print("⚠️ データベースの作成に失敗しましたが、処理を続行します")
     
     def _add_default_data(self):
         """デフォルトの初期データを追加(フォールバック用)"""
-        if self.db is None:
-            print("❌ データベースが初期化されていないため、デフォルトデータを追加できません")
-            return
-            
         initial_knowledge = [
             {
                 "text": "京セラは、稲盛和夫が1959年に創業したセラミック技術を核とする企業です。電子部品、半導体、通信機器、太陽光発電など幅広い事業を展開しています。",
