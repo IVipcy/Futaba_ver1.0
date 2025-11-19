@@ -318,12 +318,16 @@ class RAGSystem:
                     print(f"{len(documents)}個のドキュメントをデータベースに追加しました")
                 else:
                     print("uploadsディレクトリにファイルが見つかりません")
-                    # フォールバック:ハードコードされた初期データ
-                    self._add_default_data()
+                    # 🎯 案1実装: 空のChromaDBを先に初期化してからデフォルトデータを追加
+                    self._initialize_empty_database()
+                    if self.db is not None:
+                        self._add_default_data()
             else:
                 print(f"uploadsディレクトリが見つかりません: {uploads_dir}")
-                # フォールバック:ハードコードされた初期データ
-                self._add_default_data()
+                # 🎯 案1実装: 空のChromaDBを先に初期化してからデフォルトデータを追加
+                self._initialize_empty_database()
+                if self.db is not None:
+                    self._add_default_data()
             
             # データ構造の初期化
             self._load_all_knowledge()
@@ -334,8 +338,57 @@ class RAGSystem:
             traceback.print_exc()
             self.db = None
     
+    def _initialize_empty_database(self):
+        """空のChromaDBを初期化（案1実装）"""
+        try:
+            print("🔄 空のChromaDBを初期化中...")
+            
+            # Chromaクライアントの初期化
+            client = chromadb.PersistentClient(
+                path=self.persist_directory,
+                settings=Settings(
+                    anonymized_telemetry=False,
+                    allow_reset=True
+                )
+            )
+            
+            # 新しいコレクションを作成
+            collection_name = "kyoyuzen_knowledge"
+            try:
+                collection = client.create_collection(collection_name)
+                print(f"✅ 新しいコレクション '{collection_name}' を作成")
+            except Exception as e:
+                # コレクションが既に存在する場合
+                print(f"⚠️ コレクション作成エラー: {e}")
+                try:
+                    collection = client.get_collection(collection_name)
+                    print(f"✅ 既存のコレクション '{collection_name}' を使用")
+                except Exception as e2:
+                    print(f"❌ コレクション取得エラー: {e2}")
+                    raise
+            
+            # LangChain用のChromaインスタンスを作成
+            self.db = Chroma(
+                client=client,
+                collection_name=collection_name,
+                embedding_function=self.embeddings,
+                persist_directory=self.persist_directory
+            )
+            
+            print("✅ 空のChromaDB初期化完了")
+            
+        except Exception as e:
+            print(f"❌ 空のChromaDB初期化エラー: {e}")
+            import traceback
+            traceback.print_exc()
+            self.db = None
+    
     def _add_default_data(self):
         """デフォルトの初期データを追加(フォールバック用)"""
+        if self.db is None:
+            print("❌ データベースが初期化されていないため、デフォルトデータを追加できません")
+            return
+            
         initial_knowledge = [
             {
                 "text": "京セラは、稲盛和夫が1959年に創業したセラミック技術を核とする企業です。電子部品、半導体、通信機器、太陽光発電など幅広い事業を展開しています。",
@@ -1002,18 +1055,21 @@ class RAGSystem:
             try:
                 self._initialize_database()
                 if self.db is None:
-                    # 🎯 修正:言語に応じたエラーメッセージ
+                    print("❌ データベースの再初期化に失敗しました")
+                    # 🎯 案4実装: より詳細で親切なエラーメッセージ
                     if language == 'en':
-                        return "Sorry, the database is not ready yet. Please wait a moment."
+                        return "[Emotion:neutral] I apologize, but I'm currently initializing my knowledge database. This usually takes just a moment. Please try your question again in about 10 seconds, and I'll be ready to help you!"
                     else:
-                        return "申し訳ありません、データベースがまだ準備できていないようです。少々お待ちください。"
+                        return "[Emotion:neutral] 申し訳ございません。現在、知識データベースを初期化しています。通常は数秒で完了しますので、10秒ほど待ってからもう一度お試しください。すぐにお答えできるようになります！"
             except Exception as e:
                 print(f"❌ データベース再初期化エラー: {e}")
-                # 🎯 修正:言語に応じたエラーメッセージ
+                import traceback
+                traceback.print_exc()
+                # 🎯 案4実装: より詳細で親切なエラーメッセージ
                 if language == 'en':
-                    return "Sorry, the database is not ready yet. Please wait a moment."
+                    return "[Emotion:neutral] I'm having a bit of trouble accessing my knowledge database at the moment. Please try refreshing the page or wait a moment and try again. I apologize for the inconvenience!"
                 else:
-                    return "申し訳ありません、データベースがまだ準備できていないようです。少々お待ちください。"
+                    return "[Emotion:neutral] 申し訳ございません。知識データベースへのアクセスに少し問題が発生しています。ページを更新するか、しばらく待ってからもう一度お試しください。ご不便をおかけして申し訳ありません！"
         
         try:
             # データが読み込まれていない場合は再読み込み

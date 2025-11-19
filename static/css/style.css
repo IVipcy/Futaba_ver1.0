@@ -330,14 +330,14 @@ body::before {
     width: 100%;
     height: 36px;
     background: 
-        linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(250, 248, 240, 0.9));
+        linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.9));
     border-radius: 18px;
     overflow: hidden;
     position: relative;
     box-shadow: 
-        0 4px 20px rgba(212, 175, 55, 0.15),
+        0 4px 20px rgba(0, 212, 255, 0.15),
         inset 0 1px 3px rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(0, 212, 255, 0.3);
 }
 
 /* 理解度表示テキスト（メーター内に統合） */
@@ -584,18 +584,18 @@ body::before {
 }
 
 .chat-messages::-webkit-scrollbar-track {
-    background: rgba(212, 175, 55, 0.1) !important;
+    background: rgba(0, 212, 255, 0.05) !important;
     border-radius: 10px !important;
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #d4af37, #b8860b) !important;
+    background: linear-gradient(180deg, rgba(0, 212, 255, 0.8), rgba(0, 191, 255, 0.9)) !important;
     border-radius: 10px !important;
     min-height: 30px !important;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #b8860b, #9a7209) !important;
+    background: linear-gradient(180deg, rgba(0, 255, 255, 0.9), rgba(0, 212, 255, 1)) !important;
 }
 
 /* メッセージラッパー */
@@ -1284,15 +1284,24 @@ button:hover {
     .input-toggle-button {
         width: 100% !important;
         padding: 10px !important;
-        background: linear-gradient(135deg, #2d2d2d, #1a1a1a, #2d2d2d) !important;
-        color: #d4af37 !important;
-        border: none !important;
+        background: linear-gradient(135deg, 
+            rgba(20, 30, 45, 0.92) 0%, 
+            rgba(10, 15, 25, 0.95) 50%, 
+            rgba(20, 30, 45, 0.92) 100%) !important;
+        color: #00d4ff !important;
+        border: 1.5px solid rgba(0, 212, 255, 0.5) !important;
         border-radius: 12px !important;
         font-size: 14px !important;
+        font-weight: 500 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         gap: 8px !important;
+        box-shadow: 
+            0 0 15px rgba(0, 212, 255, 0.3),
+            0 2px 8px rgba(0, 191, 255, 0.2),
+            inset 0 1px 0 rgba(0, 255, 255, 0.2) !important;
+        text-shadow: 0 0 8px rgba(0, 212, 255, 0.5) !important;
     }
     
     /* メッセージ入力欄 */
@@ -1301,12 +1310,15 @@ button:hover {
         min-height: 60px !important;
         max-height: 100px !important;
         padding: 10px !important;
-        border: 2px solid rgba(212, 175, 55, 0.3) !important;
+        border: 2px solid rgba(0, 212, 255, 0.3) !important;
         border-radius: 12px !important;
         resize: none !important;
         font-size: 14px !important;
         margin-bottom: 10px !important;
         margin-top: 10px !important;
+        box-shadow: 
+            0 0 8px rgba(0, 212, 255, 0.1),
+            inset 0 1px 0 rgba(0, 255, 255, 0.05) !important;
     }
     
     /* ボタンエリア */
