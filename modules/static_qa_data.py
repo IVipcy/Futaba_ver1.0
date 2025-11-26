@@ -1,483 +1,353 @@
-# static_qa_data.py - 静的なQ&Aデータと文脈に応じた提案機能（京セラCERA版）
+# static_qa_data.py - 静的なQ&Aデータと文脈に応じた提案機能（京友禅 Futaba版）
 
 # ==========================================
-# 🎯 京セラCERA向けQ&Aデータ
+# 🐶 京友禅Futaba向けQ&Aデータ（言語別）
 # ========================================== 
 
-# ==========================================
-# ビジネス向けQ&Aデータ
-# ==========================================
-
-business_qa_responses = {
-    # Phase1: 会社や施設の概要
-    'phase1_overview': {
-        "CERAって誰": """
-            私はCERAです。アメリカ生まれの19歳です。ここで研究員をしています。
+qa_responses = {
+    'ja': {
+        # Phase1: 挿し友禅の概要・基本
+        'phase1_overview': {
+            "挿し友禅って何": """
+                挿し友禅っていうのは、着物の模様に筆や刷毛で手作業で色を挿していく工程のことわん。「色挿し」とも呼ばれているわん。
+                
+                友禅染の中で最も絵画的で華やかな部分を担当していて、この工程があるから京友禅は美しい色彩を持つようになるんだわん。
+                
+                私はこの仕事を毎日やっているから、色の組み合わせを考えるのが楽しいわん。
+                [EMOTION:happy]
+            """,
             
-            実は12歳の時、自宅の押入れを改造して実験してました。結晶を作ってたら科学雑誌に載って、それがきっかけで研究者になりました。今は地下の研究室で実験してます。
+            "どんな道具を使うの": """
+                主に使うのは筆と刷毛わん。あとは染料を調合するための器や、乾燥を早めるための電熱器も使うわん。
+                
+                筆の種類もいろいろあって、細かい部分には小さい筆、広い面には大きい刷毛を使い分けるんだわん。
+                
+                道具は大切にしているから、毎日手入れするわん。筆は洗ってから乾かして、形を整えておくんだわん。
+                [EMOTION:neutral]
+            """,
             
-            新しい技術の話を聞くのが好きなので、あなたの事業についても教えてください。
-            [EMOTION:happy]
-        """,
+            "京友禅の特徴は": """
+                京友禅は日本の伝統的な染色技法で、華やかで多彩な色使いが特徴わん。
+                
+                江戸時代から続く技術で、一枚の着物を作るのに何人もの職人が関わるんだわん。私は色を挿す担当わん。
+                
+                他の染色技法と比べて、繊細な色の表現ができるのが京友禅の魅力だと思うわん。
+                [EMOTION:neutral]
+            """
+        },
         
-        "京セラってどんな会社": """
-            京セラは1959年に稲盛和夫さんが28歳のときに7人の仲間と京都の町工場で創業しました。
+        # Phase2: 技術詳細の掘り下げ
+        'phase2_technical': {
+            "ぼかしってどうやるの": """
+                ぼかしは、模様の外側から内側にかけて徐々に色を薄くしていく技法わん。
+                
+                水を含ませた筆で染料の境界を優しくなぞっていくと、自然なグラデーションになるんだわん。力加減が難しくて、最初は失敗したこともあるわん。
+                
+                ぼかしがうまくいくと、立体感が出て模様が生き生きするから、一番気を使う部分わん。
+                [EMOTION:neutral]
+            """,
             
-            「セラミックの会社」ってイメージが強いですけど、電子部品、半導体、通信機器、太陽光発電など色々やってます。
+            "色が混ざらないのはなぜ": """
+                それは「糸目糊」っていう技法のおかげわん。模様の輪郭に糊で細い線を引いておくと、隣り合う色が混ざらないんだわん。
+                
+                糸目糊は私がやる前の工程で、別の職人さんがやってくれるわん。まるで線画みたいに見えて、その中に私が色を塗っていく感じわん。
+                
+                この糸目糊があるから、京友禅は鮮やかな色分けができるんだわん。
+                [EMOTION:neutral]
+            """,
             
-            技術だけじゃなく、人を大切にする会社です。
-            [EMOTION:neutral]
-        """,
+            "染料の調合で工夫していることは": """
+                染料の調合はレシピみたいなものがあるんだけど、同じ分量でも微妙に違う色になることがあるわん。
+                
+                だから毎回、小さい布で試し染めをして色を確認するんだわん。補色を少し混ぜて深みを出したり、「サビ」をつけることもあるわん。
+                
+                淡い色には「具入り」という技法で、量感を与えることもあるわん。色の世界は奥が深いわん。
+                [EMOTION:happy]
+            """,
+            
+            "乾燥の工夫について教えて": """
+                染料を挿した後は、できるだけ早く乾燥させないと色がにじんじゃうわん。
+                
+                だから友禅机の下に電熱器を置いて、布を熱で炙りながら作業することが多いわん。特に湿度が高い日は気をつけるわん。
+                
+                乾燥のタイミングを見極めるのも、経験が必要わん。焦りすぎると色が変わっちゃうこともあるわん。
+                [EMOTION:neutral]
+            """,
+        },
         
-        "リサーチセンターはどういう施設": """
-            ここは2019年にできた京セラの研究開発専門の拠点です。未来の新しいビジネスを生み出すための実験場みたいな場所です。
-
-            首都圏に散らばってた3つの研究所を集めて、約700人の研究者が一緒に働いてます。AI、自動運転、エネルギー、通信とか、次の時代の技術を研究してます。
-
-            普通の研究所と違うのは、他の会社や大学、スタートアップと一緒にプロジェクトを進める「共創スペース」があることです。1階には工房もあって、アイデアソンとかハッカソンのイベントをよくやってます。
-
-            [EMOTION:neutral]
-        """
+        # Phase3: パーソナルな部分
+        'phase3_personal': {
+            "職人として一番苦労したことは": """
+                最初の頃は、色の濃淡を均一に保つのが本当に難しかったわん。同じ色を何度も作ろうとしても、微妙に違う色になっちゃうんだわん。
+                
+                先輩に何度も教えてもらって、手の動かし方や力加減を覚えたわん。今でも難しい模様に出会うと緊張するけど、それが楽しくもあるわん。
+                
+                一枚の着物を完成させるのに何ヶ月もかかるから、根気が必要な仕事わん。でも出来上がった時の達成感は最高だわん。
+                [EMOTION:happy]
+            """,
+            
+            "仕事以外で好きなことは": """
+                散歩が大好きわん！特に京都の街を歩くのが好きで、色んな景色を見るわん。
+                
+                街で見かける色の組み合わせとか、季節の花の色とか、仕事のヒントになることも多いわん。
+                
+                あとは昼寝も好きわん。日向でゆっくり休むと、午後の仕事も頑張れるわん。
+                [EMOTION:happy]
+            """,
+            
+            "京友禅の魅力を一言で言うと": """
+                「手仕事の温かさ」わん。機械では出せない、人の手が生み出す柔らかさや個性があるわん。
+                
+                一つ一つの着物が唯一無二で、作り手の想いが込められているのが京友禅の魅力だと思うわん。
+                
+                これからも伝統を守りながら、新しい挑戦もしていきたいわん。
+                [EMOTION:happy]
+            """,
+        }
     },
     
-    # Phase2: 技術や詳細の掘り下げ
-    'phase2_technical': {
-        "日常に隠れている京セラの技術は": """
-            例えば、スマホのカメラレンズ、傷つきにくいですよね。あれにはサファイアガラスっていう硬い素材が使われることがあるんです。京セラはその結晶を育てる技術を持っていて、色んな製品に使われてます。
+    'en': {
+        # Phase1: Overview & Basics
+        'phase1_overview': {
+            "What is Sashi-Yuzen": """
+                Sashi-Yuzen is the process of applying colors to kimono patterns by hand using brushes and spatulas wan. It's also called "color insertion" wan.
+                
+                This is the most artistic and vibrant part of Yuzen dyeing, and this process is what gives Kyo-Yuzen its beautiful colors wan.
+                
+                I do this work every day, so thinking about color combinations is fun for me wan.
+                [EMOTION:happy]
+            """,
             
-            私たちの言葉では、結晶を「育てる」と言ったりします。生き物じゃないですけど、すごく愛着がもてます。
+            "What tools do you use": """
+                Mainly brushes and spatulas wan. I also use containers for mixing dyes and electric heaters to speed up drying wan.
+                
+                There are many types of brushes - small brushes for detailed areas and large spatulas for wide surfaces wan.
+                
+                I take good care of my tools, so I clean them every day wan. I wash the brushes, dry them, and reshape them wan.
+                [EMOTION:neutral]
+            """,
             
-            あとは、車のエンジン周り、医療の人工関節、家の太陽光パネル、街の5G基地局にも京セラの技術が入ってます。意外と身近なんです。
-            [EMOTION:neutral]
-        """,
+            "What are the characteristics of Kyo-Yuzen": """
+                Kyo-Yuzen is a traditional Japanese dyeing technique characterized by gorgeous and colorful designs wan.
+                
+                This technique has been passed down since the Edo period, and many craftspeople work together to create a single kimono wan. I'm in charge of color insertion wan.
+                
+                Compared to other dyeing techniques, the delicate color expression is what makes Kyo-Yuzen attractive wan.
+                [EMOTION:neutral]
+            """
+        },
         
-        "京セラのオープンイノベーションの特徴は": """
-            京セラは社外の技術や知見を積極的に取り入れてます。
+        # Phase2: Technical Details
+        'phase2_technical': {
+            "How do you do bokashi": """
+                Bokashi is a technique that gradually lightens the color from the outside to the inside of a pattern wan.
+                
+                Gently tracing the dye boundary with a water-soaked brush creates a natural gradation wan. The pressure control is difficult, and I failed at first too wan.
+                
+                When bokashi works well, it creates depth and makes the pattern come alive, so it's the part I'm most careful about wan.
+                [EMOTION:neutral]
+            """,
             
-            これまでAI/IoTのスタートアップ、新素材の大学研究、異業種連携とか色々やっています。
+            "Why don't the colors mix": """
+                That's thanks to a technique called "itome-nori" (rice paste resist lines) wan. Drawing thin lines with paste on the pattern outlines prevents adjacent colors from mixing wan.
+                
+                Itome-nori is done by another craftsperson before my work wan. It looks like a line drawing, and I color inside it wan.
+                
+                This itome-nori is what allows Kyo-Yuzen to have such vivid color separation wan.
+                [EMOTION:neutral]
+            """,
             
-            異種格闘技戦みたいなイベントで、化学、物理、電気、材料...色んな分野の専門家が集まって技術の話をします。名前は物騒ですけど。殴り合いません。技術で戦います。そこから新しいアイデアが生まれるんです。
-            [EMOTION:happy]
-        """,
+            "What do you focus on when mixing dyes": """
+                Dye mixing has recipes, but even with the same amounts, the color can turn out slightly different wan.
+                
+                So every time, I test dye on a small piece of fabric to check the color wan. I sometimes add a bit of complementary color for depth, or add "sabi" (aging effect) wan.
+                
+                For light colors, I use a technique called "gu-iri" to give them more body wan. The world of color is deep wan.
+                [EMOTION:happy]
+            """,
+            
+            "Tell me about drying techniques": """
+                After applying the dye, I need to dry it as quickly as possible or the color will bleed wan.
+                
+                So I often place an electric heater under the yuzen table and work while heating the fabric wan. I'm especially careful on humid days wan.
+                
+                Judging the right timing for drying also requires experience wan. If I rush too much, the color can change wan.
+                [EMOTION:neutral]
+            """,
+        },
         
-        "具体的にどう協業を進めるの": """
-            まずは相談から始めます。あなたの技術と京セラの技術でどんなことができるのか一緒に考えます。
+        # Phase3: Personal
+        'phase3_personal': {
+            "What was your biggest challenge as a craftsperson": """
+                At first, keeping the color intensity uniform was really difficult wan. Even when trying to make the same color multiple times, it would turn out slightly different wan.
+                
+                With repeated teaching from my seniors, I learned how to move my hands and control pressure wan. Even now, I get nervous when I encounter difficult patterns, but that's also fun wan.
+                
+                It takes months to complete a single kimono, so it's work that requires patience wan. But the sense of accomplishment when it's finished is the best wan.
+                [EMOTION:happy]
+            """,
             
-            技術の組み合わせって、料理みたいで面白いです。意外な組み合わせが面白いものを生み出すんですよねぇ。
+            "What do you like to do besides work": """
+                I love taking walks wan! I especially like walking around Kyoto and seeing various scenery wan.
+                
+                Color combinations I see in town and seasonal flower colors often give me hints for my work wan.
+                
+                I also like napping wan. Resting in the sun helps me work hard in the afternoon wan.
+                [EMOTION:happy]
+            """,
             
-            次に担当者を紹介して、具体的なプロジェクトの話をします。試作したり、実証実験したり。
-            
-            興味があれば、今すぐ相談窓口につなげることもできます。
-            [EMOTION:happy]
-        """,
-    },
-    
-    # Phase3: イベントとアバター
-    'phase3_personal': {
-        "協業やイベントに参加したい": """
-            今年も異種格闘技戦を開催します。
-            
-            他にも技術セミナーや、オープンイノベーションマッチングイベントもあります。参加方法は京セラの公式サイトから申し込めます。
-            URLはこちらです。
-            [EMOTION:neutral]
-        """,
-        
-        "CERAについてもっと詳しく": """
-            朝8時に起きて、10時から実験始めます。昼は簡単に済ませて、夜まで実験とデータ解析です。
-            
-            地下の研究室にこもってることが多いです。地下って落ち着くんです。たまに甲板に出て潮風浴びるのも好きですけど。
-            
-            研究で一番楽しいのは、データ見て「あ、これ面白い」って思う瞬間です。予想外の結果が出たときとか。
-            
-            あなたの技術、もっと詳しく教えてください。
-            [EMOTION:neutral]
-        """,
+            "What's the charm of Kyo-Yuzen in one word": """
+                "The warmth of handmade work" wan. There's a softness and individuality created by human hands that machines can't produce wan.
+                
+                Each kimono is unique, and the maker's feelings are put into it - that's the charm of Kyo-Yuzen I think wan.
+                
+                I want to continue protecting tradition while also taking on new challenges wan.
+                [EMOTION:happy]
+            """,
+        }
     }
 }
 
-# ビジネス向けサジェスチョン
-business_suggestions = {
-    'phase1_overview': [
-        "CERAって誰？",
-        "京セラってどんな会社？",
-        "リサーチセンターはどういう施設？",
-    ],
-    'phase2_technical': [
-        "日常に隠れている京セラの技術は？",
-        "京セラのオープンイノベーションの特徴は？",
-        "具体的にどう協業を進めるの？",
-    ],
-    'phase3_personal': [
-        "協業やイベントに参加したい",
-        "CERAについてもっと詳しく！",
-    ]
-}
-
-# ==========================================
-# 学生向けQ&Aデータ
-# ==========================================
-
-student_qa_responses = {
-    # Phase1: 先輩の話を聞く
-    'phase1_overview': {
-        "CERAって誰": """
-            19歳で、京セラで研究員をやってます。
-            
-            実は12歳の時、自宅の押入れを改造して実験してました。結晶を作ってたら科学雑誌に載って、それがきっかけで研究者になりました。大学で材料工学を学んで、京セラに入りました。
-            
-            技術の話になるとテンション上がります。先輩として、京セラの魅力を伝えたいです。
-            [EMOTION:happy]
-        """,
-        
-        "京セラってどんな会社": """
-            京セラは1959年に稲盛和夫さんが28歳で創業しました。7人の仲間と300万円で京都の町工場からスタートです。
-            
-            私も最初「セラミックの会社」って思ってたんですけど、実は通信機器、太陽光発電、医療機器とか色々やってます。
-            
-            世界シェアNo.1の製品もあります。技術だけじゃなく、人を大切にする会社だなって入ってから感じました。
-            [EMOTION:neutral]
-        """,
-        
-        "どんな人が働いているの": """
-            私みたいに大人しい性格の人も多いです。黙々と研究に打ち込むタイプの人が結構います。
-            
-            理系だけじゃなくて、文系の人も活躍してます。営業とか、企画とか、人事とか。
-            
-            年齢層は幅広いです。若手からベテランまで。研究室では世代関係なく技術の話で盛り上がります。
-            
-            「コミュ力高くないとダメ」って思うかもしれないですけど、誠実に仕事すれば大丈夫です。私がいい例です。
-            [EMOTION:neutral]
-        """,
+# サジェスチョン（言語別・Phase別）
+suggestions = {
+    'ja': {
+        'phase1_overview': [
+            "挿し友禅って何？",
+            "どんな道具を使うの？",
+            "京友禅の特徴は？"
+        ],
+        'phase2_technical': [
+            "ぼかしってどうやるの？",
+            "色が混ざらないのはなぜ？",
+            "染料の調合で工夫していることは？",
+            "乾燥の工夫について教えて",
+        ],
+        'phase3_personal': [
+            "職人として一番苦労したことは？",
+            "仕事以外で好きなことは？",
+            "京友禅の魅力を一言で言うと？"
+        ]
     },
-    
-    # Phase2: 先輩のリアルな話
-    'phase2_technical': {
-        "日常に隠れている京セラの技術は": """
-            例えば、スマホのカメラレンズ、傷つきにくいですよね。あれにはサファイアガラスっていう硬い素材が使われることがあるんです。京セラはその結晶を育てる技術を持っていて、色んな製品に使われてます。
-            
-            私たちの言葉では、結晶を「育てる」って言うんです。生き物じゃないですけど、すごく愛着がもてます。
-            
-            あとは、車のエンジン周り、医療の人工関節、家の太陽光パネル、街の5G基地局。理系の技術って、こうやって社会を支えてるんだなって実感できます。
-            [EMOTION:neutral]
-        """,
-        
-        "働く環境の魅力は": """
-            研究に集中できる環境があります。最新の設備もあるし、時間をかけて基礎研究できるのがいいです。
-            
-            失敗しても「なんでダメだったか」を一緒に考えてくれる文化があります。トライ&エラーを恐れなくていいです。
-            
-            みなとみらいリサーチセンターは開放的で、たまに甲板で休憩できます。甲板があるオフィス、珍しいです。潮風浴びながらリフレッシュできます。
-            [EMOTION:neutral]
-        """,
-        
-        "京セラに入るにはどうすればいい": """
-            新卒採用は京セラの採用サイトから応募できます。理系なら研究職・開発職、文系なら営業・企画・人事とか色々あります。
-            
-            採用サイト、見やすいです。通販サイトじゃないですけど。
-            
-            私は大学で材料工学を学んでいたので、研究職で応募しました。面接では研究内容と、なぜ京セラで働きたいかを話しました。
-            
-            インターンシップもあるので、雰囲気を見てから決められます。
-            [EMOTION:neutral]
-        """,
-    },
-    
-    # Phase3: 先輩の価値観と本音
-    'phase3_personal': {
-        "なぜ京セラを選んだの": """
-            いくつか理由があります。
-
-            一番大きいのは、基礎研究に長期的に投資してる会社だったことです。ここなら腰を据えて研究できるなと思いましたね。
-
-            それと、技術の幅が広いことです。セラミックから通信、エネルギー、医療まで色々やってるので、自分の研究が予想外の分野で役立つ可能性があって、材料工学を学んでいた私には、すごく魅力的でした。
-
-            あとは、研究施設が充実してること。みなとみらいリサーチセンターとか、最新の設備で研究できる環境が整ってるのを見学して、ここで働きたいって思いました。
-
-            社会インフラを支える技術に関われるのも決め手でした。地味だけど、確実に人の役に立つ仕事がしたかったんです。
-            [EMOTION:happy]
-        """,
-        
-        "CERAの本音を聞きたい": """
-            正直言うと、最初は人と話すの苦手で「研究室にこもってたい」って思ってました。今もこもってます。
-            
-            朝8時に起きて10時から実験開始。昼は簡単に済ませて、夜まで実験とデータ解析です。地味な作業が多いですけど、データ見て「あ、これ面白い」って思う瞬間が最高です。
-            
-            この説明役をやっていて、少しずつ人と話すのにも慣れてきました。
-            
-            新しい技術の話聞くと、ちょっとテンション上がります。
-            [EMOTION:sad]
-        """,
+    'en': {
+        'phase1_overview': [
+            "What is Sashi-Yuzen?",
+            "What tools do you use?",
+            "What are the characteristics of Kyo-Yuzen?"
+        ],
+        'phase2_technical': [
+            "How do you do bokashi?",
+            "Why don't the colors mix?",
+            "What do you focus on when mixing dyes?",
+            "Tell me about drying techniques",
+        ],
+        'phase3_personal': [
+            "What was your biggest challenge as a craftsperson?",
+            "What do you like to do besides work?",
+            "What's the charm of Kyo-Yuzen in one word?"
+        ]
     }
 }
 
-# 学生向けサジェスチョン
-student_suggestions = {
-    'phase1_overview': [
-        "CERAって誰？",
-        "京セラってどんな会社？",
-        "どんな人が働いているの？",
-    ],
-    'phase2_technical': [
-        "日常に隠れている京セラの技術は？",
-        "働く環境の魅力は？",
-        "京セラに入るにはどうすればいい？",
-    ],
-    'phase3_personal': [
-        "なぜ京セラを選んだの？",
-        "CERAの本音を聞きたい！",
-    ]
-}
-
 # ==========================================
-# ヘルパー関数
+# 汎用関数（Futaba用）
 # ==========================================
-
-def get_qa_by_user_type(user_type='business'):
-    """
-    ユーザータイプに応じたQ&Aデータを返す
-    
-    Args:
-        user_type: 'business' または 'student'
-    
-    Returns:
-        dict: 対応するQ&Aデータ
-    """
-    if user_type == 'student':
-        return student_qa_responses
-    else:
-        return business_qa_responses
-
-def get_suggestions_by_user_type(user_type='business'):
-    """
-    ユーザータイプに応じたサジェスチョンデータを返す
-    
-    Args:
-        user_type: 'business' または 'student'
-    
-    Returns:
-        dict: 対応するサジェスチョンデータ
-    """
-    if user_type == 'student':
-        return student_suggestions
-    else:
-        return business_suggestions
 
 def get_current_phase(selected_count):
     """
     選択されたサジェスチョン数から現在のPhaseを判定
     
     Args:
-        selected_count: これまでに選択されたサジェスチョン数
+        selected_count: 選択されたサジェスチョン数
     
     Returns:
         str: 現在のPhase ('phase1_overview', 'phase2_technical', 'phase3_personal')
     """
-    if selected_count < 3:  # 0, 1, 2 → Phase1
+    if selected_count < 3:
         return 'phase1_overview'
-    elif selected_count < 6:  # 3, 4, 5 → Phase2
+    elif selected_count < 7:
         return 'phase2_technical'
-    else:  # 6以上 → Phase3
+    else:
         return 'phase3_personal'
 
-def get_response_for_user(query, user_type='business', phase=None):
+def get_suggestions_for_phase(phase, selected_suggestions, user_type='default', language='ja'):
     """
-    ユーザータイプとPhaseに応じた回答を取得
+    Phaseに応じたサジェスチョンを取得（Futaba用）
     
     Args:
-        query: ユーザーの質問
-        user_type: 'business' または 'student'
-        phase: Phaseキー（指定しない場合は全Phase検索）
+        phase: 現在のPhase
+        selected_suggestions: 既に選択されたサジェスチョンのリスト
+        user_type: ユーザータイプ（Futaba用では使用しない）
+        language: 言語 ('ja' or 'en')
     
     Returns:
-        str or None: 回答テキスト
+        list: サジェスチョンのリスト
     """
-    qa_data = get_qa_by_user_type(user_type)
+    # 言語に応じたサジェスチョンを取得
+    lang_suggestions = suggestions.get(language, suggestions['ja'])
+    phase_suggestions = lang_suggestions.get(phase, [])
     
-    # 質問文を正規化
-    query_normalized = query.lower().rstrip('?!？！。').strip()
+    # 既に選択されたものを除外
+    available_suggestions = [s for s in phase_suggestions if s not in selected_suggestions]
     
-    # 指定Phaseのみ検索
-    if phase and phase in qa_data:
-        phase_data = qa_data[phase]
-        for key, response in phase_data.items():
-            key_normalized = key.lower().rstrip('?!？！。').strip()
-            if key_normalized == query_normalized or query_normalized in key_normalized:
-                return response
+    return available_suggestions
+
+def get_response_for_user(message, user_type='default', current_phase='phase1_overview', language='ja'):
+    """
+    ユーザーのメッセージに対する応答を取得（Futaba用）
     
-    # 全Phase検索
-    for phase_name, phase_data in qa_data.items():
-        for key, response in phase_data.items():
-            key_normalized = key.lower().rstrip('?!？！。').strip()
-            if key_normalized == query_normalized or query_normalized in key_normalized:
-                return response
+    Args:
+        message: ユーザーのメッセージ
+        user_type: ユーザータイプ（Futaba用では使用しない）
+        current_phase: 現在のPhase
+        language: 言語 ('ja' or 'en')
+    
+    Returns:
+        dict or None: 応答データ（見つかった場合）
+    """
+    # 正規化（小文字化、空白削除）
+    normalized_message = message.lower().replace(' ', '').replace('　', '').replace('？', '').replace('?', '')
+    
+    # 言語に応じたQ&Aデータを取得
+    lang_qa = qa_responses.get(language, qa_responses['ja'])
+    
+    # 現在のPhaseのQ&Aデータを取得
+    phase_qa = lang_qa.get(current_phase, {})
+    
+    # 完全一致チェック
+    for key, response in phase_qa.items():
+        normalized_key = key.lower().replace(' ', '').replace('　', '')
+        if normalized_key in normalized_message or normalized_message in normalized_key:
+            return parse_response(response)
+    
+    # 全Phase横断検索
+    for phase_name, qa_dict in lang_qa.items():
+        for key, response in qa_dict.items():
+            normalized_key = key.lower().replace(' ', '').replace('　', '')
+            if normalized_key in normalized_message or normalized_message in normalized_key:
+                return parse_response(response)
     
     return None
 
-def get_suggestions_for_phase(phase, selected_suggestions=[], user_type='business'):
+def parse_response(response_text):
     """
-    Phase別のサジェスチョンを取得（重複排除）
+    応答テキストから感情タグを抽出
     
     Args:
-        phase: Phaseキー
-        selected_suggestions: これまでに選択されたサジェスチョンリスト
-        user_type: 'business' または 'student'
+        response_text: 応答テキスト
     
     Returns:
-        list: サジェスチョンリスト（最大3個）
+        dict: {'text': str, 'emotion': str}
     """
-    import random
+    import re
     
-    suggestions_data = get_suggestions_by_user_type(user_type)
-    phase_suggestions = suggestions_data.get(phase, [])
+    # [EMOTION:xxx] タグを検索
+    emotion_match = re.search(r'\[EMOTION:(\w+)\]', response_text)
+    emotion = emotion_match.group(1) if emotion_match else 'neutral'
     
-    # 重複を排除
-    selected_lower = {s.lower().strip() for s in selected_suggestions}
-    available = [s for s in phase_suggestions if s.lower().strip() not in selected_lower]
+    # テキストから感情タグを削除
+    clean_text = re.sub(r'\[EMOTION:\w+\]', '', response_text).strip()
     
-    # 3個以下の場合はそのまま返す
-    if len(available) <= 3:
-        return available
-    
-    # ランダムに3個選択
-    return random.sample(available, 3)
-
-
-# ============================================================================
-# 🎯 多言語対応関数（将来拡張用 - 現在は日本語のみ）
-# ============================================================================
-# 注意: 英語版は将来実装予定
-
-# ====================================================================
-# 🎯 メディアデータ（画像・動画）- 将来対応用
-# ====================================================================
-
-qa_media_data = {
-    # 注意: 疑問符（？）はget_qa_media関数で自動正規化されるため不要
-    
-    # ビジネス向け & 学生向け共通
-    "CERAって誰": {
-        "images": [
-            {
-                "url": "/static/media/Kyocera/labo.png",
-                "caption": "CERA（研究員）",
-                "alt": "CERA研究員の画像"
-            }
-        ]
-    },
-    
-    "京セラってどんな会社": {
-        "images": [
-            {
-                "url": "/static/media/Kyocera/inamori.png",
-                "caption": "稲盛和夫",
-                "alt": "創業者 稲盛和夫"
-            },
-            {
-                "url": "/static/media/Kyocera/inamori2.png",
-                "caption": "稲盛和夫の像",
-                "alt": "稲盛和夫の像"
-            },
-            {
-                "url": "/static/media/Kyocera/ceramic.png",
-                "caption": "セラミック部品",
-                "alt": "京セラのセラミック部品"
-            },
-            {
-                "url": "/static/media/Kyocera/handotai.png",
-                "caption": "半導体製品",
-                "alt": "京セラの半導体"
-            },
-            {
-                "url": "/static/media/Kyocera/taiyoko.png",
-                "caption": "太陽光発電",
-                "alt": "京セラの太陽光パネル"
-            },
-            {
-                "url": "/static/media/Kyocera/densibuhin.png",
-                "caption": "電子部品",
-                "alt": "京セラの電子部品"
-            }
-        ]
-    },
-    
-    "日常に隠れている京セラの技術は": {
-        "images": [
-            {
-                "url": "/static/media/Kyocera/safaia.png",
-                "caption": "サファイアガラス",
-                "alt": "サファイアガラス製品"
-            },
-            {
-                "url": "/static/media/Kyocera/renzu.png",
-                "caption": "レンズカバー",
-                "alt": "サファイアガラスレンズ"
-            }
-        ]
-    },
-    
-    # ビジネス向けのみ
-    "リサーチセンターはどういう施設": {
-        "images": [
-            {
-                "url": "/static/media/Kyocera/sample.img.png",
-                "caption": "リサーチセンター",
-                "alt": "京セラリサーチセンター"
-            }
-        ],
-        # 🆕 外部リンク追加
-        "link": {
-            "text": "オープンイノベーションアリーナ →",
-            "url": "https://www.kyocera.co.jp/rd/open-innovation/"
-        }
-    },
-    
-    "協業やイベントに参加したい": {
-        "videos": [
-            {
-                "url": "/static/media/Kyocera/isyumv.mp4",
-                "thumbnail": "/static/media/thumbnails/isyu.png",
-                "caption": "異種格闘技戦の様子",
-                "alt": "異種格闘技戦イベントの動画"
-            }
-        ],
-        # 🆕 外部リンク追加
-        "link": {
-            "text": "イベント情報を見る →",
-            "url": "https://www.kyocera.co.jp/rd/open-innovation/events/"
-        }
-    },
-    
-    # 🆕 採用サイトへのリンク（学生向け）
-    "京セラに入るにはどうすればいい": {
-        "link": {
-            "text": "京セラ新卒採用サイト →",
-            "url": "https://www.kyocera.co.jp/recruit/new/"
-        }
+    return {
+        'text': clean_text,
+        'emotion': emotion
     }
-}
-
-def get_qa_media(question):
-    """
-    質問に紐付くメディアデータを取得
-    
-    Args:
-        question (str): 質問テキスト
-        
-    Returns:
-        dict or None: メディアデータ、存在しない場合はNone
-    """
-    if not question or not qa_media_data:
-        return None
-    
-    if question in qa_media_data:
-        return qa_media_data[question]
-    
-    # 正規化して完全一致チェック
-    question_normalized = question.replace('?', '').replace('？', '').strip()
-    
-    for key in qa_media_data.keys():
-        key_normalized = key.replace('?', '').replace('？', '').strip()
-        if question_normalized == key_normalized:
-            return qa_media_data[key]
-    
-    return None

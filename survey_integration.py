@@ -67,6 +67,7 @@ class SurveyManager:
         Args:
             survey_data: アンケートデータの辞書
                 {
+                    'avatar_name': アバター名 (例: 'Futaba', 'CERA'),
                     'visitor_id': 訪問者ID,
                     'quiz_score': クイズスコア (0-3),
                     'conversation_count': 会話回数,
@@ -90,6 +91,7 @@ class SurveyManager:
             # スプレッドシートに追加する行データ
             values = [[
                 timestamp,
+                survey_data.get('avatar_name', 'Unknown'),  # 🐶 アバター名を追加
                 survey_data.get('visitor_id', 'unknown'),
                 survey_data.get('quiz_score', 0),
                 survey_data.get('conversation_count', 0),
@@ -104,14 +106,15 @@ class SurveyManager:
             # スプレッドシートに追加
             result = self.service.spreadsheets().values().append(
                 spreadsheetId=self.spreadsheet_id,
-                range='シート1!A:H',  # A列からH列まで（8列）
+                range='シート1!A:I',  # A列からI列まで（9列）🐶 1列増加
                 valueInputOption='RAW',
                 insertDataOption='INSERT_ROWS',
                 body=body
             ).execute()
             
             print(f"✅ アンケート保存成功: {result.get('updates').get('updatedRows')}行追加")
-            print(f"📝 データ: 属性={survey_data.get('q1')}, 関心度={survey_data.get('q2')}, 興味={survey_data.get('q3')}")
+            print(f"🐶 アバター: {survey_data.get('avatar_name')}")
+            print(f"📝 データ: Q1={survey_data.get('q1')}, Q2={survey_data.get('q2')}, Q3={survey_data.get('q3')}")
             return True
             
         except HttpError as e:
@@ -168,70 +171,66 @@ class SurveyManager:
             return {'enabled': True, 'error': str(e)}
 
 
-# ====== アンケート質問定義（最終確定版） ======
+# ====== アンケート質問定義（Futaba版） ======
 SURVEY_QUESTIONS = {
     'ja': [
         {
             'id': 'q1',
-            'type': 'radio',
-            'question': 'あなたの属性を教えてください',
+            'type': 'rating',
+            'question': '京友禅への関心度や理解度は変化しましたか？',
             'options': [
-                {'value': 'highschool', 'label': '~高校生'},
-                {'value': 'university', 'label': '大学生・大学院生'},
-                {'value': 'startup', 'label': 'スタートアップ・ベンチャー'},
-                {'value': 'company', 'label': '一般企業'},
-                {'value': 'research', 'label': '大学・研究機関'},
-                {'value': 'government', 'label': '行政・自治体'},
-                {'value': 'other', 'label': 'その他'}
+                {'value': '5', 'label': '5 - 大きく向上した'},
+                {'value': '4', 'label': '4 - やや向上した'},
+                {'value': '3', 'label': '3 - 変わらない'},
+                {'value': '2', 'label': '2 - やや低下した'},
+                {'value': '1', 'label': '1 - 低下した'}
             ]
         },
         {
             'id': 'q2',
             'type': 'rating',
-            'question': 'CERAとの会話を通して、京セラへの興味・関心は深まりましたか？',
+            'question': '京友禅の体験工房や商品購入等の意欲は変わりましたか？',
             'options': [
-                {'value': '5', 'label': '5 - 大きく深まった'},
-                {'value': '4', 'label': '4 - やや深まった'},
+                {'value': '5', 'label': '5 - 大きく高まった'},
+                {'value': '4', 'label': '4 - やや高まった'},
                 {'value': '3', 'label': '3 - 変わらない'},
-                {'value': '2', 'label': '2 - やや薄れた'},
-                {'value': '1', 'label': '1 - 薄れた'}
+                {'value': '2', 'label': '2 - やや低下した'},
+                {'value': '1', 'label': '1 - 低下した'}
             ]
         },
         {
             'id': 'q3',
-            'type': 'checkbox',
-            'question': '以下のうち、興味を持ったものを選んでください（複数選択可）',
+            'type': 'rating',
+            'question': 'このアバターとの対話体験を他の方にもすすめたいと思いましたか？',
             'options': [
-                {'value': 'event', 'label': '京セラのイベント・異業種交流会への参加'},
-                {'value': 'collaboration', 'label': '京セラとの協創・連携'},
-                {'value': 'recruitment', 'label': '京セラの採用情報'},
-                {'value': 'technology', 'label': '京セラの技術・製品についてもっと知りたい'},
-                {'value': 'none', 'label': '特になし'}
+                {'value': '5', 'label': '5 - 強くそう思う'},
+                {'value': '4', 'label': '4 - ややそう思う'},
+                {'value': '3', 'label': '3 - どちらともいえない'},
+                {'value': '2', 'label': '2 - あまり思わない'},
+                {'value': '1', 'label': '1 - 全く思わない'}
             ]
         }
     ],
     'en': [
         {
             'id': 'q1',
-            'type': 'radio',
-            'question': 'Please select your affiliation',
+            'type': 'rating',
+            'question': 'Has your interest in and understanding of Kyo-Yuzen changed?',
             'options': [
-                {'value': 'highschool', 'label': 'High school student or younger'},
-                {'value': 'university', 'label': 'University/Graduate student'},
-                {'value': 'startup', 'label': 'Startup/Venture'},
-                {'value': 'company', 'label': 'General company'},
-                {'value': 'research', 'label': 'University/Research institution'},
-                {'value': 'government', 'label': 'Government/Local government'},
-                {'value': 'other', 'label': 'Other'}
+                {'value': '5', 'label': '5 - Significantly increased'},
+                {'value': '4', 'label': '4 - Somewhat increased'},
+                {'value': '3', 'label': '3 - No change'},
+                {'value': '2', 'label': '2 - Slightly decreased'},
+                {'value': '1', 'label': '1 - Decreased'}
             ]
         },
         {
             'id': 'q2',
             'type': 'rating',
-            'question': 'Has your interest in Kyocera deepened through conversation with CERA?',
+            'question': 'Has your interest in experiencing Kyo-Yuzen workshops or purchasing products changed?',
             'options': [
-                {'value': '5', 'label': '5 - Significantly deepened'},
-                {'value': '4', 'label': '4 - Somewhat deepened'},
+                {'value': '5', 'label': '5 - Significantly increased'},
+                {'value': '4', 'label': '4 - Somewhat increased'},
                 {'value': '3', 'label': '3 - No change'},
                 {'value': '2', 'label': '2 - Slightly decreased'},
                 {'value': '1', 'label': '1 - Decreased'}
@@ -239,14 +238,14 @@ SURVEY_QUESTIONS = {
         },
         {
             'id': 'q3',
-            'type': 'checkbox',
-            'question': 'What are you interested in? (Multiple choices allowed)',
+            'type': 'rating',
+            'question': 'Would you recommend this avatar conversation experience to others?',
             'options': [
-                {'value': 'event', 'label': 'Kyocera events/cross-industry meetings'},
-                {'value': 'collaboration', 'label': 'Co-creation/collaboration with Kyocera'},
-                {'value': 'recruitment', 'label': 'Kyocera recruitment information'},
-                {'value': 'technology', 'label': 'Learn more about Kyocera technology/products'},
-                {'value': 'none', 'label': 'None in particular'}
+                {'value': '5', 'label': '5 - Strongly agree'},
+                {'value': '4', 'label': '4 - Somewhat agree'},
+                {'value': '3', 'label': '3 - Neutral'},
+                {'value': '2', 'label': '2 - Somewhat disagree'},
+                {'value': '1', 'label': '1 - Strongly disagree'}
             ]
         }
     ]

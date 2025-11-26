@@ -2592,10 +2592,10 @@
         
         startConversation(emotion, data.audio);
         
-        // 🆕 京セラCERA用: 自己紹介後に属性選択UIを表示
-        console.log(`🔍 属性選択チェック: userTypeSelected=${userTypeSelected}, isGreeting=${data.isGreeting}`);
+        // 🐶 属性選択UI表示制御（Futaba用は無効化）
+        console.log(`🔍 属性選択チェック: enableUserTypeSelection=${data.enableUserTypeSelection}, userTypeSelected=${userTypeSelected}, isGreeting=${data.isGreeting}`);
         
-        if (!userTypeSelected && data.isGreeting) {
+        if (data.enableUserTypeSelection && !userTypeSelected && data.isGreeting) {
             console.log('✅ 3秒後に属性選択UIを表示します');
             const delayTimer = setTimeout(() => {
                 console.log('⏰ 3秒経過 - 属性選択UI表示を実行');
@@ -2605,7 +2605,7 @@
             // 🔧 重要: このタイマーはaudioTimersに追加しない（会話終了時にクリアされないように）
             appState.userTypeSelectionTimer = delayTimer;
         } else {
-            console.log(`❌ 属性選択UI非表示: userTypeSelected=${userTypeSelected}, isGreeting=${data.isGreeting}`);
+            console.log(`❌ 属性選択UI非表示: enableUserTypeSelection=${data.enableUserTypeSelection}, userTypeSelected=${userTypeSelected}, isGreeting=${data.isGreeting}`);
         }
     }
     

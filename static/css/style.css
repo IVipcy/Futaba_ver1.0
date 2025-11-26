@@ -18,8 +18,8 @@ body {
     padding: 0;
     font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background: #f5f9fc;
+    color: #2c3e50;
+    background: #f0f5f9;
     overflow-x: hidden;
 }
 
@@ -64,10 +64,9 @@ body::before {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 2px 20px rgba(212, 175, 55, 0.15);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     z-index: 100;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .header-content {
@@ -88,116 +87,45 @@ body::before {
 .main-title {
     font-size: 24px;
     font-weight: 300;
-    color: #333;
+    color: #2c3e50;
     display: flex;
     align-items: baseline;
-    gap: 8px;
+    gap: 12px;
     position: relative;
 }
 
 .title-kyo {
     font-weight: 700;
-    background: linear-gradient(135deg, 
-        #ffffff 0%, 
-        #e0f7ff 20%,
-        #81d4fa 40%, 
-        #4dd0e1 60%,
-        #00bfff 80%,
-        #00a8cc 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: 28px;
-    letter-spacing: 4px;
-    filter: drop-shadow(0 0 20px rgba(0, 212, 255, 1))
-            drop-shadow(0 0 10px rgba(0, 255, 255, 0.8))
-            drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.6))
-            drop-shadow(0 0 25px rgba(0, 191, 255, 0.6));
+    font-size: 32px;
+    letter-spacing: 3px;
+    color: #0097a7;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.9),
+        0 0 8px rgba(255, 255, 255, 0.7),
+        1px 1px 0 rgba(0, 151, 167, 0.3);
     position: relative;
-    animation: cyberPulse 3s ease-in-out infinite;
 }
 
 .title-yuzen {
-    font-weight: 700;
-    background: linear-gradient(135deg, 
-        #00ffff 0%, 
-        #00e5ff 10%,
-        #00d4ff 25%,
-        #00bfff 40%,
-        #00a8cc 55%,
-        #00bfff 70%,
-        #00d4ff 85%,
-        #00ffff 100%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: 28px;
-    letter-spacing: 4px;
-    filter: drop-shadow(0 0 25px rgba(0, 212, 255, 1))
-            drop-shadow(0 0 15px rgba(0, 255, 255, 1))
-            drop-shadow(2px 3px 8px rgba(0, 0, 0, 0.7))
-            drop-shadow(0 0 35px rgba(0, 191, 255, 0.7));
-    position: relative;
-    animation: neonGlow 2.5s ease-in-out infinite;
-}
-
-@keyframes neonGlow {
-    0%, 100% {
-        background-position: 0% center;
-        filter: drop-shadow(0 0 25px rgba(0, 212, 255, 1))
-                drop-shadow(0 0 15px rgba(0, 255, 255, 1))
-                drop-shadow(2px 3px 8px rgba(0, 0, 0, 0.7))
-                drop-shadow(0 0 35px rgba(0, 191, 255, 0.7));
-    }
-    50% {
-        background-position: 100% center;
-        filter: drop-shadow(0 0 35px rgba(0, 255, 255, 1))
-                drop-shadow(0 0 20px rgba(0, 212, 255, 1))
-                drop-shadow(2px 3px 10px rgba(0, 0, 0, 0.8))
-                drop-shadow(0 0 50px rgba(0, 191, 255, 0.9));
-    }
-}
-
-@keyframes cyberPulse {
-    0%, 100% {
-        filter: drop-shadow(0 0 20px rgba(0, 212, 255, 1))
-                drop-shadow(0 0 10px rgba(0, 255, 255, 0.8))
-                drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.6))
-                drop-shadow(0 0 25px rgba(0, 191, 255, 0.6));
-    }
-    50% {
-        filter: drop-shadow(0 0 30px rgba(0, 212, 255, 1))
-                drop-shadow(0 0 18px rgba(0, 255, 255, 1))
-                drop-shadow(2px 2px 8px rgba(0, 0, 0, 0.7))
-                drop-shadow(0 0 40px rgba(0, 191, 255, 0.8));
-    }
-}
-
-.title-subtitle {
-    font-size: 14px;
-    color: #666;
     font-weight: 400;
-    letter-spacing: 1px;
-    margin: 0 10px;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #00acc1;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.9),
+        0 0 6px rgba(255, 255, 255, 0.6);
     position: relative;
-}
-
-.title-subtitle::before,
-.title-subtitle::after {
-    content: "•";
-    color: #d4af37;
-    margin: 0 5px;
 }
 
 .title-name {
-    font-size: 20px;
-    font-weight: 500;
-    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: 3px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #0097a7;
+    text-shadow: 
+        0 1px 2px rgba(255, 255, 255, 0.9),
+        0 0 8px rgba(255, 255, 255, 0.7),
+        1px 1px 0 rgba(0, 151, 167, 0.3);
     position: relative;
 }
 
@@ -235,47 +163,40 @@ body::before {
 }
 
 .mute-button {
-    background: linear-gradient(145deg, #4CAF50, #45a049);
+    background: linear-gradient(145deg, #5a8ca8, #4a7591);
     color: white;
 }
 
 .mute-button:hover {
     transform: scale(1.1) rotate(5deg);
-    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 4px 10px rgba(90, 140, 168, 0.4);
 }
 
 .mute-button.muted {
-    background: linear-gradient(145deg, #f44336, #da190b);
+    background: linear-gradient(145deg, #8b7355, #6d5a44);
 }
 
 .language-button {
     background: linear-gradient(135deg, 
-        rgba(20, 30, 45, 0.95) 0%, 
-        rgba(10, 15, 25, 0.98) 50%, 
-        rgba(20, 30, 45, 0.95) 100%);
-    color: #00d4ff;
-    border: 1.5px solid rgba(0, 212, 255, 0.4);
+        rgba(90, 140, 168, 0.95) 0%, 
+        rgba(74, 117, 145, 0.98) 50%, 
+        rgba(90, 140, 168, 0.95) 100%);
+    color: #fff;
+    border: 1.5px solid rgba(90, 140, 168, 0.6);
     box-shadow: 
-        0 0 12px rgba(0, 212, 255, 0.4),
-        0 2px 8px rgba(0, 191, 255, 0.3),
-        inset 0 1px 0 rgba(0, 255, 255, 0.2);
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+        0 2px 8px rgba(90, 140, 168, 0.3);
 }
 
 .language-button:hover {
     background: linear-gradient(135deg, 
-        rgba(0, 212, 255, 0.25) 0%, 
-        rgba(0, 191, 255, 0.2) 50%, 
-        rgba(0, 212, 255, 0.25) 100%);
-    color: #00ffff;
-    border-color: rgba(0, 255, 255, 0.7);
+        rgba(74, 117, 145, 1) 0%, 
+        rgba(61, 90, 128, 1) 50%, 
+        rgba(74, 117, 145, 1) 100%);
+    color: #fff;
+    border-color: rgba(61, 90, 128, 0.8);
     transform: scale(1.1) rotate(5deg);
     box-shadow: 
-        0 0 25px rgba(0, 212, 255, 0.7),
-        0 0 15px rgba(0, 255, 255, 0.5),
-        0 4px 15px rgba(0, 191, 255, 0.4),
-        inset 0 1px 0 rgba(0, 255, 255, 0.4);
-    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+        0 4px 15px rgba(74, 117, 145, 0.5);
 }
 
 .language-display {
@@ -584,18 +505,18 @@ body::before {
 }
 
 .chat-messages::-webkit-scrollbar-track {
-    background: rgba(0, 212, 255, 0.05) !important;
+    background: rgba(90, 140, 168, 0.08) !important;
     border-radius: 10px !important;
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(0, 212, 255, 0.8), rgba(0, 191, 255, 0.9)) !important;
+    background: linear-gradient(180deg, rgba(90, 140, 168, 0.5), rgba(74, 117, 145, 0.6)) !important;
     border-radius: 10px !important;
     min-height: 30px !important;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(0, 255, 255, 0.9), rgba(0, 212, 255, 1)) !important;
+    background: linear-gradient(180deg, rgba(90, 140, 168, 0.7), rgba(74, 117, 145, 0.8)) !important;
 }
 
 /* メッセージラッパー */
@@ -955,13 +876,13 @@ button:hover {
 
 .suggestion-button {
     background: linear-gradient(135deg,
-        rgba(20, 40, 60, 0.85),
-        rgba(10, 25, 40, 0.9));
-    border: 2px solid rgba(0, 212, 255, 0.7);
+        rgba(90, 140, 168, 0.92),
+        rgba(74, 117, 145, 0.95));
+    border: 2px solid rgba(74, 117, 145, 0.6);
     border-radius: 18px;
     padding: 8px 16px;
     font-size: 14px;
-    color: #00d4ff;
+    color: #fff;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -975,15 +896,13 @@ button:hover {
 
 .suggestion-button:hover {
     background: linear-gradient(135deg, 
-        rgba(0, 212, 255, 0.3) 0%, 
-        rgba(0, 191, 255, 0.25) 100%);
-    color: #00ffff;
-    border-color: rgba(0, 255, 255, 0.9);
+        rgba(74, 117, 145, 1) 0%, 
+        rgba(61, 90, 128, 1) 100%);
+    color: #fff;
+    border-color: rgba(61, 90, 128, 0.9);
     transform: translateY(-2px) scale(1.05);
     box-shadow: 
-        0 0 25px rgba(0, 212, 255, 0.7),
-        0 0 15px rgba(0, 255, 255, 0.5),
-        0 5px 20px rgba(0, 191, 255, 0.4),
+        0 4px 15px rgba(74, 117, 145, 0.4),
         inset 0 1px 0 rgba(0, 255, 255, 0.4);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-shadow: 0 0 12px rgba(0, 255, 255, 0.9);
@@ -1247,18 +1166,18 @@ button:hover {
     }
     
     .chat-messages::-webkit-scrollbar-track {
-        background: rgba(212, 175, 55, 0.2) !important;
+        background: rgba(90, 140, 168, 0.12) !important;
         border-radius: 10px !important;
     }
     
     .chat-messages::-webkit-scrollbar-thumb {
-        background: rgba(212, 175, 55, 0.6) !important;
+        background: rgba(90, 140, 168, 0.45) !important;
         border-radius: 10px !important;
         min-height: 20px !important;
     }
     
     .chat-messages::-webkit-scrollbar-thumb:hover {
-        background: rgba(212, 175, 55, 0.8) !important;
+        background: rgba(90, 140, 168, 0.65) !important;
     }
     
     /* メッセージバブル：より透明に */
@@ -1354,7 +1273,7 @@ button:hover {
     .suggestion-button {
         padding: 6px 12px !important;
         font-size: 13px !important;
-        background: rgba(255, 255, 255, 0.8) !important;
+        background: linear-gradient(135deg, rgba(90, 140, 168, 0.92), rgba(74, 117, 145, 0.95)) !important;
     }
     
     /* コントロールボタン */
@@ -1857,17 +1776,17 @@ button:hover {
 }
 
 .media-images-container::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(90, 140, 168, 0.08);
     border-radius: 3px;
 }
 
 .media-images-container::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(90, 140, 168, 0.35);
     border-radius: 3px;
 }
 
 .media-images-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(90, 140, 168, 0.55);
 }
 
 .media-image-wrapper {

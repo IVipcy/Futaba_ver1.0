@@ -47,6 +47,10 @@ socketio = SocketIO(
     async_mode='threading'  # Python 3.13対応
 )
 
+# ====== 🐶 アバター設定（Futaba用） ======
+ENABLE_USER_TYPE_SELECTION = False  # True: CERA用（属性選択あり）, False: Futaba用（属性選択なし）
+DEFAULT_USER_TYPE = 'default'  # 属性選択無効時のデフォルト値
+
 # ====== 🎯 感情分析システム(改善版) ======
 class EmotionAnalyzer:
     def __init__(self):
@@ -292,66 +296,66 @@ audio_cache = {}
 QUIZ_DATA = {
     'ja': [
         {
-            'question': 'CERAが話していた「スマホのカメラレンズに使われる傷つきにくい素材」は何でしょう？',
+            'question': 'ふたばが話していた「挿し友禅」とは、どんな工程のこと？',
             'options': [
-                'A) 強化ガラス',
-                'B) サファイアガラス',
-                'C) ダイヤモンドコーティング'
+                'A) 模様の輪郭に糊を置く工程',
+                'B) 筆や刷毛で模様に色を挿していく工程',
+                'C) 布を水で洗って仕上げる工程'
             ],
             'correct': 1,
-            'explanation': 'サファイアガラスです！京セラは結晶を「育てる」技術を持っていて、この硬い素材が色んな製品に使われています。CERAは結晶を育てることに愛着を持っているんですよ✨'
+            'explanation': '正解わん！挿し友禅は筆や刷毛で手作業で模様に色を挿していく工程のことわん。友禅染の中で最も絵画的で華やかな部分を担当していて、この工程があるから京友禅は美しい色彩を持つようになるんだわん✨'
         },
         {
-            'question': '京セラは「セラミックの会社」というイメージが強いですが、実際には様々な事業を展開しています。次のうち京セラが手がけていないものはどれ？',
+            'question': '「ぼかし」という技法について、正しい説明はどれ？',
             'options': [
-                'A) 太陽光発電システム',
-                'B) 5G通信の基地局',
-                'C) 自動車の完成車製造'
-            ],
-            'correct': 2,
-            'explanation': '正解は「自動車の完成車製造」です！京セラは車のエンジン周りの部品は作っていますが、車そのものは作っていません。太陽光発電、5G基地局、医療機器、半導体など、実は身の回りの色々なところで活躍しているんです🚗'
-        },
-        {
-            'question': '京セラのみなとみらいリサーチセンターの特徴として正しいものはどれ？',
-            'options': [
-                'A) 首都圏の3つの研究所を統合して約700人の研究者が働いている',
-                'B) 京セラ製品の製造工場として稼働している',
-                'C) 一般向けのショールームとして毎日公開されている'
+                'A) 模様の外側から内側にかけて徐々に色を薄くしていく技法',
+                'B) 複数の色を混ぜて新しい色を作る技法',
+                'C) 布を熱で炙って乾燥させる技法'
             ],
             'correct': 0,
-            'explanation': '正解です！2019年にできた研究開発専門の拠点で、約700人の研究者が一緒に働いています。他の会社や大学と一緒にプロジェクトを進める「共創スペース」もあって、1階の工房ではアイデアソンやハッカソンのイベントもやってるんです🔬'
+            'explanation': '正解わん！ぼかしは、模様の外側から内側にかけて徐々に色を薄くしていく技法わん。水を含ませた筆で染料の境界を優しくなぞると、自然なグラデーションができて立体感が出るんだわん。力加減が難しくて、最初は失敗したこともあるわん🎨'
+        },
+        {
+            'question': 'ふたばが「職人として一番苦労したこと」として話していたのはどれ？',
+            'options': [
+                'A) 道具の手入れを毎日すること',
+                'B) 色の濃淡を均一に保つこと',
+                'C) 散歩の時間を確保すること'
+            ],
+            'correct': 1,
+            'explanation': '正解わん！最初の頃は、色の濃淡を均一に保つのが本当に難しかったわん。同じ色を何度も作ろうとしても、微妙に違う色になっちゃうんだわん。先輩に何度も教えてもらって、今のレベルになったわん。根気が必要な仕事だけど、やりがいがあるわん💪'
         }
     ],
     'en': [
         {
-            'question': 'What is the scratch-resistant material CERA mentioned that\'s used in smartphone camera lenses?',
+            'question': 'What is "Sashi-Yuzen" that Futaba talked about?',
             'options': [
-                'A) Tempered glass',
-                'B) Sapphire glass',
-                'C) Diamond coating'
+                'A) The process of placing glue on pattern outlines',
+                'B) The process of applying colors to patterns with brushes',
+                'C) The process of washing and finishing the fabric'
             ],
             'correct': 1,
-            'explanation': 'It\'s sapphire glass! Kyocera has the technology to "grow" crystals, and this hard material is used in various products. CERA really loves the process of growing crystals✨'
+            'explanation': 'Correct wan! Sashi-Yuzen is the process of applying colors to kimono patterns by hand using brushes. It\'s the most artistic and vibrant part of Yuzen dyeing, and this process gives Kyo-Yuzen its beautiful colors✨'
         },
         {
-            'question': 'Kyocera is known as a "ceramics company," but actually does business in various fields. Which of these does Kyocera NOT do?',
+            'question': 'Which description correctly explains the "bokashi" technique?',
             'options': [
-                'A) Solar power generation systems',
-                'B) 5G communication base stations',
-                'C) Complete automobile manufacturing'
-            ],
-            'correct': 2,
-            'explanation': 'Correct! Kyocera doesn\'t manufacture complete cars, though they do make parts for car engines. They work in solar power, 5G base stations, medical devices, semiconductors, and many other areas around us🚗'
-        },
-        {
-            'question': 'What is true about Kyocera\'s Minato Mirai Research Center?',
-            'options': [
-                'A) It integrated 3 research labs in the Tokyo area with about 700 researchers',
-                'B) It operates as a manufacturing plant for Kyocera products',
-                'C) It\'s open to the public daily as a showroom'
+                'A) A technique that gradually lightens color from outside to inside',
+                'B) A technique that mixes multiple colors to create new ones',
+                'C) A technique that dries fabric by heating it'
             ],
             'correct': 0,
-            'explanation': 'Correct! It\'s a R&D facility opened in 2019 where about 700 researchers work together. There\'s also a "co-creation space" for joint projects with other companies and universities, and the 1st floor workshop hosts ideathons and hackathons🔬'
+            'explanation': 'Correct wan! Bokashi gradually lightens the color from the outside to the inside of a pattern. Gently tracing the dye boundary with a water-soaked brush creates a natural gradation and gives depth wan. The pressure control is difficult, and I failed at first too🎨'
+        },
+        {
+            'question': 'What did Futaba mention as the biggest challenge as a craftsperson?',
+            'options': [
+                'A) Maintaining tools every day',
+                'B) Keeping color intensity uniform',
+                'C) Finding time for walks'
+            ],
+            'correct': 1,
+            'explanation': 'Correct wan! At first, keeping the color intensity uniform was really difficult wan. Even when trying to make the same color multiple times, it would turn out slightly different wan. With repeated teaching from seniors, I reached my current level. It requires patience, but it\'s rewarding work💪'
         }
     ]
 }
@@ -372,6 +376,39 @@ use_azure_speech = False
 
 # SpeechProcessor (音声認識)
 speech_processor = None
+
+# 🐶 京友禅用語辞書
+kyoyuzen_terms = {}
+
+# ====== 🐶 京友禅用語辞書の読み込み ======
+def load_kyoyuzen_terms():
+    """京友禅用語の読み仮名辞書を読み込む"""
+    global kyoyuzen_terms
+    try:
+        terms_file = Path(__file__).parent / 'kyoyuzen_terms.json'
+        if terms_file.exists():
+            with open(terms_file, 'r', encoding='utf-8') as f:
+                kyoyuzen_terms = json.load(f)
+            print(f"✅ 京友禅用語辞書読み込み成功: {len(kyoyuzen_terms)}語")
+        else:
+            print(f"⚠️ 京友禅用語辞書が見つかりません: {terms_file}")
+    except Exception as e:
+        print(f"❌ 京友禅用語辞書読み込みエラー: {e}")
+        kyoyuzen_terms = {}
+
+def apply_kyoyuzen_terms(text):
+    """テキストに京友禅用語の読み仮名を適用"""
+    if not kyoyuzen_terms:
+        return text
+    
+    # 長い単語から優先的に置換（部分一致を防ぐため）
+    sorted_terms = sorted(kyoyuzen_terms.items(), key=lambda x: len(x[0]), reverse=True)
+    
+    result = text
+    for kanji, hiragana in sorted_terms:
+        result = result.replace(kanji, hiragana)
+    
+    return result
 
 # ====== Azure Speech Serviceの音声合成クラス ======
 class AzureSpeechClient:
@@ -487,66 +524,41 @@ class AzureSpeechClient:
 class ElevenLabsClient:
     """ElevenLabs音声合成クライアント"""
     
-    def __init__(self, api_key=None, voice_id=None):
+    def __init__(self, api_key=None, voice_id=None, model_id=None, pronunciation_dictionary_id=None):
         self.api_key = api_key
         self.voice_id = voice_id or "21m00Tcm4TlvDq8ikWAM"  # デフォルト音声
+        self.model_id = model_id or "eleven_multilingual_v2"  # デフォルトモデル
+        self.pronunciation_dictionary_id = pronunciation_dictionary_id  # 発音辞書ID（オプション）
         self.base_url = "https://api.elevenlabs.io/v1"
-        
-        # 🆕 京セラ専門用語辞書を外部ファイルから読み込み
-        self.term_dictionary = self._load_term_dictionary()
+
     
-    def _load_term_dictionary(self):
-        """専門用語辞書を外部JSONファイルから読み込み
+    def normalize_japanese_text(self, text):
+        """日本語テキストを音声合成向けに正規化
+        
+        1. 京友禅用語辞書を適用（漢字→ひらがな）
+        2. 記号の正規化
+        
+        Args:
+            text: 元のテキスト
         
         Returns:
-            dict: 専門用語辞書（キー: 単語、値: 読み仮名）
+            str: 正規化されたテキスト
         """
-        import json
-        import os
+        import re
         
-        # JSONファイルのパス
-        json_path = os.path.join(os.path.dirname(__file__), 'kyocera_terms.json')
+        normalized_text = text
         
-        try:
-            with open(json_path, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-            
-            # カテゴリ別に分かれている辞書を1つにマージ
-            merged_dict = {}
-            for category, terms in data.items():
-                # メタデータ（_で始まるキー）はスキップ
-                if category.startswith('_'):
-                    continue
-                
-                # カテゴリ内の全ての用語を追加
-                if isinstance(terms, dict):
-                    merged_dict.update(terms)
-            
-            print(f"✅ 専門用語辞書を読み込みました: {len(merged_dict)}単語")
-            return merged_dict
-            
-        except FileNotFoundError:
-            print(f"⚠️ 辞書ファイルが見つかりません: {json_path}")
-            print("📝 デフォルト辞書を使用します")
-            return self._get_default_dictionary()
+        # 🐶 京友禅用語辞書を適用（漢字→ひらがな置換）
+        normalized_text = apply_kyoyuzen_terms(normalized_text)
         
-        except json.JSONDecodeError as e:
-            print(f"❌ 辞書ファイルの読み込みエラー: {e}")
-            print("📝 デフォルト辞書を使用します")
-            return self._get_default_dictionary()
-    
-    def _get_default_dictionary(self):
-        """デフォルトの専門用語辞書（フォールバック用）
+        # 記号の正規化（最小限）
+        normalized_text = normalized_text.replace('...', '。')
+        normalized_text = normalized_text.replace('…', '。')
         
-        Returns:
-            dict: 最小限の専門用語辞書
-        """
-        return {
-            '京セラ': 'きょうせら',
-            'KYOCERA': 'きょうせら',
-            'CERA': 'せら',
-            '稲盛和夫': 'いなもりかずお',
-        }
+        # 連続する句読点を整理
+        normalized_text = re.sub(r'[、。]{2,}', '。', normalized_text)
+        
+        return normalized_text
         
     def test_connection(self):
         """接続テスト"""
@@ -560,49 +572,7 @@ class ElevenLabsClient:
         except Exception as e:
             print(f"ElevenLabs接続テストエラー: {e}")
             return False
-    
-    def preprocess_text(self, text):
-        """専門用語を読みやすく変換（v3.5: テキストクリーニング追加）
-        
-        Args:
-            text: 元のテキスト
-        
-        Returns:
-            str: 変換後のテキスト
-        """
-        import re
-        
-        # 🔧 v3.5: 不自然な区切りを防ぐため、不要な記号を削除
-        processed_text = text
-        
-        # 不要な改行、タブを削除（スペースに変換）
-        processed_text = processed_text.replace('\n', ' ').replace('\t', ' ')
-        
-        # 複数の連続スペースを1つに
-        processed_text = re.sub(r'\s+', ' ', processed_text)
-        
-        # 全角スペースを削除
-        processed_text = processed_text.replace('　', '')
-        
-        # ハイフンやダッシュの前後の不要なスペースを削除
-        processed_text = re.sub(r'\s*[-–—]\s*', '', processed_text)
-        
-        replacements_made = []
-        
-        # 辞書の長い単語から順に置換（部分一致を防ぐため）
-        sorted_terms = sorted(self.term_dictionary.items(), key=lambda x: len(x[0]), reverse=True)
-        
-        for term, reading in sorted_terms:
-            if term in processed_text:
-                processed_text = processed_text.replace(term, reading)
-                replacements_made.append(f"{term}→{reading}")
-        
-        # デバッグ用ログ（置換が行われた場合のみ）
-        if replacements_made:
-            print(f"📝 専門用語変換: {', '.join(replacements_made[:3])}" + 
-                  (f" 他{len(replacements_made)-3}件" if len(replacements_made) > 3 else ""))
-        
-        return processed_text
+
     
     def generate_voice(self, text, emotion='neutral', speed=1.0):
         """音声生成
@@ -623,30 +593,24 @@ class ElevenLabsClient:
             'Content-Type': 'application/json'
         }
         
-        # 🔧 v3.5: 音量・速度を安定化（stability/similarity_boostを統一）
-        # 音量と速度のばらつきを防ぐため、全感情で統一
-        stability = 0.5  # 固定: 音声の安定性（0.5で適度な抑揚と安定性）
-        similarity_boost = 0.75  # 固定: 音量の一貫性（0.75で適度な音量）
-        style = 0.0  # 感情に応じて変化（音量には影響しない）
+        # 🔧 ElevenLabs公式推奨設定
+        # 参考: https://elevenlabs.io/docs/product-guides/playground/text-to-speech
         
-        # styleパラメータのみで感情を表現
-        if emotion == 'happy':
-            style = 0.5  # 明るく
-        elif emotion == 'sad':
-            style = 0.3  # 落ち着いて
-        elif emotion == 'angry':
-            style = 0.7  # 強く
-        elif emotion == 'surprised':
-            style = 0.6  # 驚いて
-        elif emotion == 'start':
-            style = 0.5  # 明るく
+        # UIのデフォルト値に完全一致させる
+        stability = 0.5
+        similarity_boost = 0.75
+        style = 0.0
         
-        # 🆕 テキストを前処理（専門用語をひらがな化）
-        processed_text = self.preprocess_text(text)
+        # 🆕 日本語テキストを正規化（ElevenLabs UIの自動正規化を再現）
+        normalized_text = self.normalize_japanese_text(text)
+        
+        # デバッグ用：送信するテキストを常に表示
+        print(f"🎤 ElevenLabsに送信するテキスト:")
+        print(f"   {normalized_text[:100]}{'...' if len(normalized_text) > 100 else ''}")
         
         data = {
-            'text': processed_text,
-            'model_id': 'eleven_multilingual_v2',  # 日本語対応モデル
+            'text': normalized_text,
+            'model_id': self.model_id,
             'voice_settings': {
                 'stability': stability,
                 'similarity_boost': similarity_boost,
@@ -654,6 +618,14 @@ class ElevenLabsClient:
                 'use_speaker_boost': True
             }
         }
+        
+        # 🆕 Pronunciation Dictionary（発音辞書）を追加（設定されている場合）
+        if self.pronunciation_dictionary_id:
+            data['pronunciation_dictionary_locators'] = [{
+                'pronunciation_dictionary_id': self.pronunciation_dictionary_id,
+                'version_id': 'latest'
+            }]
+            print(f"📚 発音辞書を使用: {self.pronunciation_dictionary_id}")
         
         try:
             response = requests.post(
@@ -693,19 +665,19 @@ def calculate_relationship_level(conversation_count):
         return {'level': 4, 'style': 'best_friend', 'name': 'MAX'}
 
 def get_relationship_adjusted_greeting(language, relationship_style):
-    """関係性レベルに応じた挨拶を生成（🆕 京セラCERA版）"""
+    """関係性レベルに応じた挨拶を生成（🐶 Futaba版）"""
     greetings = {
         'ja': {
-            'formal': "私はCERAといいます。みなさんに京セラの魅力を頑張ってお伝えします。アメリカ育ちで少し漢字が苦手ですが、何でも質問してくださいね！",
-            'polite': "こんにちは！また会えて嬉しいです。今日はどんなお話をしましょうか？",
-            'friendly': "やっほー！会いたかったよ〜！今日も楽しくお話しようね！",
-            'casual': "おっす！元気にしてた？なんか面白い話ある？"
+            'formal': "こんにちわん、ふたばです。私は京友禅の挿し友禅という着物に色を乗せていく工程を担当していますわん。なんでも質問してくださいね。",
+            'polite': "また会えて嬉しいわん！今日はどんなお話をしましょうか？",
+            'friendly': "わあい！会いたかったわん！今日も楽しくお話ししようね。",
+            'casual': "元気にしてたわん？何か聞きたいことあるかな？"
         },
         'en': {
-            'formal': "My name is CERA. I'll do my best to share Kyocera's appeal with you! I grew up in America and kanji is a bit challenging for me, but feel free to ask me anything!",
-            'polite': "Hello again! It's nice to see you. What would you like to talk about today?",
-            'friendly': "Hey there! I missed you! Let's have fun chatting today!",
-            'casual': "Yo! How've you been? Got any interesting stories?"
+            'formal': "Hello wan! I'm Futaba. I work on Sashi-Yuzen, the process of applying colors to kimono in Kyo-Yuzen. Feel free to ask me anything!",
+            'polite': "Nice to see you again wan! What would you like to talk about today?",
+            'friendly': "Hey there wan! I missed you! Let's chat!",
+            'casual': "How have you been wan? Got any questions?"
         }
     }
     
@@ -717,6 +689,9 @@ def initialize_system():
     global client, chatbot, elevenlabs_client, use_elevenlabs, azure_speech_client, use_azure_speech, speech_processor
     
     print("🚀 システム初期化中...")
+    
+    # 🐶 京友禅用語辞書を読み込み
+    load_kyoyuzen_terms()
     
     # OpenAI API初期化
     api_key = os.getenv('OPENAI_API_KEY')
@@ -736,14 +711,22 @@ def initialize_system():
     # 🆕 ElevenLabs初期化（日本語用 - 最優先）
     elevenlabs_key = os.getenv('ELEVENLABS_API_KEY')
     elevenlabs_voice_id = os.getenv('ELEVENLABS_VOICE_ID', '21m00Tcm4TlvDq8ikWAM')
+    elevenlabs_model_id = os.getenv('ELEVENLABS_MODEL_ID', 'eleven_multilingual_v2')
+    elevenlabs_pronunciation_dict_id = os.getenv('ELEVENLABS_PRONUNCIATION_DICTIONARY_ID')  # オプション
     elevenlabs_enabled = os.getenv('ELEVENLABS_ENABLED', 'false').lower() == 'true'
     
     if elevenlabs_enabled and elevenlabs_key:
         try:
-            elevenlabs_client = ElevenLabsClient(elevenlabs_key, elevenlabs_voice_id)
+            elevenlabs_client = ElevenLabsClient(
+                elevenlabs_key, 
+                elevenlabs_voice_id, 
+                elevenlabs_model_id,
+                elevenlabs_pronunciation_dict_id
+            )
             if elevenlabs_client.test_connection():
                 use_elevenlabs = True
-                print(f"✅ ElevenLabs初期化完了 (音声ID: {elevenlabs_voice_id})")
+                dict_info = f", 発音辞書: {elevenlabs_pronunciation_dict_id[:8]}..." if elevenlabs_pronunciation_dict_id else ""
+                print(f"✅ ElevenLabs初期化完了 (音声ID: {elevenlabs_voice_id}, モデル: {elevenlabs_model_id}{dict_info})")
             else:
                 print("⚠️ ElevenLabs接続テスト失敗")
         except Exception as e:
@@ -1176,14 +1159,16 @@ def generate_prioritized_suggestions(session_info, visitor_info, relationship_st
         print(f"[DEBUG] Suggestions count: {suggestions_count}, Phase: {current_phase}")
         print(f"[DEBUG] Selected suggestions: {selected_suggestions}")
         
-        # 🔧 修正: user_typeを取得（デフォルトは'business'）
+        # 🔧 修正: user_typeと言語を取得（デフォルトは'business'と'ja'）
         user_type = session_info.get('user_type', 'business') if session_info else 'business'
+        language = session_info.get('language', 'ja') if session_info else 'ja'
         
         # 段階別サジェスチョンを取得
         suggestions = get_suggestions_for_phase(
             phase=current_phase,
             selected_suggestions=selected_suggestions,
-            user_type=user_type
+            user_type=user_type,
+            language=language
         )
         
         print(f"[DEBUG] Generated suggestions: {suggestions}")
@@ -1495,7 +1480,14 @@ def handle_user_type_selection(data):
     """
     ユーザー属性選択ハンドラー
     クライアントから 'business' または 'student' を受信
+    
+    🐶 Futaba用: ENABLE_USER_TYPE_SELECTION = False の場合は使用されない
     """
+    # 🐶 属性選択が無効の場合はスキップ
+    if not ENABLE_USER_TYPE_SELECTION:
+        print("⚠️ 属性選択は無効化されています (Futaba mode)")
+        return
+    
     session_id = request.sid
     user_type = data.get('type', 'business')  # 'business' or 'student'
     language = data.get('language', 'ja')
@@ -1523,7 +1515,7 @@ def handle_user_type_selection(data):
     
     # Phase1のサジェスチョンを取得
     from modules.static_qa_data import get_suggestions_for_phase
-    phase1_suggestions = get_suggestions_for_phase('phase1_overview', [], user_type)
+    phase1_suggestions = get_suggestions_for_phase('phase1_overview', [], user_type, language)
     
     # 音声生成
     try:
@@ -1585,6 +1577,11 @@ def handle_connect():
             'relationship_style': 'formal'
         }
         
+        # 🐶 Futaba用: 属性選択無効時は自動的にuser_typeを設定
+        if not ENABLE_USER_TYPE_SELECTION:
+            session_data[session_id]['user_type'] = DEFAULT_USER_TYPE
+            print(f"🐶 Futaba mode: user_type自動設定 = {DEFAULT_USER_TYPE}")
+        
         # 初回接続の場合
         if session_data[session_id]['first_interaction']:
             try:
@@ -1615,11 +1612,23 @@ def handle_connect():
                     'language': 'ja',
                     'voice_engine': 'elevenlabs' if use_elevenlabs else ('azure_speech' if use_azure_speech else 'openai_tts'),
                     'relationshipLevel': 'formal',
-                    'mentalState': session_data[session_id]['mental_state']
+                    'mentalState': session_data[session_id]['mental_state'],
+                    'enableUserTypeSelection': ENABLE_USER_TYPE_SELECTION  # 🐶 フラグを送信
                 }
                 
-                # 🔧 修正: 初回自己紹介時はサジェスチョンなし（属性選択前のため）
-                greeting_data['suggestions'] = []
+                # 🐶 修正: 属性選択の有効/無効に応じてサジェスチョン表示を制御
+                if ENABLE_USER_TYPE_SELECTION:
+                    # CERA用: 属性選択前なのでサジェスチョンなし
+                    greeting_data['suggestions'] = []
+                else:
+                    # Futaba用: 最初からPhase1サジェスチョンを表示
+                    try:
+                        from modules.static_qa_data import get_suggestions_for_phase
+                        greeting_data['suggestions'] = get_suggestions_for_phase('phase1_overview', [], DEFAULT_USER_TYPE, 'ja')
+                        print(f"📋 初回自己紹介: Futaba mode, サジェスチョン={len(greeting_data['suggestions'])}個")
+                    except Exception as e:
+                        print(f"⚠️ サジェスチョン生成エラー: {e}")
+                        greeting_data['suggestions'] = []
                 
                 emit('greeting', greeting_data)
                 
@@ -1637,6 +1646,11 @@ def handle_connect():
         # 既存セッションの場合
         data = get_session_data(session_id)
         language = data["language"]
+        
+        # 🐶 Futaba用: user_typeがない場合は自動設定
+        if not ENABLE_USER_TYPE_SELECTION and 'user_type' not in data:
+            data['user_type'] = DEFAULT_USER_TYPE
+            print(f"🐶 Futaba mode: 再接続時にuser_type自動設定 = {DEFAULT_USER_TYPE}")
         
         # 訪問者の関係性レベルを確認
         visitor_info = None
@@ -1678,13 +1692,35 @@ def handle_connect():
             'language': language,
             'voice_engine': 'elevenlabs' if (use_elevenlabs and language == 'ja') else ('azure_speech' if (use_azure_speech and language == 'ja') else 'openai_tts'),
             'relationshipLevel': relationship_style,
-            'mentalState': data['mental_state']
+            'mentalState': data['mental_state'],
+            'enableUserTypeSelection': ENABLE_USER_TYPE_SELECTION  # 🐶 フラグを送信
         }
         
-        # 🔧 修正: 再接続時も属性選択前はサジェスチョンなし
-        user_type = data.get('user_type', None)
-        if user_type:
-            # 属性選択済みの場合はサジェスチョン表示
+        # 🐶 修正: 属性選択の有効/無効に応じてサジェスチョン表示を制御
+        language = data.get('language', 'ja')
+        if ENABLE_USER_TYPE_SELECTION:
+            # CERA用: 属性選択状態を確認
+            user_type = data.get('user_type', None)
+            if user_type:
+                # 属性選択済みの場合はサジェスチョン表示
+                try:
+                    from modules.static_qa_data import get_suggestions_for_phase, get_current_phase
+                    selected_count = data.get('selected_suggestions_count', 0)
+                    current_phase = get_current_phase(selected_count)
+                    greeting_data['suggestions'] = get_suggestions_for_phase(
+                        current_phase, 
+                        data.get('selected_suggestions', []), 
+                        user_type,
+                        language
+                    )
+                except Exception as e:
+                    print(f"⚠️ サジェスチョン生成エラー: {e}")
+                    greeting_data['suggestions'] = []
+            else:
+                # 属性未選択の場合はサジェスチョンなし
+                greeting_data['suggestions'] = []
+        else:
+            # Futaba用: 常にサジェスチョンを表示
             try:
                 from modules.static_qa_data import get_suggestions_for_phase, get_current_phase
                 selected_count = data.get('selected_suggestions_count', 0)
@@ -1692,14 +1728,13 @@ def handle_connect():
                 greeting_data['suggestions'] = get_suggestions_for_phase(
                     current_phase, 
                     data.get('selected_suggestions', []), 
-                    user_type
+                    DEFAULT_USER_TYPE,
+                    language
                 )
+                print(f"📋 再接続: Futaba mode, Phase={current_phase}, サジェスチョン={len(greeting_data['suggestions'])}個")
             except Exception as e:
                 print(f"⚠️ サジェスチョン生成エラー: {e}")
                 greeting_data['suggestions'] = []
-        else:
-            # 属性未選択の場合はサジェスチョンなし
-            greeting_data['suggestions'] = []
         
         emit('greeting', greeting_data)
     
@@ -1713,6 +1748,11 @@ def handle_set_language(data):
     
     session_info = get_session_data(session_id)
     session_info['language'] = language
+    
+    # 🐶 Futaba用: user_typeがない場合は自動設定
+    if not ENABLE_USER_TYPE_SELECTION and 'user_type' not in session_info:
+        session_info['user_type'] = DEFAULT_USER_TYPE
+        print(f"🐶 Futaba mode: 言語切替時にuser_type自動設定 = {DEFAULT_USER_TYPE}")
     
     # 関係性レベルを確認
     visitor_id = session_info.get('visitor_id')
@@ -1751,13 +1791,37 @@ def handle_set_language(data):
         'language': language,
         'voice_engine': 'elevenlabs' if (use_elevenlabs and language == 'ja') else ('azure_speech' if (use_azure_speech and language == 'ja') else 'openai_tts'),
         'relationshipLevel': relationship_style,
-        'mentalState': session_info['mental_state']
+        'mentalState': session_info['mental_state'],
+        'enableUserTypeSelection': ENABLE_USER_TYPE_SELECTION  # 🐶 フラグを送信
     }
     
-    # 🔧 修正: 属性選択状態に応じたサジェスチョン生成
-    user_type = session_info.get('user_type', None)
-    if user_type:
-        # 属性選択済みの場合はPhaseに応じたサジェスチョンを表示
+    # 🐶 修正: 属性選択の有効/無効に応じてサジェスチョン表示を制御
+    language = session_info.get('language', 'ja')
+    if ENABLE_USER_TYPE_SELECTION:
+        # CERA用: 属性選択状態を確認
+        user_type = session_info.get('user_type', None)
+        if user_type:
+            # 属性選択済みの場合はPhaseに応じたサジェスチョンを表示
+            try:
+                from modules.static_qa_data import get_suggestions_for_phase, get_current_phase
+                selected_count = session_info.get('selected_suggestions_count', 0)
+                current_phase = get_current_phase(selected_count)
+                greeting_data['suggestions'] = get_suggestions_for_phase(
+                    current_phase, 
+                    session_info.get('selected_suggestions', []), 
+                    user_type,
+                    language
+                )
+                print(f"📋 言語切り替え: Phase={current_phase}, UserType={user_type}, Language={language}, サジェスチョン={len(greeting_data['suggestions'])}個")
+            except Exception as e:
+                print(f"⚠️ サジェスチョン生成エラー: {e}")
+                greeting_data['suggestions'] = []
+        else:
+            # 属性未選択の場合はサジェスチョンなし
+            greeting_data['suggestions'] = []
+            print(f"📋 言語切り替え: 属性未選択のためサジェスチョンなし")
+    else:
+        # Futaba用: 常にサジェスチョンを表示
         try:
             from modules.static_qa_data import get_suggestions_for_phase, get_current_phase
             selected_count = session_info.get('selected_suggestions_count', 0)
@@ -1765,16 +1829,13 @@ def handle_set_language(data):
             greeting_data['suggestions'] = get_suggestions_for_phase(
                 current_phase, 
                 session_info.get('selected_suggestions', []), 
-                user_type
+                DEFAULT_USER_TYPE,
+                language
             )
-            print(f"📋 言語切り替え: Phase={current_phase}, UserType={user_type}, サジェスチョン={len(greeting_data['suggestions'])}個")
+            print(f"📋 言語切り替え: Futaba mode, Phase={current_phase}, Language={language}, サジェスチョン={len(greeting_data['suggestions'])}個")
         except Exception as e:
             print(f"⚠️ サジェスチョン生成エラー: {e}")
             greeting_data['suggestions'] = []
-    else:
-        # 属性未選択の場合はサジェスチョンなし
-        greeting_data['suggestions'] = []
-        print(f"📋 言語切り替え: 属性未選択のためサジェスチョンなし")
     
     emit('greeting', greeting_data)
 
@@ -1936,8 +1997,12 @@ def handle_message(data):
         else:
             print(f"🤖 新規応答生成: {message[:50]}...")
             
-            # 🆕 京セラCERA用: 静的Q&Aを優先チェック
-            user_type = session_info.get('user_type', 'business')
+            # 🐶 Futaba/CERA用: 静的Q&Aを優先チェック
+            if ENABLE_USER_TYPE_SELECTION:
+                user_type = session_info.get('user_type', 'business')
+            else:
+                user_type = DEFAULT_USER_TYPE
+            language = session_info.get('language', 'ja')
             static_response = None
             
             try:
@@ -1945,7 +2010,7 @@ def handle_message(data):
                 
                 # まず静的Q&Aをチェック
                 current_phase = get_current_phase(session_info.get('selected_suggestions_count', 0))
-                static_response = get_response_for_user(message, user_type, current_phase)
+                static_response = get_response_for_user(message, user_type, current_phase, language)
                 
                 if static_response:
                     print(f"✅ 静的Q&Aヒット: {user_type} - {current_phase}")
@@ -1956,7 +2021,9 @@ def handle_message(data):
             if chatbot:
                 # 🆕 静的Q&Aがあればそれを使用、なければRAG
                 if static_response:
-                    response = static_response
+                    response = static_response['text']
+                    emotion = static_response.get('emotion', 'neutral')
+                    print(f"✅ 静的Q&A使用: emotion={emotion}")
                 else:
                     # RAG応答生成
                     response = chatbot.get_response(
@@ -1964,9 +2031,8 @@ def handle_message(data):
                         language=language,
                         conversation_history=conversation_history
                     )
-                
-                # 応答から感情タグを抽出（アバターの回答内容から判定）
-                response, emotion = extract_emotion_tag(response)
+                    # 応答から感情タグを抽出（RAG応答の場合のみ）
+                    response, emotion = extract_emotion_tag(response)
                 
                 # 感情を検証
                 emotion = validate_emotion(emotion)
@@ -2038,8 +2104,12 @@ def handle_message(data):
                 session_info['selected_suggestions_count'] = current_count
                 print(f"📊 Suggestion count updated: {previous_count} → {current_count}")
         
-        # 🆕 サジェスチョン生成（user_type対応）
-        user_type = session_info.get('user_type', 'business')
+        # 🐶 サジェスチョン生成（user_type対応）
+        if ENABLE_USER_TYPE_SELECTION:
+            user_type = session_info.get('user_type', 'business')
+        else:
+            user_type = DEFAULT_USER_TYPE
+        language = session_info.get('language', 'ja')
         
         try:
             from modules.static_qa_data import get_suggestions_for_phase, get_current_phase
@@ -2052,7 +2122,8 @@ def handle_message(data):
             suggestions = get_suggestions_for_phase(
                 current_phase,
                 session_info.get('selected_suggestions', []),
-                user_type
+                user_type,
+                language
             )
             
             print(f"📋 サジェスチョン生成: Phase={current_phase}, UserType={user_type}, Count={len(suggestions)}")
@@ -2389,6 +2460,7 @@ def handle_submit_survey(data):
     
     # スプレッドシートに保存
     survey_data = {
+        'avatar_name': os.getenv('AVATAR_NAME', 'Unknown'),  # 🐶 アバター名を追加
         'visitor_id': visitor_id,
         'quiz_score': quiz_score,
         'conversation_count': session_info.get('interaction_count', 0),
