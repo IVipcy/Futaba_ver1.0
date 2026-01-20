@@ -18,8 +18,8 @@ body {
     padding: 0;
     font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
-    color: #2c3e50;
-    background: #f0f5f9;
+    color: #333;
+    background: #f5f9fc;
     overflow-x: hidden;
 }
 
@@ -64,9 +64,10 @@ body::before {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(212, 175, 55, 0.15);
     z-index: 100;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 .header-content {
@@ -87,7 +88,7 @@ body::before {
 .main-title {
     font-size: 24px;
     font-weight: 300;
-    color: #2c3e50;
+    color: #333;
     display: flex;
     align-items: baseline;
     gap: 12px;
@@ -96,37 +97,35 @@ body::before {
 
 .title-kyo {
     font-weight: 700;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 32px;
     letter-spacing: 3px;
-    color: #0097a7;
-    text-shadow: 
-        0 1px 2px rgba(255, 255, 255, 0.9),
-        0 0 8px rgba(255, 255, 255, 0.7),
-        1px 1px 0 rgba(0, 151, 167, 0.3);
-    position: relative;
+    filter: drop-shadow(2px 2px 4px rgba(212, 175, 55, 0.3));
 }
 
 .title-yuzen {
     font-weight: 400;
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 50%, #d4af37 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 18px;
     letter-spacing: 2px;
-    color: #00acc1;
-    text-shadow: 
-        0 1px 2px rgba(255, 255, 255, 0.9),
-        0 0 6px rgba(255, 255, 255, 0.6);
-    position: relative;
+    filter: drop-shadow(2px 2px 4px rgba(212, 175, 55, 0.4));
 }
 
 .title-name {
     font-size: 28px;
     font-weight: 700;
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     letter-spacing: 2px;
-    color: #0097a7;
-    text-shadow: 
-        0 1px 2px rgba(255, 255, 255, 0.9),
-        0 0 8px rgba(255, 255, 255, 0.7),
-        1px 1px 0 rgba(0, 151, 167, 0.3);
-    position: relative;
+    filter: drop-shadow(2px 2px 4px rgba(212, 175, 55, 0.4));
 }
 
 /* 固定コントロールボタン */
@@ -134,10 +133,10 @@ body::before {
     display: flex;
     align-items: center;
     gap: 12px;
-    background: transparent;
-    padding: 8px 0;
-    border-radius: 0;
-    box-shadow: none;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 15px;
+    border-radius: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
 }
 
@@ -163,40 +162,29 @@ body::before {
 }
 
 .mute-button {
-    background: linear-gradient(145deg, #5a8ca8, #4a7591);
+    background: linear-gradient(145deg, #4CAF50, #45a049);
     color: white;
 }
 
 .mute-button:hover {
     transform: scale(1.1) rotate(5deg);
-    box-shadow: 0 4px 10px rgba(90, 140, 168, 0.4);
+    box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
 }
 
 .mute-button.muted {
-    background: linear-gradient(145deg, #8b7355, #6d5a44);
+    background: linear-gradient(145deg, #f44336, #da190b);
 }
 
 .language-button {
-    background: linear-gradient(135deg, 
-        rgba(90, 140, 168, 0.95) 0%, 
-        rgba(74, 117, 145, 0.98) 50%, 
-        rgba(90, 140, 168, 0.95) 100%);
-    color: #fff;
-    border: 1.5px solid rgba(90, 140, 168, 0.6);
-    box-shadow: 
-        0 2px 8px rgba(90, 140, 168, 0.3);
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 50%, #2d2d2d 100%);
+    color: #f5f5dc;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
 }
 
 .language-button:hover {
-    background: linear-gradient(135deg, 
-        rgba(74, 117, 145, 1) 0%, 
-        rgba(61, 90, 128, 1) 50%, 
-        rgba(74, 117, 145, 1) 100%);
-    color: #fff;
-    border-color: rgba(61, 90, 128, 0.8);
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 50%, #d4af37 100%);
     transform: scale(1.1) rotate(5deg);
-    box-shadow: 
-        0 4px 15px rgba(74, 117, 145, 0.5);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.6);
 }
 
 .language-display {
@@ -251,14 +239,14 @@ body::before {
     width: 100%;
     height: 36px;
     background: 
-        linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.9));
+        linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(250, 248, 240, 0.9));
     border-radius: 18px;
     overflow: hidden;
     position: relative;
     box-shadow: 
-        0 4px 20px rgba(0, 212, 255, 0.15),
+        0 4px 20px rgba(212, 175, 55, 0.15),
         inset 0 1px 3px rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(0, 212, 255, 0.3);
+    border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
 /* 理解度表示テキスト（メーター内に統合） */
@@ -289,20 +277,13 @@ body::before {
 }
 
 .level-badge {
-    background: linear-gradient(135deg, 
-        rgba(20, 30, 45, 0.9), 
-        rgba(10, 15, 25, 0.95));
-    color: #00d4ff;
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+    color: #d4af37;
     padding: 2px 8px;
     border-radius: 10px;
     font-size: 12px;
     font-weight: bold;
-    border: 1px solid rgba(0, 212, 255, 0.4);
-    box-shadow: 
-        0 0 10px rgba(0, 212, 255, 0.4),
-        0 2px 8px rgba(0, 191, 255, 0.3),
-        inset 0 1px 0 rgba(0, 255, 255, 0.2);
-    text-shadow: 0 0 6px rgba(0, 212, 255, 0.6);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
 }
 
 .level-name {
@@ -313,29 +294,14 @@ body::before {
 .relationship-progress {
     height: 100%;
     background: linear-gradient(90deg, 
-        rgba(0, 212, 255, 0.4),
-        rgba(0, 255, 255, 0.5),
-        rgba(77, 208, 225, 0.6),
-        rgba(0, 212, 255, 0.7));
-    background-size: 200% 100%;
-    animation: progressFlow 3s linear infinite;
+        rgba(212, 175, 55, 0.4),
+        rgba(212, 175, 55, 0.6),
+        rgba(184, 134, 11, 0.8));
     border-radius: 18px;
     transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    box-shadow: 
-        0 0 15px rgba(0, 212, 255, 0.5),
-        inset 0 0 10px rgba(0, 255, 255, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-@keyframes progressFlow {
-    0% {
-        background-position: 0% center;
-    }
-    100% {
-        background-position: 200% center;
-    }
+    box-shadow: inset 0 2px 8px rgba(212, 175, 55, 0.3);
 }
 
 /* 経験値表示（右側） */
@@ -358,48 +324,26 @@ body::before {
     letter-spacing: 2px;
 }
 
-/* MAX専用スタイル - ホログラフィック最高峰 */
+/* MAX専用スタイル */
 .relationship-level .level-max-badge {
-    background: linear-gradient(135deg, 
-        rgba(0, 212, 255, 0.4), 
-        rgba(0, 255, 255, 0.5),
-        rgba(77, 208, 225, 0.4));
-    background-size: 200% 100%;
-    animation: maxHologramPulse 2s ease-in-out infinite;
-    color: #00ffff;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
     padding: 3px 12px;
     border-radius: 12px;
     font-size: 13px;
     font-weight: bold;
-    border: 1.5px solid rgba(0, 255, 255, 0.7);
-    box-shadow: 
-        0 0 20px rgba(0, 212, 255, 0.6),
-        0 0 12px rgba(0, 255, 255, 0.5),
-        0 2px 8px rgba(0, 191, 255, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    text-shadow: 
-        0 0 10px rgba(0, 255, 255, 0.9),
-        0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    animation: maxPulse 2s ease-in-out infinite;
 }
 
-@keyframes maxHologramPulse {
+@keyframes maxPulse {
     0%, 100% {
         transform: scale(1);
-        background-position: 0% center;
-        box-shadow: 
-            0 0 20px rgba(0, 212, 255, 0.6),
-            0 0 12px rgba(0, 255, 255, 0.5),
-            0 2px 8px rgba(0, 191, 255, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
     }
     50% {
         transform: scale(1.05);
-        background-position: 100% center;
-        box-shadow: 
-            0 0 30px rgba(0, 212, 255, 0.9),
-            0 0 18px rgba(0, 255, 255, 0.8),
-            0 4px 12px rgba(0, 191, 255, 0.6),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5);
     }
 }
 
@@ -505,18 +449,18 @@ body::before {
 }
 
 .chat-messages::-webkit-scrollbar-track {
-    background: rgba(90, 140, 168, 0.08) !important;
+    background: rgba(212, 175, 55, 0.1) !important;
     border-radius: 10px !important;
 }
 
 .chat-messages::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(90, 140, 168, 0.5), rgba(74, 117, 145, 0.6)) !important;
+    background: linear-gradient(180deg, #d4af37, #b8860b) !important;
     border-radius: 10px !important;
     min-height: 30px !important;
 }
 
 .chat-messages::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(90, 140, 168, 0.7), rgba(74, 117, 145, 0.8)) !important;
+    background: linear-gradient(180deg, #b8860b, #9a7209) !important;
 }
 
 /* メッセージラッパー */
@@ -546,29 +490,25 @@ body::before {
 /* ユーザーメッセージ：プレミアム透明クリスタル */
 .user-message {
     background: linear-gradient(135deg,
-        rgba(255, 255, 255, 0.15) 0%,
-        rgba(255, 255, 255, 0.08) 50%,
-        rgba(255, 255, 255, 0.12) 100%);
-    backdrop-filter: blur(50px) saturate(180%) contrast(110%) brightness(108%);
-    -webkit-backdrop-filter: blur(50px) saturate(180%) contrast(110%) brightness(108%);
-    color: #1a1a1a;
-    font-weight: 500;
-    text-shadow: 0 0.5px 1px rgba(255, 255, 255, 0.5);
-    padding: 13px 19px;
-    border-radius: 22px 22px 6px 22px;
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.02) 50%,
+        rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(50px) saturate(180%) contrast(105%) brightness(105%);
+    -webkit-backdrop-filter: blur(50px) saturate(180%) contrast(105%) brightness(105%);
+    color: #0f172a;
+    text-shadow: none;
+    padding: 12px 18px;
+    border-radius: 20px 20px 5px 20px;
     margin-left: auto;
     margin-right: 10px;
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     box-shadow: 
-        0 8px 35px rgba(0, 0, 0, 0.08),
-        0 3px 15px rgba(255, 255, 255, 0.1),
-        inset 0 0 25px rgba(255, 255, 255, 0.08),
-        inset 0 1px 2px rgba(255, 255, 255, 0.15),
-        inset 0 -1px 2px rgba(0, 0, 0, 0.03);
+        0 8px 32px rgba(0, 0, 0, 0.04),
+        inset 0 0 20px rgba(255, 255, 255, 0.05),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        inset 0 -1px 1px rgba(0, 0, 0, 0.02);
     position: relative;
     overflow: hidden;
-    letter-spacing: 0.2px;
-    line-height: 1.65;
 }
 
 /* 虹色のプリズム効果（控えめ） */
@@ -582,9 +522,9 @@ body::before {
     background: linear-gradient(
         45deg,
         transparent 40%,
-        rgba(120, 255, 255, 0.03) 45%,
-        rgba(255, 120, 255, 0.03) 50%,
-        rgba(120, 120, 255, 0.03) 55%,
+        rgba(212, 175, 55, 0.03) 45%,
+        rgba(184, 134, 11, 0.03) 50%,
+        rgba(212, 175, 55, 0.03) 55%,
         transparent 60%
     );
     animation: prismEffect 8s linear infinite;
@@ -608,93 +548,20 @@ body::before {
     pointer-events: none;
 }
 
-/* アシスタントメッセージ：サイバーネオンパネル */
+/* アシスタントメッセージ：高級グラスモーフィズム */
 .assistant-message {
-    background: 
-        linear-gradient(135deg, 
-            rgba(10, 10, 15, 0.95) 0%,
-            rgba(15, 20, 30, 0.92) 25%, 
-            rgba(20, 30, 45, 0.95) 50%,
-            rgba(15, 20, 30, 0.92) 75%,
-            rgba(10, 10, 15, 0.95) 100%);
-    color: #e8f8ff;
-    padding: 14px 20px;
-    border-radius: 16px 16px 16px 4px;
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 50%, #2d2d2d 100%);
+    color: #f5f5dc;
+    padding: 12px 18px;
+    border-radius: 20px 20px 20px 5px;
     margin-left: 10px;
     margin-right: auto;
-    border: 2px solid rgba(0, 212, 255, 0.5);
     box-shadow: 
-        0 0 25px rgba(0, 212, 255, 0.4),
-        0 0 15px rgba(0, 255, 255, 0.3),
-        0 4px 20px rgba(77, 208, 225, 0.2),
-        inset 0 0 30px rgba(0, 212, 255, 0.08),
-        inset 0 1px 0 rgba(0, 255, 255, 0.3),
-        inset 0 -1px 0 rgba(0, 212, 255, 0.2);
+        0 4px 20px rgba(212, 175, 55, 0.4),
+        0 2px 15px rgba(184, 134, 11, 0.3),
+        inset 0 1px 2px rgba(212, 175, 55, 0.2);
     position: relative;
     overflow: hidden;
-    font-weight: 450;
-    letter-spacing: 0.5px;
-    line-height: 1.7;
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.3),
-                 0 1px 3px rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-}
-
-/* ホログラフィックスキャンライン */
-.assistant-message::before {
-    content: '';
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(0, 255, 255, 0.1) 25%,
-        rgba(0, 212, 255, 0.2) 50%,
-        rgba(77, 208, 225, 0.15) 75%,
-        transparent 100%
-    );
-    background-size: 200% 100%;
-    animation: hologramScan 4s linear infinite;
-    border-radius: 16px 16px 16px 4px;
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* サイバーグロー上部 */
-.assistant-message::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 40%;
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 212, 255, 0.15) 0%,
-        rgba(0, 255, 255, 0.08) 50%,
-        transparent 100%
-    );
-    border-radius: 16px 16px 0 0;
-    pointer-events: none;
-    z-index: 1;
-}
-
-/* テキストを前面に */
-.assistant-message > * {
-    position: relative;
-    z-index: 2;
-}
-
-@keyframes hologramScan {
-    0% {
-        background-position: -200% 0;
-    }
-    100% {
-        background-position: 200% 0;
-    }
 }
 
 /* 入力エリア */
@@ -715,43 +582,27 @@ body::before {
 /* 入力トグルボタン */
 .input-toggle-button {
     width: 100%;
-    background: linear-gradient(135deg, 
-        rgba(20, 30, 45, 0.92) 0%, 
-        rgba(10, 15, 25, 0.95) 50%, 
-        rgba(20, 30, 45, 0.92) 100%);
-    color: #00d4ff;
-    border: 1.5px solid rgba(0, 212, 255, 0.5);
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 50%, #2d2d2d 100%);
+    color: #d4af37;
+    border: none;
     border-radius: 12px;
     padding: 10px 16px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 
-        0 0 15px rgba(0, 212, 255, 0.3),
-        0 2px 8px rgba(0, 191, 255, 0.2),
-        inset 0 1px 0 rgba(0, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
 }
 
 .input-toggle-button:hover {
-    background: linear-gradient(135deg, 
-        rgba(0, 212, 255, 0.2) 0%, 
-        rgba(0, 191, 255, 0.15) 50%, 
-        rgba(0, 212, 255, 0.2) 100%);
-    color: #00ffff;
-    border-color: rgba(0, 255, 255, 0.8);
-    box-shadow: 
-        0 0 25px rgba(0, 212, 255, 0.6),
-        0 0 15px rgba(0, 255, 255, 0.4),
-        0 4px 15px rgba(0, 191, 255, 0.3),
-        inset 0 1px 0 rgba(0, 255, 255, 0.4);
-    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #d4af37 0%, #b8860b 50%, #d4af37 100%);
+    color: #1a1a1a;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.6);
+    transform: translateY(-1px);
 }
 
 /* 入力フォームコンテナ */
@@ -771,7 +622,7 @@ body::before {
 #message-input {
     width: 100%;
     padding: 15px 20px;
-    border: 2px solid rgba(0, 212, 255, 0.3);
+    border: 2px solid rgba(212, 175, 55, 0.3);
     border-radius: 15px;
     font-size: 16px;
     background: rgba(255, 255, 255, 0.95);
@@ -783,18 +634,12 @@ body::before {
     resize: vertical;
     font-family: inherit;
     box-sizing: border-box;
-    box-shadow: 
-        0 0 8px rgba(0, 212, 255, 0.1),
-        inset 0 1px 0 rgba(0, 255, 255, 0.05);
 }
 
 #message-input:focus {
-    border-color: rgba(0, 212, 255, 0.8);
-    box-shadow: 
-        0 0 20px rgba(0, 212, 255, 0.4),
-        0 0 0 3px rgba(0, 212, 255, 0.2),
-        inset 0 1px 0 rgba(0, 255, 255, 0.15);
-    background-color: rgba(255, 255, 255, 0.98);
+    border-color: rgba(212, 175, 55, 0.8);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+    background-color: #fff;
 }
 
 /* ボタンエリア */
@@ -807,61 +652,35 @@ body::before {
 
 button {
     padding: 10px 20px;
-    background: linear-gradient(135deg, 
-        rgba(20, 30, 45, 0.9), 
-        rgba(10, 15, 25, 0.95));
-    color: #00d4ff;
-    border: 1.5px solid rgba(0, 212, 255, 0.5);
-    border-radius: 12px;
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+    color: #d4af37;
+    border: none;
+    border-radius: 15px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     transition: all 0.3s ease;
-    box-shadow: 
-        0 0 15px rgba(0, 212, 255, 0.3),
-        0 3px 10px rgba(0, 191, 255, 0.2),
-        inset 0 1px 0 rgba(0, 255, 255, 0.2);
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+    box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3);
 }
 
 button:hover {
-    background: linear-gradient(135deg, 
-        rgba(0, 212, 255, 0.2), 
-        rgba(0, 191, 255, 0.15));
-    color: #00ffff;
-    border-color: rgba(0, 255, 255, 0.8);
-    box-shadow: 
-        0 0 25px rgba(0, 212, 255, 0.6),
-        0 0 15px rgba(0, 255, 255, 0.4),
-        0 5px 15px rgba(0, 191, 255, 0.3),
-        inset 0 1px 0 rgba(0, 255, 255, 0.4);
-    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    color: #1a1a1a;
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.6);
+    transform: translateY(-1px);
 }
 
 #voice-button {
-    background: linear-gradient(135deg, 
-        rgba(20, 30, 45, 0.9), 
-        rgba(10, 15, 25, 0.95));
-    box-shadow: 
-        0 0 15px rgba(0, 212, 255, 0.3),
-        0 3px 10px rgba(0, 191, 255, 0.2);
-    color: #00d4ff;
-    border: 1.5px solid rgba(0, 212, 255, 0.5);
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+    box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3);
+    color: #d4af37;
 }
 
 #voice-button:hover {
-    background: linear-gradient(135deg, 
-        rgba(0, 212, 255, 0.2), 
-        rgba(0, 191, 255, 0.15));
-    color: #00ffff;
-    border-color: rgba(0, 255, 255, 0.8);
-    box-shadow: 
-        0 0 25px rgba(0, 212, 255, 0.6),
-        0 0 15px rgba(0, 255, 255, 0.4),
-        0 5px 15px rgba(0, 191, 255, 0.3);
-    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    color: #1a1a1a;
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.6);
 }
 
 /* サジェスチョンボタン */
@@ -875,37 +694,27 @@ button:hover {
 }
 
 .suggestion-button {
-    background: linear-gradient(135deg,
-        rgba(90, 140, 168, 0.92),
-        rgba(74, 117, 145, 0.95));
-    border: 2px solid rgba(74, 117, 145, 0.6);
-    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
     padding: 8px 16px;
     font-size: 14px;
-    color: #fff;
-    font-weight: 500;
+    color: #666;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 
-        0 0 15px rgba(0, 212, 255, 0.4),
-        0 2px 8px rgba(0, 191, 255, 0.3),
-        inset 0 1px 0 rgba(0, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.6);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    backdrop-filter: blur(5px);
 }
 
 .suggestion-button:hover {
-    background: linear-gradient(135deg, 
-        rgba(74, 117, 145, 1) 0%, 
-        rgba(61, 90, 128, 1) 100%);
-    color: #fff;
-    border-color: rgba(61, 90, 128, 0.9);
+    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    color: #d4af37;
     transform: translateY(-2px) scale(1.05);
     box-shadow: 
-        0 4px 15px rgba(74, 117, 145, 0.4),
-        inset 0 1px 0 rgba(0, 255, 255, 0.4);
+        0 5px 20px rgba(212, 175, 55, 0.5),
+        0 2px 10px rgba(184, 134, 11, 0.4);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-shadow: 0 0 12px rgba(0, 255, 255, 0.9);
+    border-color: #d4af37;
 }
 
 /* 🆕 ユーザー属性選択ボタン（CERA版）（🔧 修正版） */
@@ -1166,18 +975,18 @@ button:hover {
     }
     
     .chat-messages::-webkit-scrollbar-track {
-        background: rgba(90, 140, 168, 0.12) !important;
+        background: rgba(212, 175, 55, 0.2) !important;
         border-radius: 10px !important;
     }
     
     .chat-messages::-webkit-scrollbar-thumb {
-        background: rgba(90, 140, 168, 0.45) !important;
+        background: rgba(212, 175, 55, 0.6) !important;
         border-radius: 10px !important;
         min-height: 20px !important;
     }
     
     .chat-messages::-webkit-scrollbar-thumb:hover {
-        background: rgba(90, 140, 168, 0.65) !important;
+        background: rgba(212, 175, 55, 0.8) !important;
     }
     
     /* メッセージバブル：より透明に */
@@ -1195,7 +1004,7 @@ button:hover {
         width: 100% !important;
         padding: 10px !important;
         background: rgba(255, 255, 255, 0.9) !important;
-        border-top: 1px solid rgba(255, 182, 193, 0.2) !important;
+        border-top: 1px solid rgba(212, 175, 55, 0.2) !important;
         z-index: 110 !important;
     }
     
@@ -1203,24 +1012,15 @@ button:hover {
     .input-toggle-button {
         width: 100% !important;
         padding: 10px !important;
-        background: linear-gradient(135deg, 
-            rgba(20, 30, 45, 0.92) 0%, 
-            rgba(10, 15, 25, 0.95) 50%, 
-            rgba(20, 30, 45, 0.92) 100%) !important;
-        color: #00d4ff !important;
-        border: 1.5px solid rgba(0, 212, 255, 0.5) !important;
+        background: linear-gradient(135deg, #2d2d2d, #1a1a1a, #2d2d2d) !important;
+        color: #d4af37 !important;
+        border: none !important;
         border-radius: 12px !important;
         font-size: 14px !important;
-        font-weight: 500 !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         gap: 8px !important;
-        box-shadow: 
-            0 0 15px rgba(0, 212, 255, 0.3),
-            0 2px 8px rgba(0, 191, 255, 0.2),
-            inset 0 1px 0 rgba(0, 255, 255, 0.2) !important;
-        text-shadow: 0 0 8px rgba(0, 212, 255, 0.5) !important;
     }
     
     /* メッセージ入力欄 */
@@ -1229,15 +1029,12 @@ button:hover {
         min-height: 60px !important;
         max-height: 100px !important;
         padding: 10px !important;
-        border: 2px solid rgba(0, 212, 255, 0.3) !important;
+        border: 2px solid rgba(212, 175, 55, 0.3) !important;
         border-radius: 12px !important;
         resize: none !important;
         font-size: 14px !important;
         margin-bottom: 10px !important;
         margin-top: 10px !important;
-        box-shadow: 
-            0 0 8px rgba(0, 212, 255, 0.1),
-            inset 0 1px 0 rgba(0, 255, 255, 0.05) !important;
     }
     
     /* ボタンエリア */
@@ -1273,7 +1070,7 @@ button:hover {
     .suggestion-button {
         padding: 6px 12px !important;
         font-size: 13px !important;
-        background: linear-gradient(135deg, rgba(90, 140, 168, 0.92), rgba(74, 117, 145, 0.95)) !important;
+        background: rgba(255, 255, 255, 0.8) !important;
     }
     
     /* コントロールボタン */
@@ -1550,42 +1347,31 @@ button:hover {
 /* クイズシステムスタイル */
 /* ============================== */
 
-/* Masterレベルバッジ - サイバーエリート */
+/* Masterレベルバッジ */
 .master-badge {
-    background: linear-gradient(135deg, 
-        rgba(0, 212, 255, 0.3), 
-        rgba(0, 191, 255, 0.4)) !important;
-    color: #00ffff !important;
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    color: white !important;
     padding: 3px 12px !important;
     border-radius: 12px !important;
     font-size: 13px !important;
     font-weight: bold !important;
-    border: 1.5px solid rgba(0, 255, 255, 0.6) !important;
     box-shadow: 
-        0 0 20px rgba(0, 212, 255, 0.6),
-        0 0 12px rgba(0, 255, 255, 0.5),
-        0 4px 15px rgba(0, 191, 255, 0.4),
-        inset 0 1px 3px rgba(0, 255, 255, 0.4) !important;
-    animation: masterCyberGlow 2s ease-in-out infinite;
-    text-shadow: 
-        0 0 10px rgba(0, 255, 255, 0.8),
-        0 1px 2px rgba(0, 0, 0, 0.3);
+        0 4px 15px rgba(245, 158, 11, 0.5),
+        inset 0 1px 3px rgba(255, 255, 255, 0.5) !important;
+    animation: masterGlow 2s ease-in-out infinite;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes masterCyberGlow {
+@keyframes masterGlow {
     0%, 100% {
         box-shadow: 
-            0 0 20px rgba(0, 212, 255, 0.6),
-            0 0 12px rgba(0, 255, 255, 0.5),
-            0 4px 15px rgba(0, 191, 255, 0.4),
-            inset 0 1px 3px rgba(0, 255, 255, 0.4);
+            0 4px 15px rgba(245, 158, 11, 0.5),
+            inset 0 1px 3px rgba(255, 255, 255, 0.5);
     }
     50% {
         box-shadow: 
-            0 0 30px rgba(0, 212, 255, 0.9),
-            0 0 18px rgba(0, 255, 255, 0.8),
-            0 6px 25px rgba(0, 191, 255, 0.6),
-            inset 0 1px 3px rgba(0, 255, 255, 0.6);
+            0 6px 25px rgba(245, 158, 11, 0.8),
+            inset 0 1px 3px rgba(255, 255, 255, 0.7);
     }
 }
 
@@ -1611,29 +1397,15 @@ button:hover {
 }
 
 .quiz-choice-button.accept {
-    background: linear-gradient(135deg, 
-        rgba(20, 30, 45, 0.9), 
-        rgba(10, 15, 25, 0.95));
-    color: #00d4ff;
-    border: 1.5px solid rgba(0, 212, 255, 0.5);
-    box-shadow: 
-        0 0 15px rgba(0, 212, 255, 0.3),
-        0 3px 10px rgba(0, 191, 255, 0.2);
-    text-shadow: 0 0 8px rgba(0, 212, 255, 0.5);
+    background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+    color: #d4af37;
 }
 
 .quiz-choice-button.accept:hover {
-    background: linear-gradient(135deg, 
-        rgba(0, 212, 255, 0.2), 
-        rgba(0, 191, 255, 0.15));
-    color: #00ffff;
-    border-color: rgba(0, 255, 255, 0.8);
+    background: linear-gradient(135deg, #d4af37, #b8860b);
+    color: #1a1a1a;
     transform: translateY(-2px);
-    box-shadow: 
-        0 0 25px rgba(0, 212, 255, 0.6),
-        0 0 15px rgba(0, 255, 255, 0.4),
-        0 5px 15px rgba(0, 191, 255, 0.3);
-    text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.5);
 }
 
 .quiz-choice-button.decline {
@@ -1776,17 +1548,17 @@ button:hover {
 }
 
 .media-images-container::-webkit-scrollbar-track {
-    background: rgba(90, 140, 168, 0.08);
+    background: rgba(212, 175, 55, 0.1);
     border-radius: 3px;
 }
 
 .media-images-container::-webkit-scrollbar-thumb {
-    background: rgba(90, 140, 168, 0.35);
+    background: rgba(212, 175, 55, 0.4);
     border-radius: 3px;
 }
 
 .media-images-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(90, 140, 168, 0.55);
+    background: rgba(212, 175, 55, 0.6);
 }
 
 .media-image-wrapper {

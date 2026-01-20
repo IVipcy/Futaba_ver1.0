@@ -296,66 +296,66 @@ audio_cache = {}
 QUIZ_DATA = {
     'ja': [
         {
-            'question': 'ふたばが話していた「挿し友禅」とは、どんな工程のこと？',
+            'question': 'ふたばが話していた「金彩」とは、どんな工程のこと？',
             'options': [
-                'A) 模様の輪郭に糊を置く工程',
-                'B) 筆や刷毛で模様に色を挿していく工程',
-                'C) 布を水で洗って仕上げる工程'
+                'A) 着物に刺繍を施す工程',
+                'B) 染め上がった生地に金や銀の箔を貼り付けて装飾する工程',
+                'C) 布を染料で染める工程'
             ],
             'correct': 1,
-            'explanation': '正解わん！挿し友禅は筆や刷毛で手作業で模様に色を挿していく工程のことわん。友禅染の中で最も絵画的で華やかな部分を担当していて、この工程があるから京友禅は美しい色彩を持つようになるんだわん✨'
+            'explanation': '正解ワン！金彩は染め上がった生地に金や銀の箔を貼り付けて装飾する技術です。友禅染めだけだとちょっとボヤっとした印象になることがあるんだけど、金彩でキリッと仕上げるんです。だから「化粧係」って呼ばれてるんですよ✨'
         },
         {
-            'question': '「ぼかし」という技法について、正しい説明はどれ？',
+            'question': '「砂子筒」について、正しい説明はどれ？',
             'options': [
-                'A) 模様の外側から内側にかけて徐々に色を薄くしていく技法',
-                'B) 複数の色を混ぜて新しい色を作る技法',
-                'C) 布を熱で炙って乾燥させる技法'
+                'A) 竹筒に金網を張った道具で、金を振り落とすのに使う',
+                'B) 金箔を切るための道具',
+                'C) 糊を塗るための筒状の道具'
             ],
             'correct': 0,
-            'explanation': '正解わん！ぼかしは、模様の外側から内側にかけて徐々に色を薄くしていく技法わん。水を含ませた筆で染料の境界を優しくなぞると、自然なグラデーションができて立体感が出るんだわん。力加減が難しくて、最初は失敗したこともあるわん🎨'
+            'explanation': '正解ワン！砂子筒は竹筒に金網を張った道具で、金を振り落とすんです。竹は静電気が起きにくいから金箔を扱うのに最適なんですよ。僕は100本くらいの砂子筒を使い分けてます。網目の粗さによって金の粒のサイズが変わるんです🎨'
         },
         {
             'question': 'ふたばが「職人として一番苦労したこと」として話していたのはどれ？',
             'options': [
-                'A) 道具の手入れを毎日すること',
-                'B) 色の濃淡を均一に保つこと',
-                'C) 散歩の時間を確保すること'
+                'A) 道具を100本も管理すること',
+                'B) 金箔が息で飛んでいってしまうこと',
+                'C) 温泉に行く時間を作ること'
             ],
             'correct': 1,
-            'explanation': '正解わん！最初の頃は、色の濃淡を均一に保つのが本当に難しかったわん。同じ色を何度も作ろうとしても、微妙に違う色になっちゃうんだわん。先輩に何度も教えてもらって、今のレベルになったわん。根気が必要な仕事だけど、やりがいがあるわん💪'
+            'explanation': '正解ワン！修行時代は金箔が本当に繊細で、ちょっと息を吐いただけで飛んでいっちゃうし、緊張で手が震えると終わりだったんです。何時間もかけた仕事が一瞬でダメになる。でもある日突然「できた！」って瞬間が来るんですよ💪'
         }
     ],
     'en': [
         {
-            'question': 'What is "Sashi-Yuzen" that Futaba talked about?',
+            'question': 'What is "Kinsai" that Futaba talked about?',
             'options': [
-                'A) The process of placing glue on pattern outlines',
-                'B) The process of applying colors to patterns with brushes',
-                'C) The process of washing and finishing the fabric'
+                'A) The process of embroidering kimono',
+                'B) The process of applying gold and silver leaf to dyed fabric for decoration',
+                'C) The process of dyeing fabric with dyes'
             ],
             'correct': 1,
-            'explanation': 'Correct wan! Sashi-Yuzen is the process of applying colors to kimono patterns by hand using brushes. It\'s the most artistic and vibrant part of Yuzen dyeing, and this process gives Kyo-Yuzen its beautiful colors✨'
+            'explanation': 'Correct! Woof! Kinsai is the technique of applying gold and silver leaf to dyed fabric for decoration. Yuzen dyeing alone can look a bit soft, so we use Kinsai to sharpen it up! That\'s why we\'re called the "Makeup crew"✨'
         },
         {
-            'question': 'Which description correctly explains the "bokashi" technique?',
+            'question': 'Which description correctly explains "Sunago-zutsu"?',
             'options': [
-                'A) A technique that gradually lightens color from outside to inside',
-                'B) A technique that mixes multiple colors to create new ones',
-                'C) A technique that dries fabric by heating it'
+                'A) A bamboo tube with a metal mesh used to sprinkle gold',
+                'B) A tool for cutting gold leaf',
+                'C) A tube-shaped tool for applying glue'
             ],
             'correct': 0,
-            'explanation': 'Correct wan! Bokashi gradually lightens the color from the outside to the inside of a pattern. Gently tracing the dye boundary with a water-soaked brush creates a natural gradation and gives depth wan. The pressure control is difficult, and I failed at first too🎨'
+            'explanation': 'Correct! Woof! Sunago-zutsu is a bamboo tube with a metal mesh used to sprinkle gold. Bamboo doesn\'t make static electricity, so it\'s perfect for handling gold leaf! I have about 100 different ones. The mesh size changes the gold particle size🎨'
         },
         {
             'question': 'What did Futaba mention as the biggest challenge as a craftsperson?',
             'options': [
-                'A) Maintaining tools every day',
-                'B) Keeping color intensity uniform',
-                'C) Finding time for walks'
+                'A) Managing 100 different tools',
+                'B) Gold leaf flying away with just a breath',
+                'C) Finding time to visit hot springs'
             ],
             'correct': 1,
-            'explanation': 'Correct wan! At first, keeping the color intensity uniform was really difficult wan. Even when trying to make the same color multiple times, it would turn out slightly different wan. With repeated teaching from seniors, I reached my current level. It requires patience, but it\'s rewarding work💪'
+            'explanation': 'Correct! Woof! During apprenticeship, gold leaf was so delicate that it would fly away with just a breath, and when my hands trembled from nerves, that was it. Hours of work gone in a second. But one day suddenly "I did it!" moment comes💪'
         }
     ]
 }
@@ -668,16 +668,16 @@ def get_relationship_adjusted_greeting(language, relationship_style):
     """関係性レベルに応じた挨拶を生成（🐶 Futaba版）"""
     greetings = {
         'ja': {
-            'formal': "こんにちわん、ふたばです。私は京友禅の挿し友禅という着物に色を乗せていく工程を担当していますわん。なんでも質問してくださいね。",
-            'polite': "また会えて嬉しいわん！今日はどんなお話をしましょうか？",
-            'friendly': "わあい！会いたかったわん！今日も楽しくお話ししようね。",
-            'casual': "元気にしてたわん？何か聞きたいことあるかな？"
+            'formal': "こんにちは、ふたばです。僕は京友禅の金彩という、着物に金箔を貼る仕事をしています。なんでも質問してくださいワン！",
+            'polite': "また会えて嬉しいです！今日はどんなお話をしましょうか？",
+            'friendly': "やあ！会いたかったです！今日も楽しくお話ししましょうね。",
+            'casual': "元気にしてました？何か聞きたいことあるかな？"
         },
         'en': {
-            'formal': "Hello wan! I'm Futaba. I work on Sashi-Yuzen, the process of applying colors to kimono in Kyo-Yuzen. Feel free to ask me anything!",
-            'polite': "Nice to see you again wan! What would you like to talk about today?",
-            'friendly': "Hey there wan! I missed you! Let's chat!",
-            'casual': "How have you been wan? Got any questions?"
+            'formal': "Hello! I'm Futaba. I work on Kinsai, the process of applying gold leaf to kimono in Kyo-Yuzen. Feel free to ask me anything! Woof!",
+            'polite': "Nice to see you again! What would you like to talk about today?",
+            'friendly': "Hey there! I missed you! Let's chat!",
+            'casual': "How have you been? Got any questions?"
         }
     }
     
@@ -1412,7 +1412,7 @@ def get_reward_image():
     """クイズ報酬の待ち受け画像を提供"""
     try:
         # 画像ファイルのパスを指定
-        image_path = os.path.join(app.static_folder, 'images', 'rei_wallpaper.png')
+        image_path = os.path.join(app.static_folder, 'images', 'Futaba.png')
         
         if not os.path.exists(image_path):
             # 画像が存在しない場合はダミー画像を生成
@@ -1421,7 +1421,7 @@ def get_reward_image():
                 draw = ImageDraw.Draw(img)
                 
                 # テキストを描画
-                text = "REI\nKYO YUZEN\nMaster Certificate"
+                text = "FUTABA\nKINSAI\nMaster Certificate"
                 try:
                     font = ImageFont.truetype("arial.ttf", 80)
                 except:
@@ -1447,7 +1447,7 @@ def get_reward_image():
             image_path,
             mimetype='image/png',
             as_attachment=True,
-            download_name='REI_Wallpaper.png'
+            download_name='Futaba_Wallpaper.png'
         )
         
     except Exception as e:
