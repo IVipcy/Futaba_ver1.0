@@ -668,13 +668,13 @@ def get_relationship_adjusted_greeting(language, relationship_style):
     """関係性レベルに応じた挨拶を生成（🐶 Futaba版）"""
     greetings = {
         'ja': {
-            'formal': "こんにちは、ふたばです。僕は京友禅の金彩という、着物に金箔を貼る仕事をしています。なんでも質問してくださいワン！",
+            'formal': "こんにちは、ふたばです。私は京友禅の金彩という、着物に金箔を貼る仕事をしています。なんでも質問してくださいね！",
             'polite': "また会えて嬉しいです！今日はどんなお話をしましょうか？",
             'friendly': "やあ！会いたかったです！今日も楽しくお話ししましょうね。",
             'casual': "元気にしてました？何か聞きたいことあるかな？"
         },
         'en': {
-            'formal': "Hello! I'm Futaba. I work on Kinsai, the process of applying gold leaf to kimono in Kyo-Yuzen. Feel free to ask me anything! Woof!",
+            'formal': "Hello! I'm Futaba. I work on Kinsai, the process of applying gold leaf to kimono in Kyo-Yuzen. Feel free to ask me anything!",
             'polite': "Nice to see you again! What would you like to talk about today?",
             'friendly': "Hey there! I missed you! Let's chat!",
             'casual': "How have you been? Got any questions?"
