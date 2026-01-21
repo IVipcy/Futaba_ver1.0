@@ -527,7 +527,7 @@ class ElevenLabsClient:
     def __init__(self, api_key=None, voice_id=None, model_id=None, pronunciation_dictionary_id=None):
         self.api_key = api_key
         self.voice_id = voice_id or "21m00Tcm4TlvDq8ikWAM"  # デフォルト音声
-        self.model_id = model_id or "eleven_multilingual_v2"  # デフォルトモデル
+        self.model_id = model_id or "eleven_v3"  # デフォルトモデル
         self.pronunciation_dictionary_id = pronunciation_dictionary_id  # 発音辞書ID（オプション）
         self.base_url = "https://api.elevenlabs.io/v1"
 
@@ -711,7 +711,7 @@ def initialize_system():
     # 🆕 ElevenLabs初期化（日本語用 - 最優先）
     elevenlabs_key = os.getenv('ELEVENLABS_API_KEY')
     elevenlabs_voice_id = os.getenv('ELEVENLABS_VOICE_ID', '21m00Tcm4TlvDq8ikWAM')
-    elevenlabs_model_id = os.getenv('ELEVENLABS_MODEL_ID', 'eleven_multilingual_v2')
+    elevenlabs_model_id = os.getenv('ELEVENLABS_MODEL_ID', 'eleven_v3')
     elevenlabs_pronunciation_dict_id = os.getenv('ELEVENLABS_PRONUNCIATION_DICTIONARY_ID')  # オプション
     elevenlabs_enabled = os.getenv('ELEVENLABS_ENABLED', 'false').lower() == 'true'
     
